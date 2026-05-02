@@ -71,7 +71,8 @@ export const ui = {
     'footer.peonyGuide':    'Hướng dẫn Hoa Mẫu Đơn',
     'footer.dahliaGuide':   'Hướng dẫn Hoa Thược Dược',
     'footer.orchidCare':    'Chăm sóc Hoa Lan',
-    'footer.budgetPlanner': 'Máy tính ngân sách hoa',
+    'footer.budgetPlanner':     'Máy tính ngân sách hoa',
+    'footer.combinationBuilder':'Gợi ý kết hợp hoa',
   },
   en: {
     'site.title':        'Vườn Hoa — AI Florist Coach Blog',
@@ -138,7 +139,8 @@ export const ui = {
     'footer.peonyGuide':    'Peony Guide',
     'footer.dahliaGuide':   'Dahlia Guide',
     'footer.orchidCare':    'Orchid Care',
-    'footer.budgetPlanner': 'Bouquet Budget Planner',
+    'footer.budgetPlanner':     'Bouquet Budget Planner',
+    'footer.combinationBuilder':'Flower Combination Suggester',
   },
 } as const;
 

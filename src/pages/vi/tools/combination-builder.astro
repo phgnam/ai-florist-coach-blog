@@ -1,0 +1,388 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/combination-builder/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/combination-builder/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/combination-builder/` },
+];
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Công cụ', url: `${siteUrl}/vi/tools/` },
+  { name: 'Gợi ý kết hợp hoa', url: `${siteUrl}/vi/tools/combination-builder/` },
+];
+
+const FLOWERS = [
+  { id: 'rose',         name: 'Hoa Hồng',        emoji: '🌹' },
+  { id: 'peony',        name: 'Hoa Mẫu Đơn',    emoji: '🌸' },
+  { id: 'ranunculus',   name: 'Hoa Mao Lương',   emoji: '🌸' },
+  { id: 'tulip',        name: 'Hoa Tulip',       emoji: '🌷' },
+  { id: 'lily',         name: 'Hoa Ly',          emoji: '🌷' },
+  { id: 'sunflower',    name: 'Hoa Hướng Dương', emoji: '🌻' },
+  { id: 'orchid',       name: 'Hoa Lan',         emoji: '🌺' },
+  { id: 'hydrangea',    name: 'Hoa Cẩm Tú Cầu', emoji: '💐' },
+  { id: 'dahlia',       name: 'Hoa Thược Dược',  emoji: '🌸' },
+  { id: 'anemone',      name: 'Hoa Hải Quỳ',    emoji: '🌸' },
+  { id: 'sweet-pea',    name: 'Hoa Đậu Thơm',   emoji: '🌸' },
+  { id: 'freesia',      name: 'Hoa Freesia',     emoji: '🌸' },
+  { id: 'iris',         name: 'Hoa Diên Vĩ',    emoji: '💜' },
+  { id: 'carnation',    name: 'Hoa Cẩm Chướng', emoji: '🌺' },
+  { id: 'chrysanthemum',name: 'Hoa Cúc',        emoji: '🌼' },
+  { id: 'lavender',     name: 'Hoa Oải Hương',  emoji: '💜' },
+  { id: 'marigold',     name: 'Hoa Vạn Thọ',   emoji: '🌼' },
+  { id: 'magnolia',     name: 'Hoa Mộc Lan',    emoji: '🌸' },
+  { id: 'gardenia',     name: 'Hoa Dạ Lý Hương',emoji: '🤍' },
+  { id: 'jasmine',      name: 'Hoa Nhài',        emoji: '🌼' },
+];
+
+const flowerMap = Object.fromEntries(FLOWERS.map(f => [f.id, f]));
+
+const COMBOS: Record<string, Array<{name:string;partners:[string,string];why:string;colors:string;style:string;season:string}>> = {
+  rose: [
+    { name:"Lãng Mạn Nồng Nàn",      partners:['peony','hydrangea'],   why:"Ba loài hoa đầu tròn ở ba tầm vóc khác nhau — mẫu đơn là ngôi sao, hồng là nét duyên, cẩm tú cầu lấp đầy không gian. Những cánh hoa lồng nhau trong tông hồng phấn tạo vẻ đẹp vườn hoa nở rộ điển hình của floristry cổ điển.",      colors:"Hồng phấn · Ngà · Hồng nhạt",        style:"Lãng mạn / Đám cưới", season:"Xuân–Hạ" },
+    { name:"Vùng Quê Pháp",           partners:['lavender','freesia'],  why:"Oải hương tạo chuyển động theo chiều dọc và hương thơm; freesia uốn cong thêm chiều cao và mùi ngát. Cùng với hoa hồng, chúng tái hiện bảng màu nước hoa Provence cổ điển — ba loài hoa vườn được yêu thích nhất nước Pháp.",             colors:"Tím · Kem · Vàng nhạt",             style:"Lãng mạn / Đồng quê", season:"Xuân–Hạ" },
+    { name:"Báu Vật Mùa Thu",         partners:['dahlia','anemone'],    why:"Thược dược sánh ngang với sự xa hoa của hồng; mắt gần đen của hải quỳ tạo tương phản nổi bật trước những cánh nhung. Tông trang sức phong phú — đỏ đậm, đỏ sâu, đen — mang đến cảm giác sang trọng cuối mùa.",                            colors:"Đỏ đậm · Đỏ sâu · Đen",            style:"Kịch tính / Ấn tượng",season:"Thu" },
+    { name:"Trắng Tinh Khiết",        partners:['gardenia','magnolia'], why:"Ba bông hoa trắng và kem với hình dáng hoàn toàn khác nhau — hoa hồng với lớp cánh chồng, dạ lý hương với độ bóng sáp, mộc lan với hình ngôi sao. Thành phần đơn sắc tinh tế nhất trong floristry; hương thơm từ cả ba loài là phi thường.",  colors:"Trắng · Ngà · Kem",                 style:"Tối giản / Thanh lịch",season:"Xuân–Hạ" },
+  ],
+  peony: [
+    { name:"Bộ Ba Xa Hoa",            partners:['rose','ranunculus'],   why:"Ba loài hoa đầu tròn ở ba tầm vóc khác nhau — mẫu đơn là ngôi sao, hồng là chủ đạo, mao lương là chi tiết dịu dàng. Cùng một bộ cánh lồng nhau tạo chiều sâu mà không đơn điệu.",                                                          colors:"Hồng phấn · Hồng · Ngà",            style:"Xa hoa / Đám cưới",   season:"Xuân" },
+    { name:"Xuân Thơ Mộng",           partners:['sweet-pea','anemone'], why:"Đậu thơm uốn mình nhẹ nhàng làm nổi bật sự hùng vĩ của mẫu đơn; hình dáng giống hoa anh túc của hải quỳ với mắt đen tạo điểm nhấn tương phản với sự no tròn. Một bó hoa xuân phóng khoáng, đồng nội.",                                       colors:"Hồng nhạt · Tím · Trắng",           style:"Lãng mạn / Đồng quê", season:"Xuân" },
+    { name:"Xuân Nhật Bản",           partners:['magnolia','iris'],     why:"Những bông mộc lan hình ngôi sao kết hợp với vẻ đẹp hình học của diên vĩ — mẫu đơn cung cấp điểm tương phản đầy đặn. Kết hợp này lấy cảm hứng từ nghệ thuật cắm hoa Đông Á, nơi hình dáng tương phản được đề cao.",                         colors:"Hồng nhạt · Trắng · Tím",           style:"Thanh lịch / Nghệ thuật",season:"Xuân" },
+    { name:"Tiệc Vườn",               partners:['hydrangea','tulip'],   why:"Cẩm tú cầu lấp đầy không gian như đám mây; tulip thêm kết cấu đứng thẳng; mẫu đơn là ngôi sao thu hút mọi ánh nhìn. Ba loài yêu thích của vườn xuân mọc cùng nhau trong cùng khu đất.",                                                    colors:"Hồng · Hồng-lam · Kem",             style:"Vườn / Cổ điển",      season:"Xuân–Hạ" },
+  ],
+  ranunculus: [
+    { name:"Giấc Mơ Đồng Cỏ",        partners:['anemone','sweet-pea'], why:"Ba loài hoa xuân mong manh với dáng hình tương phản — mao lương với lớp cánh chặt chẽ, hải quỳ với mặt mở, đậu thơm với tua rua buông thõng. Cùng nhau chúng trông như một nắm hoa hái từ đồng cỏ hoang dã.",                              colors:"Hồng · Tím · Trắng",                style:"Lãng mạn / Đồng quê", season:"Xuân" },
+    { name:"Bó Hoa Chợ Xuân",         partners:['tulip','freesia'],     why:"Kết hợp chợ hoa lục địa cổ điển: tulip thẳng đứng tương phản mao lương tròn; freesia thêm hương thơm và chùm hoa cong. Bộ ba này tươi tắn và hoàn hảo theo mùa.",                                                                            colors:"Vàng · Đỏ · Kem",                   style:"Tươi mới / Cổ điển",  season:"Xuân" },
+    { name:"Lãng Mạn Provence",       partners:['rose','lavender'],     why:"Hồng và mao lương đều có đầu hoa đầy đặn và kết hợp tự nhiên; oải hương tạo cầu nối bằng hương thơm và tông tím-xám bổ sung cho hồng và hồng nhạt.",                                                                                         colors:"Hồng phấn · Tím · Xanh lá-xám",    style:"Lãng mạn / Đồng quê", season:"Xuân–Hạ" },
+    { name:"Tranh Tĩnh Vật",          partners:['iris','magnolia'],     why:"Hình học đậm nét của diên vĩ, dáng hoa cốc của mộc lan, và những lớp cánh của mao lương tạo nên bộ ba đọc như tranh tĩnh vật Hà Lan — ba hình dạng hoa riêng biệt chia sẻ bảng màu tự nhiên mềm mại.",                                      colors:"Tím · Trắng · Hồng nhạt",           style:"Nghệ thuật / Thanh lịch",season:"Xuân" },
+  ],
+  tulip: [
+    { name:"Xuân Hà Lan",             partners:['iris','ranunculus'],   why:"Diên vĩ và tulip mọc trên cùng cánh đồng Hà Lan và là cặp đôi tự nhiên; mao lương làm mềm kết cấu bằng những lớp cánh tròn. Cả ba đạt đỉnh vào mùa xuân, luôn có sẵn và tươi ngon cùng nhau.",                                               colors:"Tím · Cam · Vàng",                  style:"Ấn tượng / Cổ điển",  season:"Xuân" },
+    { name:"Vườn Anh",                partners:['rose','sweet-pea'],    why:"Quintessentially Anh Quốc — dáng thẳng của tulip kết hợp với cành hồng cong và những bông đậu thơm mỏng manh. Đây là sự kết hợp định nghĩa thẩm mỹ vườn nhà gỗ Anh.",                                                                         colors:"Hồng · Kem · Oải hương",            style:"Lãng mạn / Đồng quê", season:"Xuân" },
+    { name:"Xuân Tối Giản",           partners:['magnolia','anemone'],  why:"Ba loài hoa với dáng hình đồ họa mạnh: cốc sạch của tulip, ngôi sao của mộc lan, và mặt mắt đen của hải quỳ. Mắt đen của hải quỳ tạo điểm nhấn kịch tính trên nền trắng và hồng.",                                                          colors:"Trắng · Hồng · Mắt đen",            style:"Tối giản / Hiện đại",  season:"Xuân" },
+    { name:"Thị Trường Pastel",       partners:['freesia','peony'],     why:"Sự tươi mới đầu xuân — chùm nhỏ của freesia bao quanh mẫu đơn hùng vĩ; tulip lấp đầy bằng những đường thẳng sạch sẽ. Hương thơm của freesia mang cả bộ kết hợp. Bộ ba được chứng minh cho đám cưới và sự kiện.",                             colors:"Kem · Vàng · Hồng phấn",            style:"Tươi mới / Xa hoa",   season:"Xuân" },
+  ],
+  lily: [
+    { name:"Trắng Nhiệt Đới",         partners:['orchid','gardenia'],   why:"Ba loài hoa trắng nổi bật với tính cách hoàn toàn khác nhau: hoa ly cung cấp chiều cao, dạ lý hương cung cấp hương thơm sáp, hoa lan cung cấp đường nét kiến trúc kỳ lạ. Một trong những kết hợp trắng xa hoa nhất trong floristry.",         colors:"Trắng · Ngà · Xanh lá",             style:"Xa hoa / Nhiệt đới",  season:"Hạ" },
+    { name:"Đám Cưới Mùa Hạ",         partners:['hydrangea','freesia'], why:"Khối mây của cẩm tú cầu lấp đầy lọ xung quanh hoa ly thanh lịch cao; freesia thêm hương thơm và thân cong ở tầm trung. Kết hợp được chứng minh cho đám cưới — đẹp, lâu bền, và dễ tìm.",                                                      colors:"Trắng · Hồng-lam · Vàng",           style:"Đám cưới / Cổ điển",  season:"Hạ" },
+    { name:"Màn Sương Tím",           partners:['iris','lavender'],     why:"Những chiếc kèn trắng cao của hoa ly được diên vĩ và oải hương ở các độ cao khác nhau phản chiếu — xây dựng bảng màu hoàn toàn tím và trắng với kết cấu đứng đáng kinh ngạc.",                                                                 colors:"Tím · Tím nhạt · Trắng",            style:"Ấn tượng / Kịch tính",season:"Hạ" },
+    { name:"Vườn Cuối Hạ",            partners:['rose','chrysanthemum'],why:"Cúc kéo dài mùa khi các loài hoa khác tàn; hồng mang lại tính lãng mạn; hoa ly nâng tầm nhìn lên cao. Cùng nhau chúng bắc cầu từ cuối hạ sang đầu thu.",                                                                                       colors:"Hồng · Trắng · Vàng",               style:"Cổ điển / Vườn",      season:"Hạ–Thu" },
+  ],
+  sunflower: [
+    { name:"Mùa Gặt Bội Thu",         partners:['marigold','chrysanthemum'], why:"Bộ ba thu điển hình — tất cả ấm áp, tất cả tâm đĩa, tất cả cuối mùa. Hướng dương chiếm ưu thế ở trên; vạn thọ phân tầng ở giữa; cúc lấp đầy bên dưới. Sắp xếp thu hoạch phong phú, lễ hội.",                                       colors:"Vàng · Cam · Hổ phách",             style:"Đồng quê / Lễ hội",  season:"Thu" },
+    { name:"Cánh Đồng Provence",      partners:['lavender','freesia'],  why:"Đĩa hướng dương vàng táo bạo trước những ngọn oải hương và chùm freesia tạo cảm giác vùng quê Provence — miền Nam nước Pháp trong một bình hoa. Cả ba thịnh vượng trong nắng hè và có tính cách vui tươi.",                                    colors:"Vàng · Tím · Kem",                   style:"Đồng quê / Thơm ngát",season:"Hạ" },
+    { name:"Tiệc Vườn",               partners:['hydrangea','rose'],    why:"Hướng dương thêm chiều cao và năng lượng táo bạo; cẩm tú cầu cung cấp đám mây hồng-lam mềm mại; hồng thêm nét lãng mạn. Hướng dương nâng cặp đôi hồng-cẩm tú cầu cổ điển này lên một tầm cao mới.",                                          colors:"Vàng · Hồng · Hồng-lam",            style:"Vườn / Vui tươi",     season:"Hạ" },
+    { name:"Ấm Áp Mùa Thu",           partners:['dahlia','carnation'],  why:"Hai loài hoa táo bạo bổ sung cho đĩa hướng dương vui tươi — thược dược cung cấp chiều sâu điêu khắc, cẩm chướng lấp đầy khoảng trống bằng kết cấu. Tất cả đều mặc cam và đỏ đẹp.",                                                           colors:"Cam · Đỏ · Vàng",                   style:"Ấn tượng / Đồng quê", season:"Hạ–Thu" },
+  ],
+  orchid: [
+    { name:"Xa Hoa Nhiệt Đới",        partners:['lily','gardenia'],     why:"Ba loài trắng kiến trúc — hoa lan cung cấp bóng dáng đồ họa, hoa ly mang chiều cao và vẻ hoành tráng, dạ lý hương cung cấp hương thơm phi thường. Đây là cách cắm hoa của khách sạn sang trọng và đám cưới cao cấp.",                          colors:"Trắng · Ngà · Xanh lá",             style:"Xa hoa / Kỳ lạ",      season:"Quanh năm" },
+    { name:"Vườn Châu Á",             partners:['magnolia','jasmine'],  why:"Bảng màu Đông phương với ba loài hoa trung tâm trong văn hóa hoa châu Á. Nhài chảy bên dưới những bông mộc lan; hình dáng hình học của hoa lan neo giữ phía trên. Sâu lắng hương thơm và yên bình thị giác.",                                 colors:"Trắng · Hồng · Xanh lá",            style:"Thanh lịch / Tối giản",season:"Xuân–Hạ" },
+    { name:"Studio Hiện Đại",         partners:['iris','carnation'],    why:"Hình dạng hình học của diên vĩ phản ánh chất lượng kiến trúc của hoa lan; cẩm chướng cung cấp chất liệu lâu bền, lâu tàn. Cùng nhau chúng tạo sắp xếp hiện đại, có cấu trúc kéo dài đến hai tuần.",                                           colors:"Tím · Trắng · Đồ họa",              style:"Hiện đại / Có cấu trúc",season:"Quanh năm" },
+    { name:"Kỳ Lạ Hiện Đại",          partners:['anemone','sweet-pea'], why:"Mắt đen của hải quỳ phản chiếu cổ họng phức tạp của hoa lan; những bông đậu thơm mỏng manh thêm sự mềm mại tương phản với độ chính xác của hoa lan. Kết hợp bất ngờ nhưng thú vị.",                                                            colors:"Tím · Đen · Trắng",                 style:"Hiện đại / Kịch tính", season:"Xuân" },
+  ],
+  hydrangea: [
+    { name:"Đám Cưới Anh Cổ Điển",   partners:['rose','sweet-pea'],    why:"Bộ ba đám cưới Anh điển hình — cẩm tú cầu cung cấp khối bông gòn, hồng cung cấp vẻ đẹp và lãng mạn, đậu thơm cung cấp sự mỏng manh buông thả. Được chứng minh qua hàng nghìn đám cưới; vẫn cảm thấy tươi mới.",                              colors:"Hồng phấn · Trắng · Hồng nhạt",     style:"Đám cưới / Lãng mạn", season:"Hạ" },
+    { name:"Hạ Pháp",                 partners:['lavender','freesia'],  why:"Những ngọn oải hương và chùm freesia nép vào những chiếc đầu vòm của cẩm tú cầu, tạo kết hợp hạ Provence ngát hương. Cả ba đạt đỉnh vào tháng 6–7 và khô đẹp.",                                                                              colors:"Hồng-lam · Tím · Kem",              style:"Lãng mạn / Đồng quê", season:"Hạ" },
+    { name:"Vườn Đầy Đặn",            partners:['peony','ranunculus'],  why:"Ba loài hoa đầu tròn được tìm kiếm nhất trong floristry — một bình hoa với lượng cánh tối đa. Mẫu đơn dẫn đầu, mao lương chi tiết, cẩm tú cầu lấp đầy. Cùng nhau chúng đạt được vẻ đẹp vườn tràn đầy.",                                     colors:"Hồng · San hô · Hồng phấn",         style:"Xa hoa / Vườn",       season:"Xuân–Hạ" },
+    { name:"Kịch Tính Cuối Hạ",       partners:['dahlia','carnation'],  why:"Tông màu lam-xanh mát của cẩm tú cầu tạo tương phản nhiệt độ kịch tính với chiều sâu ấm của thược dược. Cẩm chướng lấp đầy khoảng trống với kết cấu lâu bền — kết hợp giữ đẹp 10–14 ngày.",                                                  colors:"Lam-xanh · Tím · San hô",           style:"Ấn tượng / Vườn",     season:"Hạ–Thu" },
+  ],
+  dahlia: [
+    { name:"Báu Vật Mùa Thu",         partners:['rose','anemone'],      why:"Mắt gần đen của hải quỳ là người bạn đồng hành hoàn hảo cho thược dược và hồng tông tối; hồng thêm chiều sâu nhung vào bảng màu trang sức. Kết hợp này định nghĩa sự xa hoa thu trong floristry.",                                           colors:"Đỏ đậm · Đen · Đỏ sâu",            style:"Kịch tính / Xa hoa",  season:"Thu" },
+    { name:"Lễ Hội Mùa Gặt",          partners:['sunflower','marigold'],why:"Bộ ba thu ấm áp nhất — tất cả tâm đĩa, tất cả táo bạo, tất cả cuối mùa. Cùng nhau chúng tạo sắp xếp thu hoạch phong phú, lễ hội hoạt động tốt cho bàn ăn lẫn phông nền lễ.",                                                                colors:"Cam · Vàng · Hổ phách",             style:"Đồng quê / Lễ hội",  season:"Thu" },
+    { name:"Vườn Xa Hoa",             partners:['ranunculus','hydrangea'],why:"Ba loài hoa đầu tròn; cẩm tú cầu lấp đầy thể tích, mao lương thêm chi tiết phân lớp tinh tế, thược dược làm chủ ánh nhìn. Kết hợp hạ–thu nắm bắt khu vườn tràn đầy nhất.",                                                                  colors:"San hô · Hồng phấn · Kem",          style:"Xa hoa / Vườn",       season:"Hạ–Thu" },
+    { name:"Thu Cổ Điển",             partners:['chrysanthemum','carnation'],why:"Ba loài hoa thu mạnh mẽ giữ đẹp lâu trong bình — thường 10–14 ngày. Thược dược mang kịch tính, cúc mang kết cấu, cẩm chướng lấp đầy khoảng trống. Tổ hợp đáng tin cậy và đẹp.",                                                      colors:"Tím · Đồng · Trắng",                style:"Cổ điển / Đáng tin",  season:"Thu" },
+  ],
+  anemone: [
+    { name:"Đồng Cỏ Anh",             partners:['ranunculus','sweet-pea'],why:"Ba loài hoa xuân Anh điển hình với hình dáng tương phản — mặt mở kịch tính của hải quỳ, lớp cánh chặt của mao lương, tua rua đậu thơm. Cùng nhau chúng trông như một nắm hoa hái từ vườn nhà gỗ.",                                        colors:"Tím · Hồng · Trắng",                style:"Đồng quê / Lãng mạn", season:"Xuân" },
+    { name:"Lãng Mạn Kịch Tính",      partners:['rose','dahlia'],       why:"Mắt đen tối của hải quỳ là điểm đối lập hoàn hảo cho hồng nhung và thược dược phong phú — ba loài tạo sắp xếp tông trang sức u ám, quyến rũ. Một kết hợp thu ánh mọi ánh nhìn.",                                                            colors:"Đỏ đậm · Đen · Đỏ sâu",            style:"Kịch tính / Lãng mạn",season:"Thu" },
+    { name:"Xuân Nghệ Thuật",         partners:['tulip','iris'],        why:"Ba loài hoa với sự hiện diện hình học mạnh: quạt của diên vĩ, cốc của tulip, bánh xe của hải quỳ. Mắt táo bạo của hải quỳ liên kết tulip và diên vĩ lại với nhau bằng dấu chấm đồ họa.",                                                    colors:"Tím · Lam · Mắt đen",               style:"Nghệ thuật / Ấn tượng",season:"Xuân" },
+    { name:"Tối Giản Nhật Bản",        partners:['peony','magnolia'],    why:"Bản chất đồ họa của hải quỳ tương phản mạnh mẽ với sự xa hoa của mẫu đơn và sự đơn giản của mộc lan. Mắt đen cung cấp trọng lượng thị giác ngăn bảng màu nhạt trở nên quá ngọt.",                                                          colors:"Trắng · Hồng · Mắt đen",            style:"Thanh lịch / Tối giản",season:"Xuân" },
+  ],
+  'sweet-pea': [
+    { name:"Đồng Cỏ Anh",             partners:['ranunculus','anemone'],why:"Ba loài hoa xuân Anh điển hình — những tua rua đậu thơm buông thõng từ mao lương tròn và hải quỳ đồ họa. Trông như một nắm hoa hái từ vườn nhà có tường.",                                                                                     colors:"Oải hương · Hồng · Trắng",          style:"Đồng quê / Lãng mạn", season:"Xuân" },
+    { name:"Đồng Quê Thơm Ngát",      partners:['rose','lavender'],     why:"Kết hợp ngát hương với di sản lãng mạn — cả ba gắn liền với khu vườn nhà Anh và chia sẻ tình yêu bảng màu hồng-tím nhạt. Kết hợp, chúng có mùi thơm phi thường.",                                                                             colors:"Hồng · Tím · Xanh lá",              style:"Lãng mạn / Thơm ngát",season:"Xuân–Hạ" },
+    { name:"Xuân Ngát Hương",         partners:['freesia','jasmine'],   why:"Ba trong số những loài hoa nhỏ thơm ngát nhất kết hợp — những lớp hương từ các cây bổ sung. Bó hoa này dành cho mũi cũng như mắt. Yêu thích cho các buổi lễ nơi hương thơm được chú ý.",                                                     colors:"Trắng · Kem · Oải hương",           style:"Thơm ngát / Tinh tế", season:"Xuân" },
+    { name:"Xuân Xa Hoa",             partners:['peony','tulip'],       why:"Dáng thẳng của tulip nâng những tua rua đậu thơm lên trên tâm điểm mẫu đơn hùng vĩ — bố cục kiến trúc nơi mỗi loài hoa tìm thấy tầm cao tự nhiên của mình. Định dạng đám cưới xuân mãi không cũ.",                                          colors:"Hồng phấn · Hồng · Oải hương",      style:"Xa hoa / Lãng mạn",   season:"Xuân" },
+  ],
+  freesia: [
+    { name:"Bó Hoa Thơm Ngát",        partners:['lily','jasmine'],      why:"Ba loài hoa ngát hương mạnh — ngọt ngào của hoa ly, phong phú của nhài, trái cây của freesia — phân lớp thành một bó duy nhất. Kết hợp hương thơm là phi thường; đây là bó hoa lấp đầy cả phòng.",                                           colors:"Vàng · Trắng · Kem",                style:"Thơm ngát / Cổ điển", season:"Hạ" },
+    { name:"Hương Xuân",              partners:['rose','lavender'],     why:"Hồng và freesia là đồng minh hương thơm tự nhiên — cả hai hoa và ngọt. Oải hương thêm tương phản màu sắc và nốt thảo mộc làm nền cho sự ngọt ngào.",                                                                                          colors:"Kem · Hồng · Tím",                  style:"Lãng mạn / Đồng quê", season:"Xuân–Hạ" },
+    { name:"Chợ Xuân",                partners:['tulip','sweet-pea'],   why:"Kết hợp chợ hoa tươi, vui tươi — tất cả ba ở đỉnh cao đầu xuân và rộng rãi. Tulip cung cấp kết cấu, đậu thơm thêm sự tinh tế, freesia cung cấp hương thơm và chuyển động.",                                                                   colors:"Vàng · Đỏ · Oải hương",             style:"Tươi mới / Vui tươi",  season:"Xuân" },
+    { name:"Hương Hiện Đại",          partners:['orchid','carnation'],  why:"Chất lượng kiến trúc của hoa lan nâng freesia và cẩm chướng lên thành sắp xếp đương đại. Cẩm chướng cung cấp chất liệu lâu bền; hoa lan cung cấp đường đồ họa; freesia cung cấp hương thơm mà hai loài kia thiếu.",                           colors:"Trắng · Tím · Vàng nhạt",           style:"Hiện đại / Tinh tế",  season:"Quanh năm" },
+  ],
+  iris: [
+    { name:"Cánh Đồng Hà Lan",        partners:['lavender','tulip'],    why:"Kết hợp cảnh quan Hà Lan mang tính biểu tượng nhất — diên vĩ, tulip và oải hương mọc cùng nhau trên những cánh đồng củ Hà Lan. Cả ba đạt đỉnh mùa xuân, chia sẻ tông tím-lam, và tạo bố cục đứng đẹp.",                                     colors:"Tím · Tím nhạt · Lam",              style:"Ấn tượng / Cổ điển",  season:"Xuân" },
+    { name:"Vườn Xanh",               partners:['lily','hydrangea'],    why:"Ba loài hoa với tông lam, tím, hoặc trắng — kết hợp mùa hạ màu mát hiếm gặp. Diên vĩ cung cấp kết cấu đồ họa táo bạo; hoa ly thêm chiều cao; cẩm tú cầu lấp đầy bình với khối đám mây.",                                                     colors:"Tím-lam · Trắng · Hồng-lam",        style:"Cổ điển / Thanh lịch",season:"Hạ" },
+    { name:"Tranh Nghệ Thuật",        partners:['anemone','ranunculus'],why:"Ba loài hoa được yêu thích trong tranh tĩnh vật Hà Lan thế kỷ 17 — hình học táo bạo của diên vĩ, mắt kịch tính của hải quỳ, cánh phân lớp của mao lương. Kết hợp này trông như bức tranh cổ điển sống động.",                                colors:"Tím · Đen · Hồng",                   style:"Nghệ thuật / Hội họa", season:"Xuân" },
+    { name:"Tím Cổ Điển",             partners:['rose','carnation'],    why:"Hồng làm mềm hình dáng mạnh của diên vĩ; cẩm chướng cung cấp chất liệu lâu bền, kéo dài tuổi thọ sắp xếp. Cùng với diên vĩ, bộ ba đáng tin cậy này hoạt động cho mọi dịp.",                                                                 colors:"Tím · Hồng · Đỏ",                   style:"Cổ điển / Đáng tin",  season:"Xuân–Hạ" },
+  ],
+  carnation: [
+    { name:"Xa Hoa Tiết Kiệm",        partners:['rose','chrysanthemum'],why:"Ba loài hoa đáng tin nhất và phổ biến nhất của floristry — cẩm chướng kéo dài tuổi bình, hồng mang lại vẻ đẹp, cúc mang lại kết cấu và thể tích. Cùng nhau chúng chứng minh rằng hoa giá bình dân cũng có thể đẹp.",                          colors:"Đỏ · Hồng · Trắng",                 style:"Cổ điển / Đáng tin",  season:"Quanh năm" },
+    { name:"Studio Hiện Đại",         partners:['orchid','freesia'],    why:"Độ chính xác kiến trúc của hoa lan và những chùm thơm của freesia biến đổi cẩm chướng khiêm tốn thành sắp xếp tinh tế. Kết hợp này chứng minh rằng vị thế hoa hoàn toàn phụ thuộc vào bố cục.",                                              colors:"Trắng · Tím · Vàng",                style:"Hiện đại / Nâng tầm", season:"Quanh năm" },
+    { name:"Lễ Hội Mùa Thu",          partners:['dahlia','marigold'],   why:"Những loài hoa thu ấm tông cam, đỏ, vàng; cẩm chướng lấp đầy khoảng trống với kết cấu đám mây và kéo dài tuổi thọ đáng kể. Kết hợp phong phú, lễ hội cho mùa thu.",                                                                          colors:"Cam · Đỏ · Vàng",                   style:"Ấn tượng / Lễ hội",   season:"Thu" },
+    { name:"Hạ Cổ Điển",              partners:['lily','iris'],         why:"Chiều cao của hoa ly và vai trò chất liệu của cẩm chướng bổ sung hoàn hảo cho những ngọn diên vĩ — sắp xếp có cấu trúc, thanh lịch màu lam, tím và trắng giữ được 10–14 ngày.",                                                               colors:"Trắng · Tím · Hồng",                style:"Thanh lịch / Cổ điển",season:"Hạ" },
+  ],
+  chrysanthemum: [
+    { name:"Thu Hoạch Mùa Thu",       partners:['sunflower','marigold'],why:"Bộ ba thu điển hình — tất cả ấm tông, tất cả mạnh mẽ, tất cả được yêu thích cho sắp xếp mùa gặt. Kết cấu pompom mềm của cúc tương phản đĩa táo bạo của hướng dương và cánh xếp của vạn thọ.",                                               colors:"Vàng · Cam · Hổ phách",             style:"Đồng quê / Mùa vụ",  season:"Thu" },
+    { name:"Vườn Cuối Hạ",            partners:['rose','lily'],         why:"Cúc kéo dài mùa khi các loài hoa khác tàn; hồng cung cấp lãng mạn; hoa ly cung cấp chiều cao kiến trúc. Cùng nhau chúng bắc cầu từ cuối hạ sang đầu thu với sắp xếp vườn phong phú.",                                                         colors:"Hồng · Trắng · Vàng",               style:"Cổ điển / Vườn",      season:"Hạ–Thu" },
+    { name:"Thu Cổ Điển",             partners:['dahlia','carnation'],  why:"Ba loài hoa thu mạnh mẽ giữ đặc biệt lâu trong bình — thường 10–14 ngày. Thược dược mang kịch tính, cúc mang kết cấu, cẩm chướng lấp đầy khoảng trống. Bộ ba đáng tin cậy và đẹp.",                                                          colors:"Tím · Đồng · Trắng",                style:"Cổ điển / Đáng tin",  season:"Thu" },
+    { name:"Vườn Đương Đại",          partners:['orchid','iris'],       why:"Tính kỳ lạ của hoa lan và kết cấu mạnh của diên vĩ tạo khung đương đại cho những chùm cúc. Kết hợp bất ngờ nâng cúc vượt xa những liên kết truyền thống.",                                                                                     colors:"Trắng · Tím · Vàng",                style:"Hiện đại / Có cấu trúc",season:"Thu–Quanh năm" },
+  ],
+  lavender: [
+    { name:"Lãng Mạn Pháp",          partners:['rose','freesia'],      why:"Bộ ba Provence cổ điển — cả ba thơm ngát, cả ba lãng mạn, cả ba trung tâm trong văn hóa hoa Pháp. Hồng và freesia là đồng minh hương thơm tự nhiên; oải hương thêm tương phản màu sắc và nốt thảo mộc.",                                    colors:"Tím · Hồng · Kem",                  style:"Lãng mạn / Thơm ngát",season:"Hạ" },
+    { name:"Đồng Cỏ Provence",       partners:['sweet-pea','ranunculus'],why:"Ba loài hoa xuân và hạ tinh tế trong bảng màu tím-hồng nhạt — kết hợp đồng cỏ đồng quê thoáng đãng. Cả ba mọc thấp và xơ, tạo sắp xếp tự nhiên, không cầu kỳ.",                                                                             colors:"Oải hương · Hồng · Trắng",          style:"Đồng quê / Đồng quê", season:"Xuân–Hạ" },
+    { name:"Cánh Đồng Hà Lan",       partners:['iris','tulip'],        why:"Vùng quê Hà Lan trong một bình hoa — diên vĩ và tulip phản chiếu tông tím của oải hương ở các độ cao và tầm vóc khác nhau. Cả ba là cây củ hoặc thân rễ mọc cùng nhau trên những cánh đồng củ Hà Lan nổi tiếng.",                           colors:"Tím · Tím nhạt · Lam",              style:"Cổ điển / Ấn tượng",  season:"Xuân" },
+    { name:"Trắng và Tím",           partners:['jasmine','gardenia'],  why:"Những bông hoa trắng tăng cường màu sắc và khuếch đại hương thơm của oải hương — nhài và dạ lý hương mang hương thơm mạnh. Cùng nhau chúng tạo kết hợp đơn sắc-cộng-tím ngát hương mạnh.",                                                 colors:"Tím · Trắng · Ngà",                 style:"Thơm ngát / Thanh lịch",season:"Hạ" },
+  ],
+  marigold: [
+    { name:"Lễ Hội Thu Hoạch",       partners:['sunflower','dahlia'],  why:"Những loài hoa thu to lớn nhất, táo bạo nhất cùng nhau — một lễ kỷ niệm tông ấm thu hoạch. Tất cả đều hướng mặt về phía mặt trời trong màu cam bổ sung, vàng và đỏ. Không gì nói mùa thu lễ hội như bộ ba này.",                            colors:"Cam · Vàng · Đỏ",                   style:"Ấn tượng / Lễ hội",   season:"Thu" },
+    { name:"Thu Cổ Điển",            partners:['chrysanthemum','carnation'],why:"Ba loài hoa thu lâu bền trong tông ấm hòa hợp — kết hợp mùa vụ đáng tin cậy giữ trong nhiều tuần. Tất cả đều có sẵn quanh năm nhưng gắn chặt nhất với sự ấm áp cuối mùa.",                                                               colors:"Cam · Đồng · Vàng",                 style:"Cổ điển / Đáng tin",  season:"Thu" },
+    { name:"Vườn Gia Vị",            partners:['rose','freesia'],      why:"Cam sống động của vạn thọ nâng bảng màu của hồng nhạt; freesia thêm hương thơm và sự nhẹ nhàng cân bằng cường độ của vạn thọ. Cặp đôi ấm-mát bất ngờ nhưng thành công.",                                                                     colors:"Cam · Hồng · Kem",                  style:"Đồng quê / Ấm áp",   season:"Hạ–Thu" },
+    { name:"Điểm Nhấn Nhiệt Đới",   partners:['orchid','lily'],       why:"Màu sắc sống động của vạn thọ đóng vai trò điểm nhấn táo bạo trước hoa ly thanh lịch và hoa lan kiến trúc. Bất ngờ hiện đại — cam-vàng của vạn thọ trước hoa ly và hoa lan trắng thuần túy cảm thấy đương đại và đồ họa.",                   colors:"Cam · Trắng · Vàng",                style:"Hiện đại / Nhiệt đới",season:"Hạ" },
+  ],
+  magnolia: [
+    { name:"Vườn Trắng",              partners:['gardenia','jasmine'],  why:"Ba loài hoa trắng được tôn kính nhất của floristry, mỗi loài có hương thơm và hình dạng riêng biệt — cốc ngôi sao của mộc lan, hoa hồng sáp của dạ lý hương, những ngôi sao chùm của nhài. Kết hợp, chúng tạo hương thơm phi thường.",      colors:"Trắng · Ngà · Kem",                 style:"Tối giản / Thơm ngát",season:"Xuân–Hạ" },
+    { name:"Xuân Thanh Lịch",         partners:['peony','ranunculus'],  why:"Những cốc mở đơn giản của mộc lan bên cạnh mẫu đơn xa hoa và mao lương phân lớp — mùa xuân ở vẻ thanh lịch nhất. Hình dạng sạch sẽ của mộc lan ngăn sắp xếp trở nên quá ngọt; mẫu đơn cung cấp kịch tính.",                               colors:"Hồng nhạt · Hồng phấn · Kem",       style:"Thanh lịch / Xa hoa", season:"Xuân" },
+    { name:"Tối Giản Nhật Bản",       partners:['orchid','lily'],       why:"Ba loài hoa trung tâm trong nghệ thuật cắm hoa Nhật Bản (ikebana) — hình dạng kiến trúc sạch sẽ, đường kết cấu, và sự thanh lịch kiềm chế. Kết hợp trân trọng từng cành riêng lẻ hơn là tập hợp lại.",                                     colors:"Trắng · Ngà · Xanh lá",             style:"Tối giản / Nghệ thuật",season:"Xuân–Hạ" },
+    { name:"Kịch Tính Mềm Mại",       partners:['anemone','sweet-pea'], why:"Mắt đen đồ họa của hải quỳ tạo kịch tính trước sự thuần khiết của mộc lan; đậu thơm thêm chuyển động buông thả tinh tế làm mềm bố cục. Ba loài chứng minh kịch tính và tinh tế không phải là đối lập.",                                    colors:"Trắng · Đen · Hồng nhạt",           style:"Lãng mạn / Nghệ thuật",season:"Xuân" },
+  ],
+  gardenia: [
+    { name:"Vườn Trắng",              partners:['magnolia','jasmine'],  why:"Kết hợp trắng thơm ngát nhất trong floristry — ngôi sao của mộc lan, hoa hồng sáp của dạ lý hương, những ngôi sao chùm của nhài. Mỗi loài hoa là phi thường riêng lẻ; cùng nhau chúng tạo sắp xếp lấp đầy cả căn phòng bằng hương thơm.",  colors:"Trắng · Ngà · Kem",                 style:"Tối giản / Thơm ngát",season:"Xuân–Hạ" },
+    { name:"Trắng Nhiệt Đới",         partners:['orchid','lily'],       why:"Ba loài trắng kiến trúc kịch tính — hoa ly cung cấp chiều cao và vẻ hoành tráng, hoa lan cung cấp đường đồ họa, dạ lý hương cung cấp hương thơm phi thường. Sắp xếp của địa điểm cao cấp và đám cưới đích đến.",                             colors:"Trắng · Ngà · Xanh lá",             style:"Xa hoa / Kỳ lạ",      season:"Hạ" },
+    { name:"Đám Cưới Trắng",          partners:['rose','sweet-pea'],    why:"Bảng màu cô dâu cổ điển — sự hoàn hảo sáp của dạ lý hương và hương thơm mạnh mẽ bên cạnh sự mềm mại của hồng và đậu thơm. Dạ lý hương là hoa đám cưới được dùng hàng thế kỷ; kết hợp này giải thích tại sao.",                           colors:"Trắng · Hồng phấn · Kem",           style:"Đám cưới / Lãng mạn", season:"Xuân–Hạ" },
+    { name:"Cổ Điển Thơm Ngát",       partners:['carnation','freesia'], why:"Ba loài hoa trắng, thơm ngát, lâu bền — kết hợp đáng tin cho sắp xếp trưng bày lâu dài. Dạ lý hương neo giữ bằng hương thơm; freesia thêm chuyển động; cẩm chướng kéo dài tuổi thọ đến 2+ tuần.",                                         colors:"Trắng · Kem · Vàng",                style:"Cổ điển / Đáng tin",  season:"Quanh năm" },
+  ],
+  jasmine: [
+    { name:"Vườn Thơm Ngát",          partners:['gardenia','magnolia'], why:"Ba loài trắng được định nghĩa bởi hương thơm — nhài chảy bên dưới những dạ lý hương và mộc lan lớn hơn, tạo sắp xếp tầng lớp, thác đổ. Một trong những kết hợp hương thơm phi thường nhất thế giới hoa.",                                   colors:"Trắng · Ngà · Kem",                 style:"Tối giản / Thơm ngát",season:"Xuân–Hạ" },
+    { name:"Bó Hoa Hương",            partners:['freesia','sweet-pea'], why:"Ba trong số những loài hoa nhỏ thơm ngát nhất kết hợp — những lớp hương từ các cây bổ sung. Bó hoa này dành cho mũi cũng như mắt. Được yêu thích cho các buổi lễ nơi hương thơm nên được chú ý.",                                           colors:"Trắng · Kem · Oải hương",           style:"Thơm ngát / Tinh tế", season:"Xuân" },
+    { name:"Nước Hoa Pháp",           partners:['rose','lavender'],     why:"Những yếu tố tạo nên nước hoa Pháp — nhài và hồng là cặp đôi hương thơm cổ điển của ngành nước hoa. Oải hương thêm nốt thảo mộc và tông tím tương phản. Bộ ba lãng mạn, thơm ngát sâu sắc.",                                              colors:"Trắng · Hồng · Tím",                style:"Lãng mạn / Thơm ngát",season:"Hạ" },
+    { name:"Vui Mừng Nhiệt Đới",      partners:['orchid','lily'],       why:"Dây nhài quấn quanh những thân hoa lan kiến trúc và hoa ly cao — cảm giác vườn nhiệt đới. Hương thơm mạnh của nhài biến đổi một kết hợp vốn đã đẹp thành điều gì đó phi thường.",                                                          colors:"Trắng · Ngà · Xanh lá",             style:"Nhiệt đới / Kỳ lạ",   season:"Hạ" },
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type":"Question", "name":"Hoa gì hợp với hoa hồng?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Hoa hồng kết hợp đẹp với hoa mẫu đơn và cẩm tú cầu cho vẻ lãng mạn xa hoa; oải hương và freesia cho kết hợp thơm ngát kiểu Provence; thược dược và hải quỳ cho sắp xếp thu kịch tính; hoặc dạ lý hương và mộc lan cho bố cục trắng tối giản." } },
+    { "@type":"Question", "name":"Hoa gì hợp với hoa mẫu đơn?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Hoa mẫu đơn kết hợp tốt nhất với hồng và mao lương cho sắp xếp đầu tròn xa hoa; đậu thơm và hải quỳ cho cảm giác đồng quê vui tươi; mộc lan và diên vĩ cho kết hợp thanh lịch kiểu Nhật; hoặc cẩm tú cầu và tulip cho vẻ tiệc vườn cổ điển." } },
+    { "@type":"Question", "name":"Hoa gì hợp với hoa hướng dương?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Hoa hướng dương kết hợp hoàn hảo với vạn thọ và cúc cho sắp xếp thu hoạch mùa thu; oải hương và freesia cho kết hợp hạ Provence; cẩm tú cầu và hồng cho tiệc vườn; hoặc thược dược và cẩm chướng cho tông thu ấm áp." } },
+    { "@type":"Question", "name":"Kết hợp hoa nào đẹp cho bó cưới?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Kết hợp đám cưới cổ điển bao gồm: hồng + mẫu đơn + cẩm tú cầu cho lãng mạn xa hoa; hoa ly + hoa lan + dạ lý hương cho tối giản sang trọng; đậu thơm + hồng + cẩm tú cầu cho vườn Anh; hoặc mẫu đơn + mao lương + đậu thơm cho bó xuân thân mật. Chọn hoa đúng mùa để có chất lượng và giá trị tốt nhất." } },
+    { "@type":"Question", "name":"Hoa gì trông đẹp cùng nhau?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Hoa kết hợp tốt khi chúng có màu bổ sung nhau, mùa vụ tương thích, và hình dạng tương phản (một tròn, một nhọn, một buông). Nguyên tắc cổ điển: hoa đầu tròn (hồng, mẫu đơn, thược dược) bên cạnh hoa lấp đầy (cẩm chướng, freesia) và hoa kết cấu (diên vĩ, hoa ly). Dùng công cụ gợi ý kết hợp này để tìm các cặp đôi cụ thể cho loài hoa chủ đạo của bạn." } },
+  ]
+};
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Gợi ý kết hợp hoa",
+  "description": "Công cụ miễn phí để tìm loài hoa nào kết hợp tốt với nhau — nhận gợi ý kết hợp cho bất kỳ loài hoa nào với câu chuyện màu sắc, ghi chú phong cách, và hướng dẫn theo mùa.",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Web",
+  "url": `${siteUrl}/vi/tools/combination-builder/`,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "inLanguage": "vi",
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Gợi Ý Kết Hợp Hoa — Hoa Gì Hợp Với Nhau?"
+  description="Tìm bộ đôi hoa hoàn hảo: chọn bất kỳ loài hoa nào và nhận 4 kết hợp được chọn lọc với câu chuyện màu sắc, ghi chú phong cách, và hướng dẫn theo mùa. Bao gồm tất cả 20 loài hoa."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/vi/">Trang chủ</a></li><li aria-hidden="true">›</li>
+        <li><a href="/vi/tools/">Công cụ</a></li><li aria-hidden="true">›</li>
+        <li aria-current="page">Gợi ý kết hợp hoa</li>
+      </ol>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="max-w-4xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Công cụ miễn phí</p>
+      <h1 class="page-title">Gợi Ý Kết Hợp Hoa</h1>
+      <p class="page-sub">Chọn loài hoa chủ đạo và khám phá những loài hoa nào kết hợp tốt với nó — với câu chuyện màu sắc, ghi chú phong cách, và tính sẵn có theo mùa cho mỗi kết hợp.</p>
+      <a href="/tools/combination-builder/" class="lang-switch-link">🇬🇧 View in English</a>
+    </div>
+  </div>
+
+  <div class="tool-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-12">
+
+      <div class="picker-section">
+        <h2 class="picker-heading">Chọn loài hoa chủ đạo</h2>
+        <p class="picker-sub">Chọn loài hoa bạn muốn xây dựng bó hoa xung quanh:</p>
+        <div class="flower-grid" id="flowerGrid">
+          {FLOWERS.map(f => (
+            <button class="flower-btn" data-id={f.id}>
+              <span class="fb-emoji">{f.emoji}</span>
+              <span class="fb-name">{f.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="results-section" id="resultsSection" hidden>
+        <div class="results-intro" id="resultsIntro"></div>
+        <div class="combos-grid" id="combosGrid"></div>
+        <div class="results-cta" id="resultsCta"></div>
+      </div>
+
+      <div class="faq-outer">
+        <h2 class="faq-title">Câu Hỏi Về Kết Hợp Hoa</h2>
+        <div class="faq-list">
+          {faqSchema.mainEntity.map(item => (
+            <div class="faq-item">
+              <button class="faq-q"><span>{item.name}</span><span class="faq-icon">+</span></button>
+              <div class="faq-a" hidden><p>{item.acceptedAnswer.text}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:560px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+  .tool-wrap { background:var(--ivory); }
+  .picker-section { background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:2rem; margin-bottom:1.5rem; }
+  .picker-heading { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:var(--mauve); margin:0 0 0.3rem; }
+  .picker-sub { font-family:'Jost',sans-serif; font-size:0.84rem; color:var(--taupe); font-weight:300; margin:0 0 1.5rem; }
+  .flower-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:0.5rem; }
+  .flower-btn { display:flex; flex-direction:column; align-items:center; gap:0.25rem; padding:0.75rem 0.5rem; border:1.5px solid var(--ivory-dark); border-radius:12px; background:var(--ivory); cursor:pointer; transition:all 0.18s; }
+  .flower-btn:hover { border-color:var(--blush); background:rgba(232,164,176,0.08); transform:translateY(-1px); }
+  .flower-btn.active { border-color:var(--blush-dark); background:rgba(196,122,138,0.12); box-shadow:0 0 0 3px rgba(196,122,138,0.15); }
+  .fb-emoji { font-size:1.6rem; }
+  .fb-name { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:500; color:var(--mauve); text-align:center; }
+  .results-section { animation:fadeUp 0.4s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .ri-title { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:300; color:var(--mauve); margin:0 0 0.3rem; }
+  .ri-sub { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); font-weight:300; margin:0 0 1.5rem; }
+  .combos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.25rem; margin-bottom:1.5rem; }
+  .combo-card { background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:1.75rem; transition:all 0.22s; }
+  .combo-card:hover { border-color:var(--blush); box-shadow:0 6px 24px rgba(196,122,138,0.1); transform:translateY(-2px); }
+  .cc-number { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--blush-dark); margin-bottom:0.5rem; }
+  .cc-name { font-family:'Cormorant Garamond',serif; font-size:1.35rem; font-weight:600; color:var(--mauve); margin:0 0 1rem; }
+  .cc-partners { display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap; }
+  .cc-partner { display:flex; align-items:center; gap:0.4rem; background:rgba(232,164,176,0.1); border:1px solid rgba(196,122,138,0.25); border-radius:999px; padding:0.3rem 0.75rem; text-decoration:none; transition:all 0.18s; }
+  .cc-partner:hover { background:rgba(196,122,138,0.15); border-color:var(--blush-dark); }
+  .cc-p-emoji { font-size:0.95rem; }
+  .cc-p-name { font-family:'Jost',sans-serif; font-size:0.75rem; font-weight:500; color:var(--mauve); }
+  .cc-why { font-family:'Jost',sans-serif; font-size:0.83rem; color:var(--text-mid); line-height:1.8; font-weight:300; margin-bottom:1.1rem; }
+  .cc-meta { display:flex; flex-direction:column; gap:0.4rem; }
+  .cc-colors { display:flex; align-items:center; gap:0.5rem; }
+  .cc-colors-dot { width:8px; height:8px; border-radius:50%; background:linear-gradient(135deg,var(--blush) 0%,var(--gold) 100%); flex-shrink:0; }
+  .cc-colors-text { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); font-style:italic; }
+  .cc-badges { display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.2rem; }
+  .cc-badge { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:500; letter-spacing:0.06em; padding:0.2rem 0.6rem; border-radius:999px; }
+  .cc-badge-style { background:rgba(232,164,176,0.2); color:var(--blush-dark); }
+  .cc-badge-season { background:rgba(200,149,106,0.12); color:var(--gold); }
+  .results-cta { text-align:center; padding:1.5rem; background:white; border:1px solid var(--ivory-dark); border-radius:16px; margin-bottom:1.5rem; }
+  .rc-text { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); font-weight:300; margin:0 0 0.75rem; }
+  .rc-link { font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; color:var(--blush-dark); text-decoration:none; border:1.5px solid var(--blush); padding:0.5rem 1.25rem; border-radius:10px; display:inline-block; transition:all 0.2s; }
+  .rc-link:hover { background:var(--blush-dark); color:white; }
+  .faq-outer { margin-top:3rem; }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.5rem,3vw,2.2rem); font-weight:300; color:var(--mauve); margin:0 0 1.5rem; }
+  .faq-list { display:grid; grid-template-columns:1fr; gap:0.6rem; }
+  @media (min-width:900px) { .faq-list { grid-template-columns:1fr 1fr; } }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.9rem 1.2rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.88rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.1rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.2s; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.2rem 0.9rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text-mid); line-height:1.85; margin:0; font-weight:300; }
+</style>
+
+<script define:vars={{ COMBOS, flowerMap }}>
+  const section = document.getElementById('resultsSection');
+  const grid = document.getElementById('combosGrid');
+  const intro = document.getElementById('resultsIntro');
+  const cta = document.getElementById('resultsCta');
+
+  document.querySelectorAll('.flower-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.flower-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.id;
+      showCombinations(id);
+      section.hidden = false;
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function showCombinations(id) {
+    const hero = flowerMap[id];
+    const combos = COMBOS[id] || [];
+
+    intro.innerHTML = `
+      <h2 class="ri-title">${hero.emoji} Hoa kết hợp với ${hero.name}</h2>
+      <p class="ri-sub">${combos.length} kết hợp được chọn lọc — câu chuyện màu sắc, ghi chú phong cách và hướng dẫn theo mùa đầy đủ.</p>
+    `;
+
+    grid.innerHTML = combos.map((c, i) => {
+      const partners = c.partners.map(pid => {
+        const p = flowerMap[pid];
+        return `<a href="/vi/learn/${pid}/" class="cc-partner"><span class="cc-p-emoji">${p.emoji}</span><span class="cc-p-name">${p.name}</span></a>`;
+      }).join('');
+
+      return `
+        <div class="combo-card">
+          <div class="cc-number">Kết hợp ${i + 1} trên ${combos.length}</div>
+          <h3 class="cc-name">${c.name}</h3>
+          <div class="cc-partners">${partners}</div>
+          <p class="cc-why">${c.why}</p>
+          <div class="cc-meta">
+            <div class="cc-colors">
+              <span class="cc-colors-dot"></span>
+              <span class="cc-colors-text">${c.colors}</span>
+            </div>
+            <div class="cc-badges">
+              <span class="cc-badge cc-badge-style">${c.style}</span>
+              <span class="cc-badge cc-badge-season">${c.season}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    cta.innerHTML = `
+      <p class="rc-text">Muốn biết mẹo chăm sóc, tính theo mùa và hơn thế nữa về ${hero.name}?</p>
+      <a href="/vi/learn/${id}/" class="rc-link">${hero.emoji} Đọc Hướng Dẫn ${hero.name} →</a>
+    `;
+  }
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => { el.classList.remove('open'); el.querySelector('.faq-a').hidden = true; });
+      if (!open) { item.classList.add('open'); item.querySelector('.faq-a').hidden = false; }
+    });
+  });
+</script>

@@ -1,0 +1,395 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const lang = 'en' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/combination-builder/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/combination-builder/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/combination-builder/` },
+];
+const breadcrumbs = [
+  { name: 'Home', url: `${siteUrl}/` },
+  { name: 'Tools', url: `${siteUrl}/tools/` },
+  { name: 'Flower Combination Suggester', url: `${siteUrl}/tools/combination-builder/` },
+];
+
+const FLOWERS = [
+  { id: 'rose',         name: 'Rose',          emoji: '🌹' },
+  { id: 'peony',        name: 'Peony',         emoji: '🌸' },
+  { id: 'ranunculus',   name: 'Ranunculus',    emoji: '🌸' },
+  { id: 'tulip',        name: 'Tulip',         emoji: '🌷' },
+  { id: 'lily',         name: 'Lily',          emoji: '🌷' },
+  { id: 'sunflower',    name: 'Sunflower',     emoji: '🌻' },
+  { id: 'orchid',       name: 'Orchid',        emoji: '🌺' },
+  { id: 'hydrangea',    name: 'Hydrangea',     emoji: '💐' },
+  { id: 'dahlia',       name: 'Dahlia',        emoji: '🌸' },
+  { id: 'anemone',      name: 'Anemone',       emoji: '🌸' },
+  { id: 'sweet-pea',    name: 'Sweet Pea',     emoji: '🌸' },
+  { id: 'freesia',      name: 'Freesia',       emoji: '🌸' },
+  { id: 'iris',         name: 'Iris',          emoji: '💜' },
+  { id: 'carnation',    name: 'Carnation',     emoji: '🌺' },
+  { id: 'chrysanthemum',name: 'Chrysanthemum', emoji: '🌼' },
+  { id: 'lavender',     name: 'Lavender',      emoji: '💜' },
+  { id: 'marigold',     name: 'Marigold',      emoji: '🌼' },
+  { id: 'magnolia',     name: 'Magnolia',      emoji: '🌸' },
+  { id: 'gardenia',     name: 'Gardenia',      emoji: '🤍' },
+  { id: 'jasmine',      name: 'Jasmine',       emoji: '🌼' },
+];
+
+const flowerMap = Object.fromEntries(FLOWERS.map(f => [f.id, f]));
+
+const COMBOS: Record<string, Array<{name:string;partners:[string,string];why:string;colors:string;style:string;season:string}>> = {
+  rose: [
+    { name:"The Lush Romantic",      partners:['peony','hydrangea'],   why:"Three full-headed flowers at different scales — peony commands, rose charms, hydrangea fills. Layered petals in matching blush tones create an opulent, garden-picked look that defines classic wedding floristry.",                         colors:"Blush · Ivory · Soft rose",         style:"Romantic / Wedding", season:"Spring–Summer" },
+    { name:"French Countryside",     partners:['lavender','freesia'],  why:"Lavender spikes add vertical movement and fragrance; freesia's arching clusters add height and scent. Together with rose they recreate the classic Provençal perfumery palette — three of France's most beloved garden flowers.",         colors:"Purple · Cream · Pale yellow",      style:"Romantic / Rustic",  season:"Spring–Summer" },
+    { name:"Jewel Autumn",           partners:['dahlia','anemone'],    why:"Dahlias match rose's opulence; anemone's near-black eye creates striking contrast against velvety petals. Rich jewel tones of burgundy, deep red, and black tie this into a dramatic late-season arrangement.",                           colors:"Burgundy · Deep red · Black",       style:"Dramatic / Bold",    season:"Autumn" },
+    { name:"Modern Monochrome",      partners:['gardenia','magnolia'], why:"Three white and cream blooms with utterly different forms — rose's layered cup, gardenia's waxy perfection, magnolia's star. Monochromatic compositions at their most sophisticated; scent from all three flowers is extraordinary.",      colors:"White · Ivory · Cream",             style:"Minimal / Elegant",  season:"Spring–Summer" },
+  ],
+  peony: [
+    { name:"Triple Luxury",          partners:['rose','ranunculus'],   why:"Three full-petaled centrepieces at different scales — peony is the showstopper, rose is the hero, ranunculus is the sweet detail. The same layered silhouette repeated creates depth without monotony.",                                  colors:"Blush · Pink · Ivory",              style:"Lush / Wedding",     season:"Spring" },
+    { name:"Springtime Whimsy",      partners:['sweet-pea','anemone'], why:"Sweet pea trails add airiness and movement against the grand peony; anemone's poppy-like form with its dark eye creates a graphic counterpoint to the peony's fullness. A carefree, meadow-inspired spring bouquet.",                    colors:"Soft pink · Purple · White",        style:"Romantic / Cottage", season:"Spring" },
+    { name:"Japanese Spring",        partners:['magnolia','iris'],     why:"Magnolia's starlike blooms pair with iris's geometric beauty — peony provides the lush counterpoint. This combination draws on East Asian flower-arranging traditions where contrasting forms are valued over matching.",                    colors:"Pale pink · White · Violet",        style:"Elegant / Artistic", season:"Spring" },
+    { name:"Garden Party",           partners:['hydrangea','tulip'],   why:"Hydrangea fills the vase with cloud-like mass; tulip adds upright architectural structure; peony is the focal star that draws the eye. Three spring garden favourites that grow in the same beds.",                                         colors:"Pink · Blue-pink · Cream",          style:"Garden / Classic",   season:"Spring–Summer" },
+  ],
+  ranunculus: [
+    { name:"Meadow Dream",           partners:['anemone','sweet-pea'], why:"All three are delicate spring blooms with contrasting silhouettes — ranunculus's tight layers, anemone's open face, sweet pea's trailing tendrils. Together they read as a wild meadow handful rather than a formal arrangement.",        colors:"Pink · Purple · White",             style:"Romantic / Cottage", season:"Spring" },
+    { name:"Spring Market Bunch",    partners:['tulip','freesia'],     why:"A classic continental market-stall combination: upright tulips contrast round ranunculus; freesia adds fragrance and arching clusters. This trio feels effortlessly fresh and season-perfect.",                                             colors:"Yellow · Red · Cream",              style:"Fresh / Classic",    season:"Spring" },
+    { name:"Provence Romance",       partners:['rose','lavender'],     why:"Rose and ranunculus are both full-petaled beauties that pair naturally; lavender bridges them with scent and purple-grey tones that complement blush and pink. A softly fragrant, countryside-romantic combination.",                       colors:"Blush · Purple · Sage-green",       style:"Romantic / Rustic",  season:"Spring–Summer" },
+    { name:"Painterly Still Life",   partners:['iris','magnolia'],     why:"Iris's bold geometry, magnolia's starlike cups, and ranunculus's layered petals create a trio that reads like a Dutch still-life painting — three distinct flower forms that share a soft, natural colour palette.",                       colors:"Purple · White · Soft pink",        style:"Artistic / Elegant", season:"Spring" },
+  ],
+  tulip: [
+    { name:"Dutch Spring",           partners:['iris','ranunculus'],   why:"Irises and tulips grow in the same Dutch fields and are natural partners; ranunculus softens the structure with rounded layers. All three peak in spring, making them always available and fresh together.",                                  colors:"Purple · Orange · Yellow",          style:"Bold / Classic",     season:"Spring" },
+    { name:"English Garden",         partners:['rose','sweet-pea'],    why:"Quintessentially English — tulip's upright form paired with arching rose stems and sweet pea's delicate trailing flowers. This is the combination that defined the English cottage-garden aesthetic.",                                       colors:"Pink · Cream · Lavender",           style:"Romantic / Cottage", season:"Spring" },
+    { name:"Minimalist Spring",      partners:['magnolia','anemone'],  why:"Three flowers with strong graphic presence: tulip's clean cup, magnolia's star, and anemone's dark-eyed face. The near-black anemone eye provides a dramatic punctuation against the white and pink palette.",                             colors:"White · Pink · Black-eye",          style:"Minimal / Modern",   season:"Spring" },
+    { name:"Pastel Market",          partners:['freesia','peony'],     why:"Early-spring freshness — freesia's small clusters frame the grand peony; tulips fill in with clean upright lines. Freesia's fragrance carries the whole combination. A proven wedding and event trio.",                                     colors:"Cream · Yellow · Blush",            style:"Fresh / Lush",       season:"Spring" },
+  ],
+  lily: [
+    { name:"Tropical White",         partners:['orchid','gardenia'],   why:"Three statement white flowers with utterly different personalities: lily provides height, gardenia provides waxy fragrance, orchid provides exotic architectural line. One of the most luxurious white combinations in floristry.",          colors:"White · Ivory · Green",             style:"Luxury / Tropical",  season:"Summer" },
+    { name:"Summer Wedding",         partners:['hydrangea','freesia'], why:"Hydrangea's cloud-like mass fills the vase around tall, elegant lilies; freesia adds fragrance and arching stems at mid-height. A proven wedding combination — beautiful, long-lasting, and widely available.",                             colors:"White · Blue-pink · Yellow",        style:"Wedding / Classic",  season:"Summer" },
+    { name:"Purple Haze",            partners:['iris','lavender'],     why:"Lily's tall white trumpets are fully echoed by iris spikes and lavender wands at different heights — building a fully purple and white palette with stunning vertical structure. Rare and dramatic.",                                       colors:"Purple · Violet · White",           style:"Bold / Dramatic",    season:"Summer" },
+    { name:"Late Summer Garden",     partners:['rose','chrysanthemum'],why:"Chrysanthemum extends the season when other flowers fade; rose provides romance; lily lifts the eye upward with its height. Together they bridge summer's end and autumn's beginning.",                                                     colors:"Pink · White · Golden",             style:"Classic / Garden",   season:"Summer–Autumn" },
+  ],
+  sunflower: [
+    { name:"Harvest Bounty",         partners:['marigold','chrysanthemum'], why:"The definitive autumn trio — all warm-toned, all disc-centred, all late-season. Sunflower commands attention at the top; marigold layers at mid-height; chrysanthemum fills below. A rich, celebratory harvest arrangement.",      colors:"Gold · Orange · Amber",             style:"Rustic / Festive",   season:"Autumn" },
+    { name:"Provence Fields",        partners:['lavender','freesia'],  why:"Sunflower's bold yellow disc against lavender spires and freesia clusters creates a Provençal countryside feel — the South of France in a vase. All three thrive in summer heat and share a joyful, carefree character.",                  colors:"Yellow · Purple · Cream",           style:"Rustic / Fragrant",  season:"Summer" },
+    { name:"Garden Party",           partners:['hydrangea','rose'],    why:"Sunflower adds height and bold energy; hydrangea provides a soft pink-blue cloud; rose adds romance. The sunflower lifts this classic rose-hydrangea pairing into something sunnier and more exuberant.",                                   colors:"Yellow · Pink · Blue-pink",         style:"Garden / Cheerful",  season:"Summer" },
+    { name:"Warm Autumn",            partners:['dahlia','carnation'],  why:"Two complementary bold flowers alongside sunflower's cheerful disc — dahlia provides sculptural depth, carnation fills texture gaps. All three wear orange and red beautifully.",                                                           colors:"Orange · Red · Gold",               style:"Bold / Rustic",      season:"Summer–Autumn" },
+  ],
+  orchid: [
+    { name:"Tropical Luxury",        partners:['lily','gardenia'],     why:"Three architectural whites — orchid provides the graphic silhouette, lily the height and grandeur, gardenia the extraordinary fragrance. This is the arrangement of luxury hotel lobbies and couture weddings.",                             colors:"White · Ivory · Green",             style:"Luxury / Exotic",    season:"Year-round" },
+    { name:"Asian Garden",           partners:['magnolia','jasmine'],  why:"An Eastern-inspired palette with three flowers central to Asian floral culture. Jasmine trails beneath magnolia's star blooms; orchid's geometric form anchors above. Deeply fragrant and visually serene.",                                colors:"White · Pink · Green",              style:"Elegant / Minimal",  season:"Spring–Summer" },
+    { name:"Contemporary Studio",    partners:['iris','carnation'],    why:"Iris's geometric form echoes orchid's architectural quality; carnation provides cloud-like, long-lasting filler. Together they create a modern, structured arrangement that lasts up to two weeks in a vase.",                             colors:"Purple · White · Graphic",          style:"Modern / Structured",season:"Year-round" },
+    { name:"Modern Exotic",          partners:['anemone','sweet-pea'], why:"Anemone's dark eye mirrors orchid's complex throat; sweet pea's delicate trailing flowers add a softness that contrasts orchid's precision. An unexpected but rewarding modern pairing.",                                                  colors:"Purple · Black · White",            style:"Modern / Dramatic",  season:"Spring" },
+  ],
+  hydrangea: [
+    { name:"Classic English Wedding",partners:['rose','sweet-pea'],   why:"The ultimate English wedding trio — hydrangea provides the pillowy mass, rose provides beauty and romance, sweet pea provides delicate trailing grace. Proven at thousands of weddings; still feels effortlessly fresh.",                  colors:"Blush · White · Soft pink",         style:"Wedding / Romantic", season:"Summer" },
+    { name:"French Summer",          partners:['lavender','freesia'],  why:"Lavender wands and freesia clusters nestle within hydrangea's domed heads, creating a deeply scented, Provençal summer combination. All three peak in June–July and dry beautifully for lasting arrangements.",                             colors:"Blue-pink · Purple · Cream",        style:"Romantic / Rustic",  season:"Summer" },
+    { name:"Full Garden",            partners:['peony','ranunculus'],  why:"Three of the most coveted full-headed flowers in floristry — a vase of maximum petal count. Peony leads, ranunculus details, hydrangea fills. Together they achieve the overflowing garden-gate look.",                                   colors:"Pink · Coral · Blush",              style:"Lush / Garden",      season:"Spring–Summer" },
+    { name:"Late Summer Drama",      partners:['dahlia','carnation'],  why:"Hydrangea's cool blue-green tones create a dramatic temperature contrast against dahlia's warm depth. Carnation fills the gaps with long-lasting texture — the combination holds beautifully for 10–14 days.",                            colors:"Blue-green · Purple · Coral",       style:"Bold / Garden",      season:"Summer–Autumn" },
+  ],
+  dahlia: [
+    { name:"Autumn Jewels",          partners:['rose','anemone'],      why:"Anemone's near-black eye is the perfect partner for dark-centred café-au-lait and burgundy dahlias; rose adds velvety depth to the jewel-toned palette. This combination defines autumn luxury in floristry.",                            colors:"Burgundy · Black · Deep red",       style:"Dramatic / Luxury",  season:"Autumn" },
+    { name:"Harvest Festival",       partners:['sunflower','marigold'],why:"The warmest autumn trio — all disc-centred, all bold, all late-season. Together they create a rich, celebratory harvest arrangement that works equally well on a dining table or as a ceremony backdrop.",                                  colors:"Orange · Gold · Amber",             style:"Rustic / Festive",   season:"Autumn" },
+    { name:"Garden Lush",            partners:['ranunculus','hydrangea'],why:"Three full-headed flowers; hydrangea fills the vase volume, ranunculus adds intricate layered detail, dahlia commands the eye. A summer-to-autumn combination that captures the garden at its most overflowing.",                          colors:"Coral · Blush · Cream",             style:"Lush / Garden",      season:"Summer–Autumn" },
+    { name:"Autumn Classic",         partners:['chrysanthemum','carnation'],why:"Three robust autumn flowers that hold long in the vase — chrysanthemum and carnation are natural long-life companions to dahlia. The combination works in warm earth tones or cool purple palettes.",                                  colors:"Purple · Bronze · White",           style:"Classic / Reliable", season:"Autumn" },
+  ],
+  anemone: [
+    { name:"English Meadow",         partners:['ranunculus','sweet-pea'],why:"Three quintessentially English spring flowers with contrasting forms — anemone's dramatic open face, ranunculus's tight layers, sweet pea's trailing tendrils. Together they read as a wild meadow armful.",                            colors:"Purple · Pink · White",             style:"Cottage / Romantic", season:"Spring" },
+    { name:"Dramatic Romance",       partners:['rose','dahlia'],       why:"Dark anemone eyes are the perfect counterpoint to velvety roses and rich dahlias — the three create a moody, jewel-toned arrangement. A combination that earns second glances at any event.",                                             colors:"Burgundy · Dark red · Black",       style:"Dramatic / Romantic",season:"Autumn" },
+    { name:"Artistic Spring",        partners:['tulip','iris'],        why:"Three flowers with bold geometric presence: iris's fan, tulip's cup, anemone's wheel. The anemone's dark eye ties tulip and iris's strong forms together with a graphic touch that reads like a painting.",                                colors:"Purple · Blue · Black-eye",         style:"Artistic / Bold",    season:"Spring" },
+    { name:"Japanese Minimal",       partners:['peony','magnolia'],    why:"Anemone's graphic nature contrasts powerfully with peony's lushness and magnolia's simplicity. The dark eye provides visual weight that prevents the pale palette from feeling too sweet.",                                                 colors:"White · Pink · Black-eye",          style:"Elegant / Minimal",  season:"Spring" },
+  ],
+  'sweet-pea': [
+    { name:"English Meadow",         partners:['ranunculus','anemone'],why:"Three quintessentially English spring flowers — sweet pea trails cascade from rounded ranunculus and graphic anemone. This looks like a handful of flowers picked from a walled cottage garden.",                                          colors:"Lavender · Pink · White",           style:"Cottage / Romantic", season:"Spring" },
+    { name:"Fragrant Cottage",       partners:['rose','lavender'],     why:"A deeply fragrant combination with romantic heritage — all three are associated with the English cottage garden and share a love of soft pink-purple palettes. Combined, they are extraordinarily scented.",                                colors:"Pink · Purple · Green",             style:"Romantic / Fragrant",season:"Spring–Summer" },
+    { name:"Scented Spring",         partners:['freesia','jasmine'],   why:"Three of the most fragrant delicate-flowered stems combined — layers of scent from complementary plants. This bouquet is as much for the nose as the eye. Beautiful for ceremonies and indoor events.",                                   colors:"White · Cream · Lavender",          style:"Fragrant / Delicate",season:"Spring" },
+    { name:"Lush Spring",            partners:['peony','tulip'],       why:"Tulip's upright form lifts sweet pea trails above a grand peony centrepiece — an architectural composition where each flower finds its natural level. A spring wedding staple for a reason.",                                              colors:"Blush · Pink · Lavender",           style:"Lush / Romantic",    season:"Spring" },
+  ],
+  freesia: [
+    { name:"Fragrant Bouquet",       partners:['lily','jasmine'],      why:"Three intensely fragrant flowers — lily's sweetness, jasmine's richness, freesia's fruitiness — layered into a single bouquet. The fragrance combination is extraordinary; this is a bouquet that fills a room.",                         colors:"Yellow · White · Cream",            style:"Fragrant / Classic", season:"Summer" },
+    { name:"Spring Scent",           partners:['rose','lavender'],     why:"Rose and freesia are natural scent allies — both floral and sweet. Lavender adds colour contrast and an herbal note that grounds the sweetness. A classic romantic combination, best in late spring.",                                    colors:"Cream · Pink · Purple",             style:"Romantic / Rustic",  season:"Spring–Summer" },
+    { name:"Spring Market",          partners:['tulip','sweet-pea'],   why:"A bright, cheerful market-stall combination — all three at their peak in early spring and widely available. Tulip provides structure, sweet pea adds delicacy, freesia provides fragrance and movement.",                                 colors:"Yellow · Red · Lavender",           style:"Fresh / Cheerful",   season:"Spring" },
+    { name:"Modern Scent",           partners:['orchid','carnation'],  why:"Orchid's architectural quality elevates freesia and carnation into a contemporary arrangement. Carnation provides long-lasting filler; orchid provides graphic line; freesia provides the fragrance the other two lack.",                  colors:"White · Purple · Pale yellow",      style:"Modern / Sophisticated",season:"Year-round" },
+  ],
+  iris: [
+    { name:"Dutch Fields",           partners:['lavender','tulip'],    why:"The most iconic Dutch landscape combination — irises, tulips, and lavender growing together in the same bulb fields. All three peak in spring, share purple-blue tones, and create a stunning vertical composition.",                     colors:"Purple · Violet · Blue",            style:"Bold / Classic",     season:"Spring" },
+    { name:"Blue Garden",            partners:['lily','hydrangea'],    why:"Three flowers with blue, purple, or white tones — a rare cool-toned summer combination. Iris provides bold graphic structure; lily adds height; hydrangea fills the vase with its cloud-like mass.",                                      colors:"Purple-blue · White · Blue-pink",   style:"Classic / Elegant",  season:"Summer" },
+    { name:"Artistic Mix",           partners:['anemone','ranunculus'],why:"Three flowers beloved by Dutch Golden Age still-life painters — iris's bold geometry, anemone's dramatic eye, ranunculus's layered petals. This combination looks like a 17th-century painting come to life.",                           colors:"Purple · Black · Pink",             style:"Artistic / Painterly",season:"Spring" },
+    { name:"Classic Purple",         partners:['rose','carnation'],    why:"Rose softens iris's strong form; carnation provides long-lasting filler that extends the arrangement's life. Together with iris this reliable trio works for any occasion from everyday arrangements to events.",                          colors:"Purple · Pink · Red",               style:"Classic / Reliable", season:"Spring–Summer" },
+  ],
+  carnation: [
+    { name:"Budget Luxury",          partners:['rose','chrysanthemum'],why:"Three of floristry's most reliable and widely available flowers — carnation extends vase life, rose provides beauty, chrysanthemum provides texture and volume. Together they prove that budget flowers can be beautiful.",                colors:"Red · Pink · White",                style:"Classic / Reliable", season:"Year-round" },
+    { name:"Modern Studio",          partners:['orchid','freesia'],    why:"Orchid's architectural precision and freesia's fragrant clusters transform the humble carnation into a sophisticated arrangement. This combination proves that flower status is entirely about composition.",                                 colors:"White · Purple · Yellow",           style:"Modern / Elevated",  season:"Year-round" },
+    { name:"Autumn Fiesta",          partners:['dahlia','marigold'],   why:"Warm-toned autumn flowers in orange, red, and gold; carnation fills gaps with cloud-like texture and extends vase life significantly. A rich, festive combination for harvest season.",                                                    colors:"Orange · Red · Gold",               style:"Bold / Festive",     season:"Autumn" },
+    { name:"Summer Classic",         partners:['lily','iris'],         why:"Lily's height and carnation's filler role complement iris spikes perfectly — a structured, elegant arrangement in blue, purple, and white that holds for 10–14 days.",                                                                     colors:"White · Purple · Pink",             style:"Elegant / Classic",  season:"Summer" },
+  ],
+  chrysanthemum: [
+    { name:"Autumn Harvest",         partners:['sunflower','marigold'],why:"The definitive autumn trio — all warm-toned, all robust, all beloved for harvest-season arrangements. Chrysanthemum's soft pompom texture contrasts sunflower's bold disc and marigold's ruffled petals.",                               colors:"Gold · Orange · Amber",             style:"Rustic / Seasonal",  season:"Autumn" },
+    { name:"Late Summer Garden",     partners:['rose','lily'],         why:"Chrysanthemum extends the season when other flowers fade; rose provides romance; lily provides architectural height. Together they bridge summer's end and autumn's beginning with an abundant garden-style arrangement.",                  colors:"Pink · White · Golden",             style:"Classic / Garden",   season:"Summer–Autumn" },
+    { name:"Autumn Classic",         partners:['dahlia','carnation'],  why:"Three robust autumn flowers that hold exceptionally long in the vase — typically 10–14 days. Dahlia provides drama, chrysanthemum provides texture, carnation fills gaps. A dependable and beautiful trio.",                              colors:"Purple · Bronze · White",           style:"Classic / Reliable", season:"Autumn" },
+    { name:"Contemporary Garden",    partners:['orchid','iris'],       why:"Orchid's exotic quality and iris's strong geometry create a contemporary framework for chrysanthemum clusters. An unexpected combination that elevates the chrysanthemum far beyond its traditional associations.",                         colors:"White · Purple · Yellow",           style:"Modern / Structured",season:"Autumn–Year-round" },
+  ],
+  lavender: [
+    { name:"French Romance",         partners:['rose','freesia'],      why:"The classic Provençal trio — all three fragrant, all three romantic, all three central to French floral culture. Rose and freesia are natural scent allies; lavender adds colour contrast and an herbal note that grounds their sweetness.",colors:"Purple · Pink · Cream",             style:"Romantic / Fragrant",season:"Summer" },
+    { name:"Provence Meadow",        partners:['sweet-pea','ranunculus'],why:"Three delicate spring and summer flowers in a soft purple-pink palette — an airy, meadow-inspired combination. All three grow low and loose, creating an effortlessly natural, unpretentious arrangement.",                             colors:"Lavender · Pink · White",           style:"Rustic / Cottage",   season:"Spring–Summer" },
+    { name:"Dutch Fields",           partners:['iris','tulip'],        why:"The Dutch countryside in a vase — iris and tulip echo lavender's purple tones at different heights and scales. All three are bulb or rhizome plants that grow together in the famous Dutch bulb fields.",                                  colors:"Purple · Violet · Blue",            style:"Classic / Bold",     season:"Spring" },
+    { name:"White & Purple",         partners:['jasmine','gardenia'],  why:"White flowers accentuate lavender's colour and amplify its scent — jasmine and gardenia bring intense fragrance. Together they create a powerfully scented monochromatic-plus-purple arrangement.",                                        colors:"Purple · White · Ivory",            style:"Fragrant / Elegant", season:"Summer" },
+  ],
+  marigold: [
+    { name:"Harvest Fiesta",         partners:['sunflower','dahlia'],  why:"The biggest, boldest autumn flowers together — a celebration of warm harvest tones. All three are disc-centred, sun-facing flowers in complementary orange, gold, and red tones. Nothing says autumn celebration quite like this trio.",  colors:"Orange · Gold · Red",               style:"Bold / Festive",     season:"Autumn" },
+    { name:"Autumn Classic",         partners:['chrysanthemum','carnation'],why:"Three long-lasting autumn flowers in harmonious warm tones — a reliable seasonal combination that holds for weeks. All three are available year-round but are quintessentially associated with late-season warmth.",                   colors:"Orange · Bronze · Yellow",          style:"Classic / Reliable", season:"Autumn" },
+    { name:"Spice Garden",           partners:['rose','freesia'],      why:"Marigold's vivid orange lifts the palette of pink roses; freesia adds fragrance and lightness that balances marigold's intensity. An unexpected but successful warm-cool pairing.",                                                        colors:"Orange · Pink · Cream",             style:"Rustic / Warm",      season:"Summer–Autumn" },
+    { name:"Tropical Accent",        partners:['orchid','lily'],       why:"Marigold's vivid colour acts as a bold accent against elegant lily and architectural orchid. Surprisingly modern — the orange-yellow of marigold against pure white lily and orchid feels contemporary and graphic.",                       colors:"Orange · White · Yellow",           style:"Modern / Tropical",  season:"Summer" },
+  ],
+  magnolia: [
+    { name:"The White Garden",       partners:['gardenia','jasmine'],  why:"Three of floristry's most revered white flowers, each with a distinctive fragrance and form — magnolia's starlike cups, gardenia's waxy rosettes, jasmine's tiny clustered stars. Combined they are overwhelmingly beautiful and fragrant.", colors:"White · Ivory · Cream",            style:"Minimal / Fragrant", season:"Spring–Summer" },
+    { name:"Spring Elegance",        partners:['peony','ranunculus'],  why:"Magnolia's simple open cups alongside lush peony and layered ranunculus — spring at its most elegant. Magnolia's clean form prevents the arrangement from becoming too sweet; peony provides the drama.",                                  colors:"Pale pink · Blush · Cream",         style:"Elegant / Lush",     season:"Spring" },
+    { name:"Japanese Minimalism",    partners:['orchid','lily'],       why:"Three flowers central to Japanese flower arranging (ikebana) — clean architectural forms, structural line, and restrained elegance. The combination values each stem individually rather than massing them together.",                      colors:"White · Ivory · Green",             style:"Minimal / Artistic", season:"Spring–Summer" },
+    { name:"Soft Drama",             partners:['anemone','sweet-pea'], why:"Anemone's graphic black eye creates drama against magnolia's pure white; sweet pea adds delicate trailing movement that softens the composition. Three flowers that prove drama and delicacy are not opposites.",                          colors:"White · Black · Soft pink",         style:"Romantic / Artistic",season:"Spring" },
+  ],
+  gardenia: [
+    { name:"The White Garden",       partners:['magnolia','jasmine'],  why:"The most fragrant white combination in floristry — magnolia's star, gardenia's waxy rosette, jasmine's trailing stars. Each flower is individually extraordinary; together they create an arrangement that fills the entire room with scent.", colors:"White · Ivory · Cream",           style:"Minimal / Fragrant", season:"Spring–Summer" },
+    { name:"Tropical White",         partners:['orchid','lily'],       why:"Three dramatic architectural whites — lily provides height and grandeur, orchid provides graphic line and exotic detail, gardenia provides extraordinary fragrance. The arrangement of high-end venues and destination weddings.",             colors:"White · Ivory · Green",             style:"Luxury / Exotic",    season:"Summer" },
+    { name:"Wedding White",          partners:['rose','sweet-pea'],    why:"A classic bridal palette — gardenia's waxy perfection and intense fragrance alongside rose and sweet pea's softness. Gardenia has been a wedding flower for centuries; this combination explains why.",                                     colors:"White · Blush · Cream",             style:"Wedding / Romantic", season:"Spring–Summer" },
+    { name:"Fragrant Classic",       partners:['carnation','freesia'], why:"Three long-lasting, fragrant white flowers — a reliable combination for long-display arrangements. Gardenia anchors with fragrance; freesia adds movement; carnation extends vase life to 2+ weeks.",                                       colors:"White · Cream · Yellow",            style:"Classic / Reliable", season:"Year-round" },
+  ],
+  jasmine: [
+    { name:"Fragrant Garden",        partners:['gardenia','magnolia'], why:"Three whites defined by their scent — jasmine trails below the larger gardenia and magnolia heads, creating a layered, cascading arrangement. One of the most extraordinary fragrance combinations in the floral world.",                  colors:"White · Ivory · Cream",             style:"Minimal / Fragrant", season:"Spring–Summer" },
+    { name:"Scent Bouquet",          partners:['freesia','sweet-pea'], why:"Three of the most fragrant small-flowered stems combined — layers of scent from complementary plants. This bouquet is as much for the nose as the eye. A favourite for ceremonies where the fragrance should be noticed.",                 colors:"White · Cream · Lavender",          style:"Fragrant / Delicate",season:"Spring" },
+    { name:"French Perfumery",       partners:['rose','lavender'],     why:"The building blocks of French perfume — jasmine and rose are the classic scent pairing of the perfume industry. Lavender adds an herbal note and a contrasting purple tone. A deeply romantic and fragrant trio.",                        colors:"White · Pink · Purple",             style:"Romantic / Fragrant",season:"Summer" },
+    { name:"Tropical Delight",       partners:['orchid','lily'],       why:"Jasmine vines weave around architectural orchid stems and tall lilies — a tropical garden feel. The jasmine's intense fragrance transforms an already beautiful combination into something otherworldly.",                                  colors:"White · Ivory · Green",             style:"Tropical / Exotic",  season:"Summer" },
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type":"Question", "name":"What flowers go well with roses?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Roses pair beautifully with peonies and hydrangea for a lush romantic look; lavender and freesia for a Provençal fragrant combination; dahlias and anemones for dramatic autumn arrangements; or gardenias and magnolias for a minimal all-white composition." } },
+    { "@type":"Question", "name":"What flowers pair well with peonies?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Peonies pair best with roses and ranunculus for a full-petaled luxury arrangement; sweet peas and anemones for a whimsical cottage feel; magnolias and irises for a Japanese-inspired elegant combination; or hydrangeas and tulips for a classic garden party look." } },
+    { "@type":"Question", "name":"What flowers go well with sunflowers?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Sunflowers pair perfectly with marigolds and chrysanthemums for an autumn harvest arrangement; lavender and freesia for a Provençal summer combination; hydrangeas and roses for a garden party feel; or dahlias and carnations for warm autumn tones." } },
+    { "@type":"Question", "name":"What flowers complement lavender?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Lavender pairs beautifully with roses and freesia for a classic French romantic fragrant bouquet; sweet peas and ranunculus for a Provence meadow look; irises and tulips for a Dutch bulb-field combination; or jasmine and gardenia for an intensely fragrant white-and-purple arrangement." } },
+    { "@type":"Question", "name":"What is a good flower combination for a wedding bouquet?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Classic wedding combinations include: roses + peonies + hydrangea for lush romantic; lily + orchid + gardenia for luxury minimal; sweet pea + rose + hydrangea for English garden; or peony + ranunculus + sweet pea for an intimate spring bouquet. Choose flowers in season for the best quality and value." } },
+    { "@type":"Question", "name":"Which flowers look good together?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Flowers pair well when they share complementary colours, compatible seasons, and contrasting forms (one round, one spiky, one trailing). Classic principles: full-headed flowers (rose, peony, dahlia) alongside filler flowers (carnation, freesia) and structural flowers (iris, lily). Use this combination suggester to find specific pairings for your hero flower." } },
+    { "@type":"Question", "name":"What flowers pair with dahlias?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Dahlias pair spectacularly with roses and anemones for an autumn jewel palette; sunflowers and marigolds for a warm harvest arrangement; ranunculus and hydrangea for a lush garden combination; or chrysanthemums and carnations for a long-lasting classic autumn bouquet." } },
+    { "@type":"Question", "name":"What flowers go well with orchids?",
+      "acceptedAnswer":{ "@type":"Answer", "text":"Orchids pair best with lilies and gardenias for tropical luxury; magnolias and jasmine for an Asian-garden aesthetic; irises and carnations for a modern structured arrangement; or anemones and sweet peas for a surprisingly soft and romantic combination." } },
+  ]
+};
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Flower Combination Suggester",
+  "description": "Free tool to find which flowers pair well together — get curated combination suggestions for any hero flower, with colour stories, style notes, and seasonal availability.",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Web",
+  "url": `${siteUrl}/tools/combination-builder/`,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "inLanguage": "en",
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Flower Combination Suggester — What Flowers Go Well Together?"
+  description="Find the perfect flower pairings: pick any flower and get 4 curated combinations with colour stories, style notes, and seasonal guides. Covers all 20 flowers — roses, peonies, dahlias, sunflowers and more."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li><li aria-hidden="true">›</li>
+        <li><a href="/tools/">Tools</a></li><li aria-hidden="true">›</li>
+        <li aria-current="page">Flower Combination Suggester</li>
+      </ol>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="max-w-4xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Free Florist Tool</p>
+      <h1 class="page-title">Flower Combination Suggester</h1>
+      <p class="page-sub">Pick your hero flower and discover which flowers pair with it — with colour stories, style notes, and seasonal availability for each combination.</p>
+      <a href="/vi/tools/combination-builder/" class="lang-switch-link">🇻🇳 Xem bằng tiếng Việt</a>
+    </div>
+  </div>
+
+  <div class="tool-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-12">
+
+      <div class="picker-section">
+        <h2 class="picker-heading">Choose your hero flower</h2>
+        <p class="picker-sub">Select the flower you want to build around:</p>
+        <div class="flower-grid" id="flowerGrid">
+          {FLOWERS.map(f => (
+            <button class="flower-btn" data-id={f.id}>
+              <span class="fb-emoji">{f.emoji}</span>
+              <span class="fb-name">{f.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="results-section" id="resultsSection" hidden>
+        <div class="results-intro" id="resultsIntro"></div>
+        <div class="combos-grid" id="combosGrid"></div>
+        <div class="results-cta" id="resultsCta"></div>
+      </div>
+
+      <div class="faq-outer">
+        <h2 class="faq-title">Flower Pairing FAQ</h2>
+        <div class="faq-list">
+          {faqSchema.mainEntity.map(item => (
+            <div class="faq-item">
+              <button class="faq-q"><span>{item.name}</span><span class="faq-icon">+</span></button>
+              <div class="faq-a" hidden><p>{item.acceptedAnswer.text}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:560px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+  .tool-wrap { background:var(--ivory); }
+  .picker-section { background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:2rem; margin-bottom:1.5rem; }
+  .picker-heading { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:var(--mauve); margin:0 0 0.3rem; }
+  .picker-sub { font-family:'Jost',sans-serif; font-size:0.84rem; color:var(--taupe); font-weight:300; margin:0 0 1.5rem; }
+  .flower-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:0.5rem; }
+  .flower-btn { display:flex; flex-direction:column; align-items:center; gap:0.25rem; padding:0.75rem 0.5rem; border:1.5px solid var(--ivory-dark); border-radius:12px; background:var(--ivory); cursor:pointer; transition:all 0.18s; }
+  .flower-btn:hover { border-color:var(--blush); background:rgba(232,164,176,0.08); transform:translateY(-1px); }
+  .flower-btn.active { border-color:var(--blush-dark); background:rgba(196,122,138,0.12); box-shadow:0 0 0 3px rgba(196,122,138,0.15); }
+  .fb-emoji { font-size:1.6rem; }
+  .fb-name { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; color:var(--mauve); text-align:center; }
+  .results-section { animation:fadeUp 0.4s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .results-intro { margin-bottom:1.5rem; }
+  .ri-title { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:300; color:var(--mauve); margin:0 0 0.3rem; }
+  .ri-sub { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); font-weight:300; margin:0; }
+  .combos-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.25rem; margin-bottom:1.5rem; }
+  .combo-card { background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:1.75rem; transition:all 0.22s; }
+  .combo-card:hover { border-color:var(--blush); box-shadow:0 6px 24px rgba(196,122,138,0.1); transform:translateY(-2px); }
+  .cc-number { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--blush-dark); margin-bottom:0.5rem; }
+  .cc-name { font-family:'Cormorant Garamond',serif; font-size:1.35rem; font-weight:600; color:var(--mauve); margin:0 0 1rem; }
+  .cc-partners { display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap; }
+  .cc-partner { display:flex; align-items:center; gap:0.4rem; background:rgba(232,164,176,0.1); border:1px solid rgba(196,122,138,0.25); border-radius:999px; padding:0.3rem 0.75rem; text-decoration:none; transition:all 0.18s; }
+  .cc-partner:hover { background:rgba(196,122,138,0.15); border-color:var(--blush-dark); }
+  .cc-p-emoji { font-size:0.95rem; }
+  .cc-p-name { font-family:'Jost',sans-serif; font-size:0.75rem; font-weight:500; color:var(--mauve); }
+  .cc-why { font-family:'Jost',sans-serif; font-size:0.83rem; color:var(--text-mid); line-height:1.8; font-weight:300; margin-bottom:1.1rem; }
+  .cc-meta { display:flex; flex-direction:column; gap:0.4rem; }
+  .cc-colors { display:flex; align-items:center; gap:0.5rem; }
+  .cc-colors-dot { width:8px; height:8px; border-radius:50%; background:linear-gradient(135deg,var(--blush) 0%,var(--gold) 100%); flex-shrink:0; }
+  .cc-colors-text { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); font-style:italic; }
+  .cc-badges { display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:0.2rem; }
+  .cc-badge { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:500; letter-spacing:0.06em; padding:0.2rem 0.6rem; border-radius:999px; }
+  .cc-badge-style { background:rgba(232,164,176,0.2); color:var(--blush-dark); }
+  .cc-badge-season { background:rgba(200,149,106,0.12); color:var(--gold); }
+  .results-cta { text-align:center; padding:1.5rem; background:white; border:1px solid var(--ivory-dark); border-radius:16px; margin-bottom:1.5rem; }
+  .rc-text { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); font-weight:300; margin:0 0 0.75rem; }
+  .rc-link { font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; color:var(--blush-dark); text-decoration:none; border:1.5px solid var(--blush); padding:0.5rem 1.25rem; border-radius:10px; display:inline-block; transition:all 0.2s; }
+  .rc-link:hover { background:var(--blush-dark); color:white; }
+  .faq-outer { margin-top:3rem; }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.5rem,3vw,2.2rem); font-weight:300; color:var(--mauve); margin:0 0 1.5rem; }
+  .faq-list { display:grid; grid-template-columns:1fr; gap:0.6rem; }
+  @media (min-width:900px) { .faq-list { grid-template-columns:1fr 1fr; } }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.9rem 1.2rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.88rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.1rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.2s; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.2rem 0.9rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text-mid); line-height:1.85; margin:0; font-weight:300; }
+</style>
+
+<script define:vars={{ COMBOS, flowerMap }}>
+  const section = document.getElementById('resultsSection');
+  const grid = document.getElementById('combosGrid');
+  const intro = document.getElementById('resultsIntro');
+  const cta = document.getElementById('resultsCta');
+
+  document.querySelectorAll('.flower-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.flower-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const id = btn.dataset.id;
+      showCombinations(id);
+      section.hidden = false;
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  function showCombinations(id) {
+    const hero = flowerMap[id];
+    const combos = COMBOS[id] || [];
+
+    intro.innerHTML = `
+      <h2 class="ri-title">${hero.emoji} Flowers that go well with ${hero.name}</h2>
+      <p class="ri-sub">${combos.length} curated combinations — colour stories, style notes, and seasonal guides included.</p>
+    `;
+
+    grid.innerHTML = combos.map((c, i) => {
+      const partners = c.partners.map(pid => {
+        const p = flowerMap[pid];
+        return `<a href="/learn/${pid}/" class="cc-partner"><span class="cc-p-emoji">${p.emoji}</span><span class="cc-p-name">${p.name}</span></a>`;
+      }).join('');
+
+      return `
+        <div class="combo-card">
+          <div class="cc-number">Combination ${i + 1} of ${combos.length}</div>
+          <h3 class="cc-name">${c.name}</h3>
+          <div class="cc-partners">${partners}</div>
+          <p class="cc-why">${c.why}</p>
+          <div class="cc-meta">
+            <div class="cc-colors">
+              <span class="cc-colors-dot"></span>
+              <span class="cc-colors-text">${c.colors}</span>
+            </div>
+            <div class="cc-badges">
+              <span class="cc-badge cc-badge-style">${c.style}</span>
+              <span class="cc-badge cc-badge-season">${c.season}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    cta.innerHTML = `
+      <p class="rc-text">Want care tips, seasonal availability, and more for ${hero.name}?</p>
+      <a href="/learn/${id}/" class="rc-link">${hero.emoji} Read the ${hero.name} Guide →</a>
+    `;
+  }
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => { el.classList.remove('open'); el.querySelector('.faq-a').hidden = true; });
+      if (!open) { item.classList.add('open'); item.querySelector('.faq-a').hidden = false; }
+    });
+  });
+</script>
