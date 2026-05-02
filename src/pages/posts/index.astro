@@ -6,7 +6,7 @@ import PostCard from '../../components/PostCard.astro';
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
-<BaseLayout title="Tất cả bài viết" description="Danh sách tất cả bài viết trên Vườn Hoa">
+<BaseLayout title="Tất cả bài viết" description="Danh sách tất cả bài viết trên Vườn Hoa" padTop={false}>
 
   <!-- Page header -->
   <div class="page-header">

@@ -10,7 +10,7 @@ const tagCounts = posts.flatMap((p) => p.data.tags).reduce((acc, tag) => {
 
 const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 ---
-<BaseLayout title="Chủ đề" description="Tất cả chủ đề trên Vườn Hoa">
+<BaseLayout title="Chủ đề" description="Tất cả chủ đề trên Vườn Hoa" padTop={false}>
 
   <div class="page-header">
     <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20 text-center">
