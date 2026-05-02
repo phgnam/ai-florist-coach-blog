@@ -1,0 +1,545 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const lang = 'en' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/season-planner/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/season-planner/` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: `${siteUrl}/` },
+  { name: 'Tools', url: `${siteUrl}/tools/` },
+  { name: 'Flower Season Planner', url: `${siteUrl}/tools/season-planner/` },
+];
+
+// 0 = not in season, 1 = available (commercially / shoulder), 2 = peak natural season
+const FLOWERS = [
+  { slug: 'rose',          emoji: '🌹', name: 'Rose',          months: [1,1,1,2,2,2,2,2,2,1,1,1], bestFor: ['Weddings','Valentine\'s Day','Anniversaries'] },
+  { slug: 'peony',         emoji: '🌸', name: 'Peony',         months: [0,0,0,1,2,2,0,0,0,0,0,0], bestFor: ['Weddings','Mother\'s Day','Spring events'] },
+  { slug: 'tulip',         emoji: '🌷', name: 'Tulip',         months: [1,1,2,2,2,0,0,0,0,0,0,1], bestFor: ['Spring weddings','Easter','Mother\'s Day'] },
+  { slug: 'lily',          emoji: '🌷', name: 'Lily',          months: [0,0,0,0,1,2,2,2,1,0,0,0], bestFor: ['Funerals','Easter','Summer weddings'] },
+  { slug: 'sunflower',     emoji: '🌻', name: 'Sunflower',     months: [0,0,0,0,0,1,2,2,2,1,0,0], bestFor: ['Summer events','Rustic weddings','Birthdays'] },
+  { slug: 'hydrangea',     emoji: '💐', name: 'Hydrangea',     months: [0,0,0,0,1,2,2,2,2,1,0,0], bestFor: ['Wedding centrepieces','Summer events'] },
+  { slug: 'dahlia',        emoji: '🌸', name: 'Dahlia',        months: [0,0,0,0,0,0,1,2,2,2,0,0], bestFor: ['Late-summer weddings','Autumn events'] },
+  { slug: 'sweet-pea',     emoji: '🌸', name: 'Sweet Pea',     months: [0,0,0,1,2,2,1,0,0,0,0,0], bestFor: ['Bridal bouquets','Spring posies'] },
+  { slug: 'iris',          emoji: '💜', name: 'Iris',          months: [0,0,1,2,2,1,0,0,0,0,0,0], bestFor: ['Spring weddings','Mother\'s Day','Easter'] },
+  { slug: 'ranunculus',    emoji: '🌸', name: 'Ranunculus',    months: [1,2,2,2,2,0,0,0,0,0,0,0], bestFor: ['Valentine\'s Day','Spring weddings'] },
+  { slug: 'anemone',       emoji: '🌸', name: 'Anemone',       months: [2,2,2,1,0,0,0,0,0,0,1,2], bestFor: ['Winter weddings','Valentine\'s Day'] },
+  { slug: 'freesia',       emoji: '🌸', name: 'Freesia',       months: [1,2,2,2,2,1,0,0,0,0,0,0], bestFor: ['Spring weddings','Bridal bouquets'] },
+  { slug: 'lavender',      emoji: '💜', name: 'Lavender',      months: [0,0,0,0,0,2,2,1,0,0,0,0], bestFor: ['Dried arrangements','Wellness gifts'] },
+  { slug: 'gardenia',      emoji: '🤍', name: 'Gardenia',      months: [0,0,0,0,1,2,2,2,1,0,0,0], bestFor: ['Boutonnières','Luxury corsages'] },
+  { slug: 'jasmine',       emoji: '🌼', name: 'Jasmine',       months: [0,0,0,0,1,2,2,2,1,0,0,0], bestFor: ['Wedding garlands','Fragrant arrangements'] },
+  { slug: 'magnolia',      emoji: '🌸', name: 'Magnolia',      months: [0,1,2,2,1,0,0,0,0,0,0,0], bestFor: ['Spring arches','Luxury foliage'] },
+  { slug: 'chrysanthemum', emoji: '🌼', name: 'Chrysanthemum', months: [1,1,1,1,1,1,1,1,2,2,2,1], bestFor: ['Autumn arrangements','Long-lasting displays'] },
+  { slug: 'carnation',     emoji: '🌺', name: 'Carnation',     months: [2,2,2,2,2,2,2,2,2,2,2,2], bestFor: ['Mother\'s Day','Budget-friendly events'] },
+  { slug: 'marigold',      emoji: '🌼', name: 'Marigold',      months: [0,0,0,0,0,1,2,2,2,1,0,0], bestFor: ['Autumn events','Día de Muertos'] },
+  { slug: 'orchid',        emoji: '🌺', name: 'Orchid',        months: [2,2,2,2,2,2,2,2,2,2,2,2], bestFor: ['Luxury gifts','Corporate plants'] },
+];
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// Build FAQ for each month
+const monthFAQs = MONTHS.map((month, mi) => {
+  const peak = FLOWERS.filter(f => f.months[mi] === 2).map(f => f.name);
+  const avail = FLOWERS.filter(f => f.months[mi] >= 1).map(f => f.name);
+  return {
+    q: `What flowers are in season in ${month}?`,
+    a: peak.length > 0
+      ? `Peak season flowers in ${month} include: ${peak.join(', ')}. Also available (commercially or shoulder season): ${avail.filter(n => !peak.includes(n)).join(', ') || 'year-round varieties like carnations and orchids'}. The best locally-grown flowers for ${month} arrangements are ${peak.slice(0, 3).join(', ')}.`
+      : `In ${month}, most flowers available are commercial year-round varieties. Look for: ${avail.join(', ')}. Local flower availability varies by climate zone.`
+  };
+});
+
+// Schema
+const datasetSchema = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "Cut Flower Seasonal Availability Calendar",
+  "description": "Monthly availability data for 20 popular cut flowers showing peak season and commercial availability throughout the year.",
+  "url": `${siteUrl}/tools/season-planner/`,
+  "creator": { "@type": "Organization", "name": "Vườn Hoa", "url": siteUrl },
+  "keywords": ["flower season", "seasonal flowers", "cut flower availability", "wedding flowers by season"],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": monthFAQs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": { "@type": "Answer", "text": item.a }
+  }))
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbs.map((b, i) => ({
+    "@type": "ListItem",
+    "position": i + 1,
+    "name": b.name,
+    "item": b.url,
+  }))
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Flower Season Planner — What Flowers Are in Season Each Month?"
+  description="Interactive flower season calendar: discover which flowers are in peak bloom every month of the year. Essential for wedding planners, florists, and event coordinators. Free tool from Vườn Hoa."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(datasetSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} slot="head" />
+
+  <!-- Breadcrumb nav -->
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/tools/">Tools</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">Flower Season Planner</li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="max-w-6xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Free Florist Tool</p>
+      <h1 class="page-title">Flower Season Planner</h1>
+      <p class="page-sub">Which flowers are in bloom right now? Explore peak seasons and commercial availability for 20 popular flowers — month by month, all year round.</p>
+    </div>
+  </div>
+
+  <!-- Planner -->
+  <div class="planner-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-12">
+
+      <!-- View toggle + legend -->
+      <div class="planner-controls">
+        <div class="view-toggle" role="group" aria-label="View mode">
+          <button class="toggle-btn active" id="btn-by-month" aria-pressed="true">By Month</button>
+          <button class="toggle-btn" id="btn-by-flower" aria-pressed="false">By Flower</button>
+        </div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot dot-peak"></span>Peak season</span>
+          <span class="legend-item"><span class="legend-dot dot-avail"></span>Available</span>
+          <span class="legend-item"><span class="legend-dot dot-none"></span>Out of season</span>
+        </div>
+      </div>
+
+      <!-- BY MONTH VIEW -->
+      <div id="view-by-month">
+        <!-- Month tabs -->
+        <div class="month-tabs" role="tablist" aria-label="Select a month">
+          {MONTHS.map((m, i) => (
+            <button
+              class:list={['month-tab', { 'active': i === new Date().getMonth() }]}
+              role="tab"
+              aria-selected={i === new Date().getMonth() ? 'true' : 'false'}
+              data-month={i}
+              id={`tab-${i}`}
+              aria-controls={`panel-${i}`}
+            >{MONTH_SHORT[i]}</button>
+          ))}
+        </div>
+
+        <!-- Month panels (all rendered for SEO, shown/hidden via JS) -->
+        {MONTHS.map((month, mi) => {
+          const peakFlowers = FLOWERS.filter(f => f.months[mi] === 2);
+          const availFlowers = FLOWERS.filter(f => f.months[mi] === 1);
+          const offFlowers = FLOWERS.filter(f => f.months[mi] === 0);
+          return (
+            <div
+              class="month-panel"
+              id={`panel-${mi}`}
+              role="tabpanel"
+              aria-labelledby={`tab-${mi}`}
+              data-month={mi}
+              hidden={mi !== new Date().getMonth()}
+            >
+              <div class="month-panel-header">
+                <h2 class="month-panel-title">Flowers in Season: <em>{month}</em></h2>
+                <p class="month-panel-count">
+                  <strong>{peakFlowers.length}</strong> peak · <strong>{availFlowers.length}</strong> available · <strong>{offFlowers.length}</strong> out of season
+                </p>
+              </div>
+
+              {peakFlowers.length > 0 && (
+                <div class="flower-section">
+                  <h3 class="flower-section-heading peak-heading">🌟 Peak Season</h3>
+                  <div class="flower-cards">
+                    {peakFlowers.map(f => (
+                      <a href={`/learn/${f.slug}/`} class="flower-card flower-card--peak">
+                        <span class="card-emoji">{f.emoji}</span>
+                        <div class="card-body">
+                          <div class="card-name">{f.name}</div>
+                          <div class="card-best">{f.bestFor[0]}</div>
+                        </div>
+                        <span class="peak-badge">Peak</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {availFlowers.length > 0 && (
+                <div class="flower-section">
+                  <h3 class="flower-section-heading avail-heading">✓ Also Available</h3>
+                  <div class="flower-cards">
+                    {availFlowers.map(f => (
+                      <a href={`/learn/${f.slug}/`} class="flower-card flower-card--avail">
+                        <span class="card-emoji">{f.emoji}</span>
+                        <div class="card-body">
+                          <div class="card-name">{f.name}</div>
+                          <div class="card-best">{f.bestFor[0]}</div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {offFlowers.length > 0 && (
+                <div class="flower-section">
+                  <h3 class="flower-section-heading off-heading">✗ Out of Season</h3>
+                  <div class="flower-cards">
+                    {offFlowers.map(f => (
+                      <a href={`/learn/${f.slug}/`} class="flower-card flower-card--off">
+                        <span class="card-emoji card-emoji--off">{f.emoji}</span>
+                        <div class="card-body">
+                          <div class="card-name card-name--off">{f.name}</div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div><!-- /view-by-month -->
+
+      <!-- BY FLOWER VIEW (hidden initially) -->
+      <div id="view-by-flower" hidden>
+        <div class="by-flower-grid">
+          {FLOWERS.map(f => (
+            <div class="flower-row">
+              <a href={`/learn/${f.slug}/`} class="flower-row-label">
+                <span class="row-emoji">{f.emoji}</span>
+                <span class="row-name">{f.name}</span>
+              </a>
+              <div class="month-dots" aria-label={`${f.name} seasonal availability`}>
+                {f.months.map((val, mi) => (
+                  <div
+                    class:list={['month-dot', {
+                      'dot-is-peak': val === 2,
+                      'dot-is-avail': val === 1,
+                      'dot-is-off': val === 0,
+                    }]}
+                    title={`${MONTHS[mi]}: ${val === 2 ? 'Peak season' : val === 1 ? 'Available' : 'Out of season'}`}
+                    aria-label={`${MONTHS[mi]}: ${val === 2 ? 'Peak' : val === 1 ? 'Available' : 'Out of season'}`}
+                  >
+                    <span class="dot-month-label">{MONTH_SHORT[mi].slice(0,1)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="by-flower-month-row">
+          <div class="month-col-spacer"></div>
+          {MONTH_SHORT.map(m => <span class="month-col-label">{m}</span>)}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Annual grid (always visible, SEO table) -->
+  <section class="grid-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="grid-title">Full Year Flower Season Calendar</h2>
+      <p class="grid-sub">All 20 flowers across all 12 months at a glance. <span class="legend-inline"><span class="dot dot-sm dot-peak-sm"></span> Peak</span> <span class="legend-inline"><span class="dot dot-sm dot-avail-sm"></span> Available</span></p>
+      <div class="grid-table-wrap">
+        <table class="grid-table">
+          <thead>
+            <tr>
+              <th class="col-flower">Flower</th>
+              {MONTHS.map(m => <th class="col-month">{m.slice(0,3)}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {FLOWERS.map(f => (
+              <tr>
+                <td class="cell-name">
+                  <a href={`/learn/${f.slug}/`} class="table-flower-link">{f.emoji} {f.name}</a>
+                </td>
+                {f.months.map((val, mi) => (
+                  <td class:list={['cell-month', {
+                    'cell-peak': val === 2,
+                    'cell-avail': val === 1,
+                    'cell-off': val === 0,
+                  }]} aria-label={val === 2 ? 'Peak' : val === 1 ? 'Available' : ''}>
+                    {val === 2 ? '●' : val === 1 ? '○' : ''}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ section (one per month — targets "[month] flower in season" queries) -->
+  <section class="faq-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-16">
+      <h2 class="faq-title">Seasonal Flower FAQs — Every Month of the Year</h2>
+      <div class="faq-list">
+        {monthFAQs.map((item, i) => (
+          <div class="faq-item" data-index={i}>
+            <button class="faq-q" aria-expanded="false">
+              <span>{item.q}</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>{item.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Tips section -->
+  <section class="tips-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="tips-title">How to Use This Seasonal Planner for Weddings & Events</h2>
+      <div class="tips-grid">
+        {[
+          { icon: '💍', head: 'Wedding planning', body: 'Book flowers 3–9 months in advance. If your date falls in a shoulder month, check both the month before and after — flowers from adjacent peak seasons are often still available from wholesalers who pre-book supply.' },
+          { icon: '💰', head: 'Save money with in-season flowers', body: 'Peak-season, locally grown flowers can be 30–60% less expensive than out-of-season imports. Choosing flowers at their natural peak also means better quality, stronger stems, and longer vase life.' },
+          { icon: '🌍', head: 'Commercial vs. natural availability', body: 'Many flowers marked "available" are commercially grown year-round in greenhouses or imported from regions with different climates. Natural peak-season flowers are shown in pink — these are typically highest quality and lowest cost in that month.' },
+          { icon: '☁️', head: 'Climate zone matters', body: 'This planner uses Northern Hemisphere temperate zone averages (similar to the UK, much of Europe, and northern USA). Southern Hemisphere seasons are roughly reversed. Tropical climates have different seasons entirely — jasmine, orchids, and marigolds are nearly year-round there.' },
+        ].map(tip => (
+          <div class="tip-card">
+            <div class="tip-icon">{tip.icon}</div>
+            <h3 class="tip-head">{tip.head}</h3>
+            <p class="tip-body">{tip.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .breadcrumb-list a:hover { text-decoration:underline; }
+
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:580px; margin:0 auto; line-height:1.75; }
+
+  /* ── PLANNER ── */
+  .planner-wrap { background:var(--ivory); }
+
+  .planner-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
+
+  .view-toggle { display:flex; background:white; border:1px solid var(--ivory-dark); border-radius:10px; padding:3px; gap:2px; }
+  .toggle-btn { padding:0.45rem 1.25rem; border:none; background:none; border-radius:7px; font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:400; color:var(--taupe); cursor:pointer; transition:all 0.2s; }
+  .toggle-btn.active { background:var(--blush-dark); color:white; font-weight:500; }
+
+  .legend { display:flex; align-items:center; gap:1rem; }
+  .legend-item { display:flex; align-items:center; gap:0.4rem; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--taupe); font-weight:300; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .dot-peak  { background:var(--blush-dark); }
+  .dot-avail { background:rgba(232,164,176,0.45); border:1px solid var(--blush); }
+  .dot-none  { background:var(--ivory-dark); }
+
+  /* ── MONTH TABS ── */
+  .month-tabs { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1.5rem; background:white; border:1px solid var(--ivory-dark); border-radius:14px; padding:0.5rem; }
+  .month-tab { flex:1; min-width:48px; padding:0.5rem 0.25rem; border:none; background:none; border-radius:9px; font-family:'Jost',sans-serif; font-size:0.78rem; font-weight:400; color:var(--taupe); cursor:pointer; transition:all 0.2s; text-align:center; }
+  .month-tab.active { background:var(--blush-dark); color:white; font-weight:500; }
+  .month-tab:hover:not(.active) { background:var(--blush-light); color:var(--mauve); }
+
+  /* ── MONTH PANEL ── */
+  .month-panel { }
+  .month-panel-header { margin-bottom:1.75rem; }
+  .month-panel-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; color:var(--mauve); margin:0 0 0.35rem; }
+  .month-panel-title em { font-style:italic; color:var(--blush-dark); }
+  .month-panel-count { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); font-weight:300; margin:0; }
+  .month-panel-count strong { color:var(--mauve); }
+
+  .flower-section { margin-bottom:2rem; }
+  .flower-section-heading { font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; margin:0 0 0.85rem; }
+  .peak-heading { color:var(--blush-dark); }
+  .avail-heading { color:var(--taupe); }
+  .off-heading { color:var(--ivory-dark); }
+
+  .flower-cards { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:0.65rem; }
+
+  .flower-card { display:flex; align-items:center; gap:0.65rem; border-radius:12px; padding:0.75rem 0.9rem; text-decoration:none; transition:all 0.2s; border:1px solid transparent; }
+  .flower-card--peak { background:rgba(232,164,176,0.12); border-color:rgba(196,122,138,0.25); }
+  .flower-card--peak:hover { background:rgba(232,164,176,0.22); border-color:var(--blush-dark); transform:translateY(-1px); }
+  .flower-card--avail { background:rgba(253,240,242,0.6); border-color:var(--ivory-dark); }
+  .flower-card--avail:hover { background:rgba(232,164,176,0.1); border-color:var(--blush); transform:translateY(-1px); }
+  .flower-card--off { background:rgba(240,235,230,0.4); border-color:transparent; opacity:0.6; }
+  .flower-card--off:hover { opacity:0.85; }
+
+  .card-emoji { font-size:1.5rem; flex-shrink:0; }
+  .card-emoji--off { filter:grayscale(1) opacity(0.5); }
+  .card-body { min-width:0; }
+  .card-name { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600; color:var(--mauve); line-height:1.2; }
+  .card-name--off { color:var(--taupe); font-weight:400; }
+  .card-best { font-family:'Jost',sans-serif; font-size:0.7rem; color:var(--taupe); font-weight:300; }
+  .peak-badge { margin-left:auto; font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; background:var(--blush-dark); color:white; padding:0.15rem 0.5rem; border-radius:999px; flex-shrink:0; }
+
+  /* ── BY FLOWER VIEW ── */
+  .by-flower-grid { display:flex; flex-direction:column; gap:0.55rem; }
+  .flower-row { display:flex; align-items:center; gap:0.75rem; background:white; border:1px solid var(--ivory-dark); border-radius:12px; padding:0.65rem 1rem; }
+  .flower-row-label { display:flex; align-items:center; gap:0.5rem; width:130px; flex-shrink:0; text-decoration:none; transition:color 0.2s; }
+  .flower-row-label:hover .row-name { color:var(--blush-dark); }
+  .row-emoji { font-size:1.2rem; }
+  .row-name { font-family:'Cormorant Garamond',serif; font-size:0.95rem; font-weight:600; color:var(--mauve); }
+
+  .month-dots { display:flex; gap:3px; flex:1; }
+  .month-dot { flex:1; height:28px; border-radius:5px; display:flex; align-items:center; justify-content:center; cursor:default; transition:transform 0.15s; }
+  .month-dot:hover { transform:scaleY(1.2); }
+  .dot-is-peak  { background:var(--blush-dark); }
+  .dot-is-avail { background:rgba(232,164,176,0.4); border:1px solid rgba(196,122,138,0.25); }
+  .dot-is-off   { background:var(--ivory-dark); }
+  .dot-month-label { font-family:'Jost',sans-serif; font-size:0.55rem; font-weight:500; color:rgba(255,255,255,0.7); text-transform:uppercase; user-select:none; }
+  .dot-is-off .dot-month-label { color:rgba(158,138,128,0.4); }
+  .dot-is-avail .dot-month-label { color:rgba(196,122,138,0.7); }
+
+  .by-flower-month-row { display:flex; align-items:center; gap:0.75rem; padding:0.35rem 1rem; }
+  .month-col-spacer { width:130px; flex-shrink:0; }
+  .month-col-label { flex:1; font-family:'Jost',sans-serif; font-size:0.6rem; text-align:center; color:var(--taupe); font-weight:400; letter-spacing:0.05em; }
+
+  @media (max-width: 640px) {
+    .flower-row-label { width:90px; }
+    .row-name { font-size:0.82rem; }
+    .month-col-spacer { width:90px; }
+    .dot-month-label { font-size:0; }
+  }
+
+  /* ── FULL GRID TABLE ── */
+  .grid-section { background:white; border-top:1px solid var(--ivory-dark); }
+  .grid-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:300; color:var(--mauve); margin:0 0 0.5rem; text-align:center; }
+  .grid-sub { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); text-align:center; margin:0 0 2rem; font-weight:300; }
+  .legend-inline { display:inline-flex; align-items:center; gap:0.35rem; margin:0 0.35rem; }
+  .dot { border-radius:50%; display:inline-block; }
+  .dot-sm { width:8px; height:8px; }
+  .dot-peak-sm { background:var(--blush-dark); }
+  .dot-avail-sm { background:rgba(232,164,176,0.5); border:1px solid var(--blush); }
+  .grid-table-wrap { overflow-x:auto; border-radius:16px; border:1px solid var(--ivory-dark); }
+  .grid-table { width:100%; border-collapse:collapse; font-family:'Jost',sans-serif; }
+  .grid-table thead { background:var(--ivory); }
+  .grid-table th { padding:0.7rem 0.3rem; font-size:0.68rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--taupe); border-bottom:1px solid var(--ivory-dark); text-align:center; }
+  .col-flower { text-align:left; padding-left:1rem; min-width:130px; }
+  .col-month { min-width:36px; }
+  .grid-table td { border-bottom:1px solid var(--ivory-dark); }
+  .grid-table tbody tr:last-child td { border-bottom:none; }
+  .grid-table tbody tr:hover td { background:rgba(253,240,242,0.4); }
+  .cell-name { padding:0.65rem 0.3rem 0.65rem 1rem; }
+  .table-flower-link { color:var(--blush-dark); text-decoration:none; font-size:0.88rem; font-weight:400; white-space:nowrap; }
+  .table-flower-link:hover { text-decoration:underline; }
+  .cell-month { text-align:center; font-size:0.65rem; padding:0.5rem 0.2rem; }
+  .cell-peak  { color:var(--blush-dark); font-size:0.75rem; }
+  .cell-avail { color:rgba(196,122,138,0.55); font-size:0.7rem; }
+  .cell-off   { color:transparent; }
+
+  /* ── FAQ ── */
+  .faq-section { background:var(--ivory); border-top:1px solid var(--ivory-dark); }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:300; color:var(--mauve); margin:0 0 2.5rem; text-align:center; }
+  .faq-list { display:flex; flex-direction:column; gap:0.6rem; columns:1; }
+  @media (min-width:900px) { .faq-list { columns:2; column-gap:1.25rem; } .faq-item { break-inside:avoid; } }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.9rem 1.2rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.88rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.1rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.2s; font-weight:300; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.2rem 0.9rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.86rem; color:var(--text-mid); line-height:1.8; margin:0; font-weight:300; }
+
+  /* ── TIPS ── */
+  .tips-section { background:white; border-top:1px solid var(--ivory-dark); }
+  .tips-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:300; color:var(--mauve); margin:0 0 2rem; text-align:center; }
+  .tips-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.25rem; }
+  .tip-card { background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:16px; padding:1.5rem; }
+  .tip-icon { font-size:1.8rem; margin-bottom:0.75rem; }
+  .tip-head { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:600; color:var(--mauve); margin:0 0 0.5rem; }
+  .tip-body { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text-mid); line-height:1.75; margin:0; font-weight:300; }
+</style>
+
+<script>
+  // ── Month tab switching ────────────────────────────────────────────
+  const monthTabs = document.querySelectorAll<HTMLElement>('.month-tab');
+  const monthPanels = document.querySelectorAll<HTMLElement>('.month-panel');
+
+  monthTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const mi = Number(tab.dataset.month);
+      monthTabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+      monthPanels.forEach(p => { p.hidden = true; });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      const panel = document.getElementById(`panel-${mi}`);
+      if (panel) panel.hidden = false;
+    });
+  });
+
+  // ── View toggle ────────────────────────────────────────────────────
+  const btnMonth = document.getElementById('btn-by-month')!;
+  const btnFlower = document.getElementById('btn-by-flower')!;
+  const viewMonth = document.getElementById('view-by-month')!;
+  const viewFlower = document.getElementById('view-by-flower')!;
+
+  btnMonth.addEventListener('click', () => {
+    btnMonth.classList.add('active'); btnMonth.setAttribute('aria-pressed', 'true');
+    btnFlower.classList.remove('active'); btnFlower.setAttribute('aria-pressed', 'false');
+    viewMonth.removeAttribute('hidden');
+    viewFlower.hidden = true;
+  });
+
+  btnFlower.addEventListener('click', () => {
+    btnFlower.classList.add('active'); btnFlower.setAttribute('aria-pressed', 'true');
+    btnMonth.classList.remove('active'); btnMonth.setAttribute('aria-pressed', 'false');
+    viewFlower.removeAttribute('hidden');
+    viewMonth.hidden = true;
+  });
+
+  // ── FAQ accordion ──────────────────────────────────────────────────
+  document.querySelectorAll<HTMLElement>('.faq-item').forEach(item => {
+    const btn = item.querySelector<HTMLButtonElement>('.faq-q')!;
+    const ans = item.querySelector<HTMLElement>('.faq-a')!;
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector<HTMLButtonElement>('.faq-q')!.setAttribute('aria-expanded', 'false');
+        (el.querySelector<HTMLElement>('.faq-a')!).hidden = true;
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        ans.hidden = false;
+      }
+    });
+  });
+</script>
