@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { useTranslations } from '../i18n/utils';
+import bridalBouquetImage from '@assets/image_1777765971107.png';
 
 const lang = 'en' as const;
 const t = useTranslations(lang);
@@ -86,7 +87,7 @@ const breadcrumbs = [
         pubDate={featured.data.pubDate}
         slug={`/posts/${featured.id}`}
         tags={featured.data.tags}
-        heroImage={featured.data.heroImage as any}
+        heroImage={featured.id === 'bridal-bouquet-history-en' ? bridalBouquetImage : (featured.data.heroImage as any)}
         heroAlt={featured.data.heroAlt}
         featured={true}
       />
