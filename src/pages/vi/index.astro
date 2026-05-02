@@ -2,12 +2,10 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/PostCard.astro';
-import { useTranslations } from '../../i18n/utils';
 
-const lang = 'en' as const;
-const t = useTranslations(lang);
+const lang = 'vi' as const;
 
-const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const featured = allPosts[0];
@@ -25,6 +23,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
         <ellipse cx="90" cy="270" rx="38" ry="20" fill="rgba(196,122,138,0.09)" transform="rotate(-8 90 270)"/>
         <circle cx="55" cy="60" r="7" fill="rgba(200,149,106,0.35)"/>
         <circle cx="75" cy="330" r="5" fill="rgba(232,164,176,0.4)"/>
+        <circle cx="95" cy="400" r="4" fill="rgba(196,122,138,0.3)"/>
         <path d="M90 440 Q55 340 75 220 Q95 100 55 20" stroke="rgba(196,122,138,0.15)" stroke-width="1.5" fill="none"/>
       </svg>
     </div>
@@ -32,6 +31,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
       <svg viewBox="0 0 200 440" fill="none" xmlns="http://www.w3.org/2000/svg">
         <ellipse cx="120" cy="170" rx="44" ry="24" fill="rgba(196,122,138,0.14)" transform="rotate(20 120 170)"/>
         <ellipse cx="135" cy="120" rx="32" ry="17" fill="rgba(232,164,176,0.1)" transform="rotate(-15 135 120)"/>
+        <ellipse cx="110" cy="280" rx="36" ry="19" fill="rgba(196,122,138,0.09)" transform="rotate(8 110 280)"/>
         <circle cx="145" cy="55" r="7" fill="rgba(200,149,106,0.35)"/>
         <circle cx="125" cy="340" r="5" fill="rgba(232,164,176,0.4)"/>
         <path d="M110 440 Q145 340 125 220 Q105 100 145 20" stroke="rgba(196,122,138,0.15)" stroke-width="1.5" fill="none"/>
@@ -43,15 +43,15 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     <span class="petal-float petal-3" aria-hidden="true">🌺</span>
 
     <div class="hero-content max-w-4xl mx-auto px-6 text-center">
-      <p class="hero-eyebrow fade-up fade-up-1">{t('hero.eyebrow')}</p>
+      <p class="hero-eyebrow fade-up fade-up-1">AI Florist Coach · Blog</p>
       <h1 class="hero-title fade-up fade-up-2">
-        {t('hero.title')}<br/>
-        <em>{t('hero.title.em')}</em>
+        Vườn Hoa<br/>
+        <em>của chúng tôi</em>
       </h1>
-      <p class="hero-sub fade-up fade-up-3">{t('hero.sub')}</p>
+      <p class="hero-sub fade-up fade-up-3">Blog về hoa và nghề florist, được hỗ trợ bởi AI Florist Coach.</p>
       <div class="hero-actions fade-up fade-up-4">
-        <a href="/en/posts" class="btn-primary">{t('hero.cta.primary')}</a>
-        <a href="/en/about" class="btn-ghost">{t('hero.cta.ghost')}</a>
+        <a href="/vi/posts" class="btn-primary">Khám phá bài viết</a>
+        <a href="/vi/about" class="btn-ghost">Giới thiệu →</a>
       </div>
     </div>
 
@@ -65,14 +65,14 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     <section class="section-featured max-w-7xl mx-auto px-6 lg:px-10">
       <div class="section-label">
         <span class="label-line"></span>
-        <span class="label-text">{t('section.featured')}</span>
+        <span class="label-text">Bài viết nổi bật</span>
         <span class="label-line"></span>
       </div>
       <PostCard
         title={featured.data.title}
         description={featured.data.description}
         pubDate={featured.data.pubDate}
-        slug={`/en/posts/${featured.id}`}
+        slug={`/vi/posts/${featured.id}`}
         tags={featured.data.tags}
         heroImage={featured.data.heroImage as any}
         heroAlt={featured.data.heroAlt}
@@ -86,7 +86,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     <section class="section-recent max-w-7xl mx-auto px-6 lg:px-10">
       <div class="section-label">
         <span class="label-line"></span>
-        <span class="label-text">{t('section.recent')}</span>
+        <span class="label-text">Bài viết mới nhất</span>
         <span class="label-line"></span>
       </div>
       <div class="posts-grid">
@@ -95,7 +95,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
             title={post.data.title}
             description={post.data.description}
             pubDate={post.data.pubDate}
-            slug={`/en/posts/${post.id}`}
+            slug={`/vi/posts/${post.id}`}
             tags={post.data.tags}
             heroImage={post.data.heroImage as any}
             heroAlt={post.data.heroAlt}
@@ -103,7 +103,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
         ))}
       </div>
       <div class="text-center mt-12">
-        <a href="/en/posts" class="btn-outline">{t('section.viewAll')}</a>
+        <a href="/vi/posts" class="btn-outline">Xem tất cả bài viết</a>
       </div>
     </section>
   )}
@@ -114,12 +114,12 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
       <div class="tags-inner max-w-7xl mx-auto px-6 lg:px-10">
         <div class="section-label">
           <span class="label-line label-line--light"></span>
-          <span class="label-text label-text--light">{t('section.topics')}</span>
+          <span class="label-text label-text--light">Khám phá theo chủ đề</span>
           <span class="label-line label-line--light"></span>
         </div>
         <div class="tag-cloud">
           {allTags.map((tag) => (
-            <a href={`/en/tags/${tag}`} class="tag-cloud-item">
+            <a href={`/vi/tags/${tag}`} class="tag-cloud-item">
               <span class="tag-hash">#</span>{tag}
             </a>
           ))}
@@ -128,14 +128,14 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     </section>
   )}
 
-  <!-- ── RSS TEASER ── -->
+  <!-- ── NEWSLETTER TEASER ── -->
   <section class="section-newsletter max-w-7xl mx-auto px-6 lg:px-10">
     <div class="newsletter-card">
       <div class="newsletter-deco" aria-hidden="true">🌹</div>
       <div class="newsletter-content">
-        <h2 class="newsletter-title">{t('rss.title')}</h2>
-        <p class="newsletter-sub">{t('rss.sub')}</p>
-        <a href="/rss.xml" class="btn-gold">{t('rss.cta')}</a>
+        <h2 class="newsletter-title">Đăng ký RSS Feed</h2>
+        <p class="newsletter-sub">Nhận ngay thông báo khi có bài viết mới về hoa và nghề florist.</p>
+        <a href="/rss.xml" class="btn-gold">Đăng ký RSS →</a>
       </div>
     </div>
   </section>
@@ -164,12 +164,13 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
   .petal-3 { bottom: 25%; left: 18%; animation: petalDrift 7s ease-in-out infinite 3s; }
   .hero-content { position: relative; z-index: 2; }
   .hero-eyebrow { font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1.5rem; }
-  .hero-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(3.5rem,10vw,7.5rem); font-weight:300; color:var(--mauve); line-height:1.02; margin:0 0 1.5rem; }
+  .hero-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(3.5rem,10vw,7.5rem); font-weight:300; color:var(--mauve); line-height:1.02; margin:0 0 1.5rem; letter-spacing:-0.01em; }
   .hero-title em { font-style:italic; color:var(--blush-dark); font-weight:300; }
   .hero-sub { font-family:'Jost',sans-serif; font-size:clamp(0.95rem,2vw,1.1rem); color:var(--mauve-mid); max-width:500px; margin:0 auto 2.5rem; font-weight:300; line-height:1.75; }
   .hero-actions { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; }
-  .scroll-indicator { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; }
+  .scroll-indicator { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; }
   .scroll-line { width:1px; height:52px; background:linear-gradient(to bottom,transparent,rgba(196,122,138,0.5)); animation:floatPetal 2.5s ease-in-out infinite; }
+
   .btn-primary { display:inline-block; padding:0.85rem 2rem; background:var(--blush-dark); color:white; font-family:'Jost',sans-serif; font-size:0.8rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:999px; transition:background 0.25s,transform 0.25s; }
   .btn-primary:hover { background:var(--mauve); transform:translateY(-2px); }
   .btn-ghost { display:inline-block; padding:0.85rem 2rem; color:var(--mauve-mid); font-family:'Jost',sans-serif; font-size:0.8rem; font-weight:400; letter-spacing:0.06em; text-decoration:none; border-radius:999px; border:1px solid rgba(196,122,138,0.4); transition:all 0.25s; }
@@ -178,17 +179,22 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
   .btn-outline:hover { background:var(--blush-dark); color:white; }
   .btn-gold { display:inline-block; padding:0.8rem 2rem; background:var(--gold); color:white; font-family:'Jost',sans-serif; font-size:0.8rem; font-weight:500; letter-spacing:0.06em; text-decoration:none; border-radius:999px; transition:all 0.25s; }
   .btn-gold:hover { background:#b07c52; }
-  .section-featured { padding:6rem 0 3rem; } .section-recent { padding:3rem 0 5rem; }
+
+  .section-featured { padding:6rem 0 3rem; }
+  .section-recent   { padding:3rem 0 5rem; }
   .section-label { display:flex; align-items:center; gap:1.5rem; margin-bottom:3rem; }
-  .label-line { flex:1; height:1px; background:var(--ivory-dark); } .label-line--light { background:rgba(232,164,176,0.4); }
+  .label-line { flex:1; height:1px; background:var(--ivory-dark); }
+  .label-line--light { background:rgba(232,164,176,0.4); }
   .label-text { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.22em; text-transform:uppercase; color:var(--taupe); white-space:nowrap; }
   .label-text--light { color:rgba(250,245,238,0.7); }
   .posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.75rem; }
+
   .section-tags { background:linear-gradient(160deg,var(--blush-dark) 0%,var(--mauve) 100%); padding:5rem 0; }
   .tag-cloud { display:flex; flex-wrap:wrap; gap:0.75rem; justify-content:center; }
   .tag-cloud-item { display:inline-block; padding:0.5rem 1.2rem; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.85rem; font-weight:400; color:rgba(255,255,255,0.85); text-decoration:none; transition:all 0.25s; backdrop-filter:blur(4px); }
   .tag-cloud-item:hover { background:rgba(255,255,255,0.25); color:white; border-color:rgba(255,255,255,0.4); transform:translateY(-2px); }
   .tag-hash { color:rgba(255,255,255,0.5); margin-right:2px; }
+
   .section-newsletter { padding:5rem 0 6rem; }
   .newsletter-card { background:linear-gradient(135deg,#FDF0F2 0%,var(--blush-light) 50%,#EDA8B8 100%); border-radius:28px; padding:4rem; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; gap:1.5rem; position:relative; overflow:hidden; border:1px solid rgba(232,164,176,0.3); }
   .newsletter-card::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(255,255,255,0.5) 0%,transparent 70%); pointer-events:none; }

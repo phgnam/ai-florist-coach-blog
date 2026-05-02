@@ -1,45 +1,46 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { useTranslations } from '../../../i18n/utils';
 
-const lang = 'en' as const;
-const t = useTranslations(lang);
+const lang = 'vi' as const;
 
-const posts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en');
+const posts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi');
 const tagCounts = posts.flatMap((p) => p.data.tags).reduce((acc, tag) => {
   acc[tag] = (acc[tag] ?? 0) + 1;
   return acc;
 }, {} as Record<string, number>);
+
 const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 ---
-<BaseLayout lang={lang} title={t('tags.title')} description={t('tags.sub')} padTop={false}>
+<BaseLayout lang={lang} title="Chủ đề" description="Tất cả chủ đề trên Vườn Hoa" padTop={false}>
 
   <div class="page-header">
     <div class="header-deco" aria-hidden="true">
-      <svg viewBox="0 0 200 200" fill="none">
-        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.15)"/>
-        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.15)" transform="rotate(72 100 100)"/>
-        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.15)" transform="rotate(144 100 100)"/>
-        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.15)" transform="rotate(216 100 100)"/>
-        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.15)" transform="rotate(288 100 100)"/>
-        <circle cx="100" cy="100" r="14" fill="rgba(232,164,176,0.4)"/>
+      <svg viewBox="0 0 300 280" fill="none">
+        <circle cx="60" cy="80" r="50" stroke="rgba(196,122,138,0.12)" stroke-width="1" fill="none"/>
+        <circle cx="60" cy="80" r="30" stroke="rgba(196,122,138,0.08)" stroke-width="1" fill="none"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)" transform="rotate(72 60 80)"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)" transform="rotate(144 60 80)"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)" transform="rotate(216 60 80)"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)" transform="rotate(288 60 80)"/>
+        <circle cx="60" cy="80" r="9" fill="rgba(232,164,176,0.5)"/>
       </svg>
     </div>
     <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
-      <p class="page-eyebrow">{t('tags.eyebrow')}</p>
-      <h1 class="page-title">{t('tags.title')}</h1>
-      <p class="page-sub">{t('tags.sub')}</p>
+      <p class="page-eyebrow">Danh mục</p>
+      <h1 class="page-title">Chủ đề</h1>
+      <p class="page-sub">Tìm kiếm bài viết theo chủ đề bạn quan tâm.</p>
     </div>
   </div>
 
   <div class="max-w-5xl mx-auto px-6 lg:px-10 py-16">
     <div class="tags-grid">
       {tags.map(([tag, count]) => (
-        <a href={`/en/tags/${tag}`} class="tag-block">
+        <a href={`/vi/tags/${tag}`} class="tag-block">
           <span class="tag-icon">🌸</span>
           <span class="tag-name">#{tag}</span>
-          <span class="tag-count">{count} {t('tags.count')}</span>
+          <span class="tag-count">{count} bài</span>
         </a>
       ))}
     </div>

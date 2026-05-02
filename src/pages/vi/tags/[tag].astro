@@ -2,13 +2,11 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PostCard from '../../../components/PostCard.astro';
-import { useTranslations } from '../../../i18n/utils';
 
-const lang = 'en' as const;
-const t = useTranslations(lang);
+const lang = 'vi' as const;
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en');
+  const posts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi');
   const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
   return tags.map((tag) => ({
     params: { tag },
@@ -23,13 +21,13 @@ export async function getStaticPaths() {
 const { tag } = Astro.params;
 const { posts } = Astro.props;
 ---
-<BaseLayout lang={lang} title={`#${tag}`} description={`Articles with topic #${tag}`} padTop={false}>
+<BaseLayout lang={lang} title={`#${tag}`} description={`Bài viết với chủ đề #${tag}`} padTop={false}>
 
   <div class="page-header">
     <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
-      <p class="page-eyebrow">{t('tags.topic')}</p>
+      <p class="page-eyebrow">Chủ đề</p>
       <h1 class="page-title">#{tag}</h1>
-      <p class="page-sub">{posts.length} {t('tags.posts')}</p>
+      <p class="page-sub">{posts.length} bài viết trong chủ đề này</p>
     </div>
   </div>
 
@@ -40,7 +38,7 @@ const { posts } = Astro.props;
           title={post.data.title}
           description={post.data.description}
           pubDate={post.data.pubDate}
-          slug={`/en/posts/${post.id}`}
+          slug={`/vi/posts/${post.id}`}
           tags={post.data.tags}
           heroImage={post.data.heroImage}
           heroAlt={post.data.heroAlt}
@@ -48,7 +46,7 @@ const { posts } = Astro.props;
       ))}
     </div>
     <div class="text-center mt-12">
-      <a href="/en/tags" class="back-link">{t('tags.back')}</a>
+      <a href="/vi/tags" class="back-link">← Tất cả chủ đề</a>
     </div>
   </div>
 </BaseLayout>

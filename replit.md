@@ -42,13 +42,21 @@ npm run preview    # Serve dist/ locally
 │   │   ├── SEO.astro
 │   │   ├── Search.astro      # Pagefind UI (only works after build)
 │   │   └── Giscus.astro
-│   ├── pages/
+│   ├── i18n/
+│   │   ├── ui.ts            # All translation strings (EN + VI)
+│   │   └── utils.ts         # useTranslations(), localePath(), alternatePath()
+│   ├── pages/               # English (default, no prefix)
 │   │   ├── index.astro
 │   │   ├── about.astro
 │   │   ├── posts/index.astro + [...slug].astro
 │   │   ├── tags/index.astro + [tag].astro
-│   │   └── rss.xml.js
-│   └── content/posts/*.mdx   # Blog posts
+│   │   ├── rss.xml.js
+│   │   └── vi/              # Vietnamese (optional, /vi/ prefix)
+│   │       ├── index.astro
+│   │       ├── about.astro
+│   │       ├── posts/index.astro + [...slug].astro
+│   │       └── tags/index.astro + [tag].astro
+│   └── content/posts/*.mdx   # Blog posts (lang: 'en' | 'vi' field)
 └── public/
     ├── favicon.svg
     └── robots.txt
@@ -69,6 +77,15 @@ npm run preview    # Serve dist/ locally
 - **Tag hover**: Blush-dark fill replacing old green-deep fill
 - **Animations**: `fadeUp`, `floatPetal`, `petalDrift` for decorative elements
 - **Texture**: Subtle SVG noise overlay on `body::before`, reduced opacity for lightness
+
+## Multilingual (i18n)
+
+- **Default locale**: English at `/` — no URL prefix
+- **Secondary locale**: Vietnamese at `/vi/` — all pages under `/vi/`
+- **Language switcher**: `EN | VI` pill in the header on every page
+- **Content filtering**: posts with `lang: 'en'` appear on EN pages; `lang: 'vi'` (default) on VI pages
+- **Adding EN post**: set `lang: 'en'` in MDX frontmatter
+- **Adding VI post**: omit `lang` (defaults to `'vi'`) or set `lang: 'vi'`
 
 ## Key Notes
 

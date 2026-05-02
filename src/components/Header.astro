@@ -7,7 +7,7 @@ interface Props {
   lang?: Lang;
 }
 
-const { lang = 'vi' } = Astro.props;
+const { lang = 'en' } = Astro.props;
 const t = useTranslations(lang);
 const p = (path: string) => localePath(lang, path);
 const alternateLang = lang === 'vi' ? 'en' : 'vi';

@@ -6,8 +6,8 @@ export default defineConfig({
   site: 'https://vuon-hoa.replit.app',
   integrations: [mdx(), sitemap()],
   i18n: {
-    defaultLocale: 'vi',
-    locales: ['vi', 'en'],
+    defaultLocale: 'en',
+    locales: ['en', 'vi'],
     routing: {
       prefixDefaultLocale: false,
     },

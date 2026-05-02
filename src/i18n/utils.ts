@@ -13,8 +13,8 @@ export function useTranslations(lang: Lang) {
 }
 
 /** Build a locale-aware URL path.
- *  prefix('en', '/posts') → '/en/posts'
- *  prefix('vi', '/posts') → '/posts'
+ *  localePath('en', '/posts') → '/posts'   (en is default, no prefix)
+ *  localePath('vi', '/posts') → '/vi/posts'
  */
 export function localePath(lang: Lang, path: string): string {
   if (lang === defaultLang) return path;
@@ -24,14 +24,16 @@ export function localePath(lang: Lang, path: string): string {
 /** Given the current pathname, return the equivalent path in the other locale. */
 export function alternatePath(pathname: string, currentLang: Lang): string {
   if (currentLang === 'en') {
-    const stripped = pathname.replace(/^\/en\/?/, '') || '';
-    if (stripped.startsWith('posts/')) return '/posts';
-    if (stripped.startsWith('tags/')) return '/tags';
-    return '/' + stripped;
+    // EN pages have no prefix → add /vi prefix
+    if (pathname === '/') return '/vi';
+    if (pathname.startsWith('/posts/') && pathname.length > '/posts/'.length) return '/vi/posts';
+    if (pathname.startsWith('/tags/') && pathname.length > '/tags/'.length) return '/vi/tags';
+    return '/vi' + pathname;
   } else {
-    if (pathname.startsWith('/posts/') && pathname !== '/posts') return '/en/posts';
-    if (pathname.startsWith('/tags/') && pathname !== '/tags') return '/en/tags';
-    if (pathname === '/') return '/en';
-    return '/en' + pathname;
+    // VI pages have /vi prefix → strip it
+    const stripped = pathname.replace(/^\/vi/, '') || '/';
+    if (stripped.startsWith('/posts/') && stripped.length > '/posts/'.length) return '/posts';
+    if (stripped.startsWith('/tags/') && stripped.length > '/tags/'.length) return '/tags';
+    return stripped || '/';
   }
 }

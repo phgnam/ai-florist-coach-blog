@@ -3,7 +3,7 @@ export const languages = {
   en: 'English',
 };
 
-export const defaultLang = 'vi' as const;
+export const defaultLang = 'en' as const;
 
 export const ui = {
   vi: {

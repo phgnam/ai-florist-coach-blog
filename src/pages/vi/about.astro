@@ -1,11 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { useTranslations } from '../../i18n/utils';
 
-const lang = 'en' as const;
-const t = useTranslations(lang);
+const lang = 'vi' as const;
 ---
-<BaseLayout lang={lang} title="About" description="About the Vườn Hoa blog — AI Florist Coach" padTop={false}>
+<BaseLayout lang={lang} title="Giới thiệu" description="Về blog Vườn Hoa — AI Florist Coach" padTop={false}>
 
   <div class="about-hero">
     <div class="about-hero-deco" aria-hidden="true">
@@ -19,8 +17,8 @@ const t = useTranslations(lang);
       </svg>
     </div>
     <div class="max-w-4xl mx-auto px-6 py-28 text-center" style="position:relative;z-index:2">
-      <p class="page-eyebrow">{t('about.eyebrow')}</p>
-      <h1 class="about-title">{t('about.title')} <em>{t('about.title.em')}</em></h1>
+      <p class="page-eyebrow">Câu chuyện của chúng tôi</p>
+      <h1 class="about-title">Về <em>Vườn Hoa</em></h1>
     </div>
   </div>
 
@@ -28,36 +26,36 @@ const t = useTranslations(lang);
     <div class="about-grid">
       <div class="about-card accent-blush">
         <span class="card-icon">🌸</span>
-        <h3>{t('about.card1.title')}</h3>
-        <p><strong>Vườn Hoa</strong> {t('about.card1.body')}</p>
+        <h3>Về Blog</h3>
+        <p><strong>Vườn Hoa</strong> là blog đồng hành với ứng dụng AI Florist Coach — nơi chia sẻ kiến thức, kinh nghiệm và cảm hứng về nghề florist và thế giới hoa.</p>
       </div>
       <div class="about-card accent-rose">
         <span class="card-icon">🌹</span>
-        <h3>{t('about.card2.title')}</h3>
+        <h3>Nội dung</h3>
         <ul>
-          <li>{t('about.card2.li1')}</li>
-          <li>{t('about.card2.li2')}</li>
-          <li>{t('about.card2.li3')}</li>
-          <li>{t('about.card2.li4')}</li>
+          <li>Cách chăm sóc và bảo quản các loại hoa</li>
+          <li>Kỹ thuật cắm hoa và thiết kế bó hoa</li>
+          <li>Xu hướng hoa trang trí theo mùa</li>
+          <li>Kinh nghiệm kinh doanh nghề florist</li>
         </ul>
       </div>
       <div class="about-card accent-gold">
         <span class="card-icon">🤖</span>
-        <h3>{t('about.card3.title')}</h3>
-        <p>{t('about.card3.body')}</p>
+        <h3>AI Florist Coach</h3>
+        <p>Blog này là người bạn đồng hành của ứng dụng <strong>AI Florist Coach</strong> — giúp các florist chuyên nghiệp và người yêu hoa tìm kiếm cảm hứng và phát triển sự nghiệp.</p>
       </div>
     </div>
 
     <div class="about-quote">
       <div class="quote-petal" aria-hidden="true">🌷</div>
       <blockquote>
-        <p>{t('about.quote')}</p>
-        <cite>{t('about.quote.cite')}</cite>
+        <p>"Hoa không chỉ là vẻ đẹp — đó là ngôn ngữ của tình cảm, của nghề thủ công, và của nghệ thuật sống."</p>
+        <cite>— Vườn Hoa Team</cite>
       </blockquote>
     </div>
 
     <div class="about-cta text-center mt-12">
-      <a href="/en/posts" class="btn-primary">{t('about.cta')}</a>
+      <a href="/vi/posts" class="btn-primary">Đọc bài viết đầu tiên</a>
     </div>
   </div>
 </BaseLayout>
