@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/` },
+];
+
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Công cụ', url: `${siteUrl}/vi/tools/` },
+];
+---
+<BaseLayout
+  lang={lang}
+  title="Công Cụ Florist — Tài Nguyên Miễn Phí Cho Người Yêu Hoa"
+  description="Công cụ florist miễn phí từ Vườn Hoa: máy tính tuổi thọ hoa, lịch hoa theo mùa, từ điển hoa và nhiều tài nguyên hữu ích hơn."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <div class="page-header">
+    <div class="max-w-5xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Tài nguyên miễn phí</p>
+      <h1 class="page-title">Công Cụ Florist</h1>
+      <p class="page-sub">Những công cụ thực tế cho florist, người yêu hoa và bất kỳ ai muốn hoa của mình tươi lâu hơn.</p>
+      <a href="/tools/" class="lang-switch-link">🇬🇧 View in English</a>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-14">
+    <div class="tools-grid">
+      <a href="/vi/tools/care-calculator/" class="tool-card">
+        <div class="tool-icon">🌸⏱️</div>
+        <div class="tool-body">
+          <h2 class="tool-name">Máy Tính Tuổi Thọ Hoa</h2>
+          <p class="tool-desc">Ước tính hoa cắt của bạn sẽ tươi bao lâu dựa trên loại hoa, nhiệt độ phòng và thói quen chăm sóc. Nhận mẹo cá nhân hóa để tối đa độ tươi.</p>
+          <span class="tool-cta">Dùng máy tính →</span>
+        </div>
+      </a>
+      <a href="/vi/tools/season-planner/" class="tool-card">
+        <div class="tool-icon">📅🌸</div>
+        <div class="tool-body">
+          <h2 class="tool-name">Lịch Hoa Theo Mùa</h2>
+          <p class="tool-desc">Khám phá loài hoa nào đang nở vào từng tháng trong năm. Thiết yếu cho các wedding planner, florist và nhà tổ chức sự kiện lên kế hoạch hoa theo mùa.</p>
+          <span class="tool-cta">Mở lịch →</span>
+        </div>
+      </a>
+      <a href="/vi/learn/" class="tool-card">
+        <div class="tool-icon">📖🌹</div>
+        <div class="tool-body">
+          <h2 class="tool-name">Từ Điển Hoa</h2>
+          <p class="tool-desc">Hướng dẫn A–Z về 20 loài hoa: ý nghĩa biểu tượng, mẹo chăm sóc, các giống tốt nhất, tính theo mùa và sự kiện thú vị cho mọi florist cần biết.</p>
+          <span class="tool-cta">Xem từ điển →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.5rem,6vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:480px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+  .tools-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem; }
+  .tool-card { display:flex; gap:1.25rem; background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:2rem; text-decoration:none; transition:all 0.22s; }
+  .tool-card:hover { border-color:var(--blush); transform:translateY(-2px); box-shadow:0 8px 28px rgba(196,122,138,0.1); }
+  .tool-icon { font-size:2.5rem; flex-shrink:0; }
+  .tool-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--mauve); margin:0 0 0.5rem; }
+  .tool-desc { font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text-mid); font-weight:300; line-height:1.7; margin:0 0 1rem; }
+  .tool-cta { font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; color:var(--blush-dark); }
+</style>

@@ -1,0 +1,332 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/care-calculator/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/care-calculator/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/care-calculator/` },
+];
+
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Công cụ', url: `${siteUrl}/vi/tools/` },
+  { name: 'Máy tính tuổi thọ hoa', url: `${siteUrl}/vi/tools/care-calculator/` },
+];
+
+const FLOWERS = [
+  { id: 'rose',         name: 'Hoa Hồng',        base: 7,  tip: 'Cắt cuống chéo dưới vòi nước. Loại bỏ lá ở dưới mực nước ngay lập tức.', slug: 'rose' },
+  { id: 'lily',         name: 'Hoa Ly',           base: 10, tip: 'Bỏ nhị hoa ngay khi bông nở để tránh vết phấn và giữ bình sạch.', slug: 'lily' },
+  { id: 'peony',        name: 'Hoa Mẫu Đơn',     base: 7,  tip: 'Mua ở giai đoạn "quả cầu bông mềm". Giữ mát để kéo dài tuổi thọ.', slug: 'peony' },
+  { id: 'tulip',        name: 'Hoa Tulip',        base: 7,  tip: 'Hoa tulip tiếp tục mọc sau khi cắt — dùng bình cao và giữ lạnh.', slug: 'tulip' },
+  { id: 'sunflower',    name: 'Hoa Hướng Dương',  base: 9,  tip: 'Uống nhiều nước — đổ đầy bình và kiểm tra hàng ngày.', slug: 'sunflower' },
+  { id: 'orchid',       name: 'Hoa Lan (Cắt)',    base: 12, tip: 'Phun sương nhẹ lên bông hoa hàng ngày để giữ độ ẩm.', slug: 'orchid' },
+  { id: 'hydrangea',    name: 'Hoa Cẩm Tú Cầu',  base: 6,  tip: 'Khi héo: ngâm toàn bộ bông hoa vào nước mát 30–60 phút.', slug: 'hydrangea' },
+  { id: 'dahlia',       name: 'Hoa Thược Dược',   base: 5,  tip: 'Sơ chế với nước sôi 20 giây sau đó ngay vào nước lạnh để kéo dài tuổi thọ.', slug: 'dahlia' },
+  { id: 'carnation',    name: 'Hoa Cẩm Chướng',  base: 21, tip: 'Một trong những hoa sống lâu nhất! Cắt giữa các mắt để hút nước tốt nhất.', slug: 'carnation' },
+  { id: 'chrysanthemum',name: 'Hoa Cúc',          base: 14, tip: 'Bỏ tất cả lá dưới nước ngay lập tức — lá cúc phân hủy nhanh.', slug: 'chrysanthemum' },
+  { id: 'freesia',      name: 'Hoa Freesia',      base: 10, tip: 'Mua ở giai đoạn nụ — chúng sẽ nở dần từ dưới lên trong 1–2 tuần.', slug: 'freesia' },
+  { id: 'lavender',     name: 'Hoa Oải Hương',    base: 6,  tip: 'Cần rất ít nước — nó thích điều kiện khô hơn hầu hết hoa cắt.', slug: 'lavender' },
+  { id: 'iris',         name: 'Hoa Diên Vĩ',      base: 7,  tip: 'Mua ở giai đoạn nụ đóng — các nụ kế tiếp sẽ tiếp tục nở.', slug: 'iris' },
+  { id: 'ranunculus',   name: 'Hoa Mao Lương',    base: 10, tip: 'Cuống rỗng và mỏng manh — cắt dưới nước và cầm nhẹ nhàng.', slug: 'ranunculus' },
+  { id: 'anemone',      name: 'Hoa Hải Quỳ',     base: 7,  tip: 'Xoay bình thường xuyên — chúng cong về phía ánh sáng.', slug: 'anemone' },
+  { id: 'sweet-pea',    name: 'Hoa Đậu Thơm',    base: 5,  tip: 'Cực nhạy cảm với ethylene — giữ hoàn toàn tránh xa trái cây chín.', slug: 'sweet-pea' },
+  { id: 'gardenia',     name: 'Hoa Dạ Lý Hương', base: 4,  tip: 'Cầm càng ít càng tốt — dầu tay gây bầm ngay trên cánh hoa.', slug: 'gardenia' },
+  { id: 'jasmine',      name: 'Hoa Nhài',         base: 3,  tip: 'Dùng cụm nụ hoa thay vì bông đã nở để có độ bền lâu hơn.', slug: 'jasmine' },
+  { id: 'magnolia',     name: 'Hoa Mộc Lan',      base: 3,  tip: 'Cắt ở giai đoạn nụ cuối — hoa đã nở hoàn toàn sẽ bầm trong vài giờ.', slug: 'magnolia' },
+  { id: 'marigold',     name: 'Hoa Vạn Thọ',     base: 10, tip: 'Bỏ tất cả lá — chúng có mùi mạnh và phân hủy nhanh trong nước.', slug: 'marigold' },
+];
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Cách giữ hoa cắt tươi lâu hơn",
+  "description": "Hướng dẫn từng bước để kéo dài tuổi thọ hoa cắt, từ sơ chế ban đầu đến chăm sóc hàng ngày.",
+  "inLanguage": "vi",
+  "step": [
+    { "@type": "HowToStep", "name": "Cắt lại cuống", "text": "Cắt cuống chéo 45 độ dưới nước chảy để ngăn bọt khí." },
+    { "@type": "HowToStep", "name": "Bỏ lá dưới mực nước", "text": "Loại bỏ tất cả lá sẽ ngâm trong nước để ngăn vi khuẩn phát triển." },
+    { "@type": "HowToStep", "name": "Dùng nước sạch", "text": "Đổ đầy bình với nước sạch và thêm dung dịch bảo quản hoa." },
+    { "@type": "HowToStep", "name": "Đặt ở nơi mát", "text": "Tránh ánh nắng trực tiếp, gió lùa và trái cây chín (tỏa khí ethylene)." },
+    { "@type": "HowToStep", "name": "Thay nước thường xuyên", "text": "Thay nước và cắt lại cuống mỗi 1–2 ngày để duy trì độ tươi." },
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Làm thế nào để giữ hoa tươi lâu hơn?", "acceptedAnswer": { "@type": "Answer", "text": "Cắt cuống chéo dưới nước, bỏ lá dưới mực nước, thay nước mỗi 1–2 ngày, tránh nhiệt và trái cây chín. Nhiệt độ mát (16–20°C) kéo dài đáng kể tuổi thọ bình." } },
+    { "@type": "Question", "name": "Hoa cắt sống được bao lâu?", "acceptedAnswer": { "@type": "Answer", "text": "Phụ thuộc vào loài hoa. Hoa cẩm chướng: 2–4 tuần; hoa cúc: 10–21 ngày; hoa hồng: 5–12 ngày; hoa thược dược: 4–8 ngày. Chăm sóc đúng cách có thể tăng gấp đôi tuổi thọ bình." } },
+    { "@type": "Question", "name": "Có nên dùng dung dịch bảo quản hoa không?", "acceptedAnswer": { "@type": "Answer", "text": "Có — dung dịch bảo quản hoa kéo dài tuổi thọ bình 30–50% vì chứa đường (thức ăn), axit (điều chỉnh pH) và chất diệt khuẩn. Tự làm bằng 1 thìa cà phê đường + vài giọt nước súc miệng trong 500ml nước." } },
+    { "@type": "Question", "name": "Tại sao hoa của tôi héo sớm?", "acceptedAnswer": { "@type": "Answer", "text": "Nguyên nhân phổ biến nhất: cuống bị tắc (cắt lại và cắm ngay vào nước), nước quá ấm, lá thối trong nước, quá gần nguồn nhiệt hoặc trái cây chín. Đặt bình trong tủ lạnh qua đêm thường cứu được hoa đang héo." } },
+  ]
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Máy Tính Tuổi Thọ Hoa — Hoa Của Bạn Tươi Được Bao Lâu?"
+  description="Công cụ miễn phí: tính xem hoa cắt của bạn sẽ tươi bao lâu dựa trên loại hoa, nhiệt độ phòng và thói quen chăm sóc. Nhận mẹo cá nhân hóa từ Vườn Hoa."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/vi/">Trang chủ</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/vi/tools/">Công cụ</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">Máy tính tuổi thọ hoa</li>
+      </ol>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="max-w-5xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Công cụ miễn phí</p>
+      <h1 class="page-title">Máy Tính Tuổi Thọ Hoa</h1>
+      <p class="page-sub">Ước tính hoa cắt của bạn sẽ tươi bao lâu dựa trên loại hoa, nhiệt độ phòng và thói quen chăm sóc. Nhận mẹo cá nhân hóa để tối đa độ tươi.</p>
+      <a href="/tools/care-calculator/" class="lang-switch-link">🇬🇧 View in English</a>
+    </div>
+  </div>
+
+  <div class="calc-wrap">
+    <div class="max-w-5xl mx-auto px-4 lg:px-6 py-14">
+      <div class="calc-grid">
+        <div class="calc-card" id="calculator">
+          <h2 class="calc-section-title">Điều Kiện Của Bạn</h2>
+
+          <div class="field-group">
+            <label class="field-label" for="flowerType">Loại hoa <span class="required">*</span></label>
+            <select class="field-select" id="flowerType">
+              <option value="">— Chọn một loại hoa —</option>
+              {FLOWERS.map(f => <option value={f.id} data-base={f.base} data-tip={f.tip} data-slug={f.slug}>{f.name}</option>)}
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="roomTemp">Nhiệt độ phòng</label>
+            <div class="radio-group" id="roomTemp">
+              <label class="radio-option"><input type="radio" name="temp" value="hot"/> <span>Nóng (&gt;26°C)</span></label>
+              <label class="radio-option"><input type="radio" name="temp" value="warm"/> <span>Ấm (21–25°C)</span></label>
+              <label class="radio-option active"><input type="radio" name="temp" value="cool" checked/> <span>Mát (16–20°C)</span></label>
+              <label class="radio-option"><input type="radio" name="temp" value="cold"/> <span>Lạnh (&lt;16°C)</span></label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="waterChange">Thay nước bao lâu một lần?</label>
+            <div class="radio-group" id="waterChange">
+              <label class="radio-option"><input type="radio" name="water" value="never"/> <span>Không thay</span></label>
+              <label class="radio-option"><input type="radio" name="water" value="fewDays"/> <span>3–4 ngày/lần</span></label>
+              <label class="radio-option active"><input type="radio" name="water" value="every2" checked/> <span>2 ngày/lần</span></label>
+              <label class="radio-option"><input type="radio" name="water" value="daily"/> <span>Hàng ngày</span></label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Bạn có cắt lại cuống không?</label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="recut" value="no"/> <span>Không</span></label>
+              <label class="radio-option active"><input type="radio" name="recut" value="yes" checked/> <span>Có, cắt chéo</span></label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Sử dụng dung dịch dinh dưỡng?</label>
+            <div class="radio-group">
+              <label class="radio-option active"><input type="radio" name="food" value="none" checked/> <span>Chỉ nước</span></label>
+              <label class="radio-option"><input type="radio" name="food" value="yes"/> <span>Có, dùng dung dịch</span></label>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Đã bỏ lá dưới mực nước?</label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="leaves" value="no"/> <span>Chưa</span></label>
+              <label class="radio-option active"><input type="radio" name="leaves" value="yes" checked/> <span>Rồi</span></label>
+            </div>
+          </div>
+
+          <button class="calc-btn" id="calculateBtn">Tính ngay →</button>
+        </div>
+
+        <div class="result-card" id="resultCard" hidden>
+          <div class="result-header">
+            <p class="result-label">Ước tính tuổi thọ</p>
+            <div class="result-days"><span id="resultDays">—</span> <span class="result-unit">ngày</span></div>
+            <p class="result-range" id="resultRange"></p>
+          </div>
+
+          <div class="result-section" id="flowerTipSection" hidden>
+            <h3 class="result-section-title">Mẹo đặc biệt cho loài hoa này</h3>
+            <p class="result-tip" id="flowerTipText"></p>
+            <a href="#" class="result-link" id="glossaryLink">Hướng dẫn chăm sóc đầy đủ →</a>
+          </div>
+
+          <div class="result-section">
+            <h3 class="result-section-title">Cải thiện nhanh để kéo dài thêm ngày</h3>
+            <ul class="quick-wins" id="quickWinsList"></ul>
+          </div>
+
+          <button class="recalc-btn" id="recalcBtn">← Tính lại</button>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="faq-section-inner">
+        <h2 class="faq-title">Câu Hỏi Thường Gặp</h2>
+        <div class="faq-list">
+          {faqSchema.mainEntity.map(item => (
+            <div class="faq-item">
+              <button class="faq-q">
+                <span>{item.name}</span>
+                <span class="faq-icon">+</span>
+              </button>
+              <div class="faq-a" hidden><p>{item.acceptedAnswer.text}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:540px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+  .calc-wrap { background:var(--ivory); }
+  .calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+  @media (max-width:768px) { .calc-grid { grid-template-columns:1fr; } }
+  .calc-card,.result-card { background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:2rem; }
+  .calc-section-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--mauve); margin:0 0 1.5rem; }
+  .field-group { margin-bottom:1.4rem; }
+  .field-label { display:block; font-family:'Jost',sans-serif; font-size:0.78rem; font-weight:500; color:var(--mauve); margin-bottom:0.5rem; letter-spacing:0.04em; }
+  .required { color:var(--blush-dark); }
+  .field-select { width:100%; padding:0.7rem 1rem; border:1.5px solid var(--ivory-dark); border-radius:10px; font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--mauve); background:var(--ivory); outline:none; transition:border-color 0.2s; cursor:pointer; }
+  .field-select:focus { border-color:var(--blush); }
+  .radio-group { display:flex; flex-wrap:wrap; gap:0.4rem; }
+  .radio-option { display:flex; align-items:center; gap:0.4rem; padding:0.45rem 0.9rem; border:1.5px solid var(--ivory-dark); border-radius:999px; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); transition:all 0.18s; }
+  .radio-option input { display:none; }
+  .radio-option.active,.radio-option:has(input:checked) { background:var(--blush-dark); border-color:var(--blush-dark); color:white; }
+  .radio-option:not(.active):hover { border-color:var(--blush); color:var(--mauve); }
+  .calc-btn { width:100%; margin-top:0.5rem; padding:0.95rem 2rem; background:var(--blush-dark); color:white; border:none; border-radius:12px; font-family:'Jost',sans-serif; font-size:0.88rem; font-weight:500; letter-spacing:0.08em; cursor:pointer; transition:all 0.2s; }
+  .calc-btn:hover { background:var(--mauve); transform:translateY(-1px); }
+  .result-card { background:linear-gradient(160deg,#FDF0F2 0%,white 100%); display:flex; flex-direction:column; gap:1.5rem; }
+  .result-header { text-align:center; padding-bottom:1.25rem; border-bottom:1px solid var(--ivory-dark); }
+  .result-label { font-family:'Jost',sans-serif; font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--taupe); margin:0 0 0.5rem; }
+  .result-days { font-family:'Cormorant Garamond',serif; font-size:4rem; font-weight:300; color:var(--blush-dark); line-height:1; }
+  .result-unit { font-size:1.5rem; color:var(--mauve-mid); }
+  .result-range { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); margin:0.5rem 0 0; }
+  .result-section { background:white; border:1px solid var(--ivory-dark); border-radius:14px; padding:1.25rem; }
+  .result-section-title { font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--taupe); margin:0 0 0.75rem; }
+  .result-tip { font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text-mid); line-height:1.75; margin:0 0 0.75rem; font-weight:300; }
+  .result-link { font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--blush-dark); text-decoration:none; font-weight:500; }
+  .result-link:hover { text-decoration:underline; }
+  .quick-wins { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem; }
+  .quick-wins li { display:flex; align-items:flex-start; gap:0.6rem; font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text-mid); line-height:1.65; font-weight:300; }
+  .quick-wins li::before { content:'✓'; color:var(--blush-dark); font-weight:600; flex-shrink:0; margin-top:1px; }
+  .recalc-btn { background:none; border:1.5px solid var(--ivory-dark); border-radius:10px; padding:0.7rem 1.5rem; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); cursor:pointer; transition:all 0.2s; align-self:flex-start; }
+  .recalc-btn:hover { border-color:var(--blush); color:var(--blush-dark); }
+  .faq-section-inner { margin-top:3rem; }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.5rem,3vw,2rem); font-weight:300; color:var(--mauve); margin:0 0 1.5rem; }
+  .faq-list { display:flex; flex-direction:column; gap:0.5rem; }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.9rem 1.2rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.88rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.1rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.2s; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.2rem 0.9rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text-mid); line-height:1.85; margin:0; font-weight:300; }
+</style>
+
+<script define:vars={{ FLOWERS }}>
+  const flowerMap = {};
+  FLOWERS.forEach(f => { flowerMap[f.id] = f; });
+
+  const multTemp   = { hot: 0.55, warm: 0.8, cool: 1.0, cold: 1.3 };
+  const multWater  = { never: 0.6, fewDays: 0.85, every2: 1.0, daily: 1.15 };
+  const multRecut  = { no: 0.8, yes: 1.0 };
+  const multFood   = { none: 1.0, yes: 1.3 };
+  const multLeaves = { no: 0.8, yes: 1.0 };
+
+  document.querySelectorAll('.radio-option').forEach(opt => {
+    const input = opt.querySelector('input');
+    if (input) input.addEventListener('change', () => {
+      document.querySelectorAll(`.radio-option input[name="${input.name}"]`).forEach(i => {
+        i.closest('.radio-option')?.classList.remove('active');
+      });
+      opt.classList.add('active');
+    });
+  });
+
+  document.getElementById('calculateBtn')?.addEventListener('click', () => {
+    const flowerSel = document.getElementById('flowerType');
+    const flowerVal = flowerSel?.value;
+    if (!flowerVal) { flowerSel?.style && (flowerSel.style.borderColor='var(--blush-dark)'); return; }
+    const flower = flowerMap[flowerVal];
+    const temp   = document.querySelector('input[name="temp"]:checked')?.value ?? 'cool';
+    const water  = document.querySelector('input[name="water"]:checked')?.value ?? 'every2';
+    const recut  = document.querySelector('input[name="recut"]:checked')?.value ?? 'yes';
+    const food   = document.querySelector('input[name="food"]:checked')?.value ?? 'none';
+    const leaves = document.querySelector('input[name="leaves"]:checked')?.value ?? 'yes';
+
+    const mult = multTemp[temp] * multWater[water] * multRecut[recut] * multFood[food] * multLeaves[leaves];
+    const days = Math.round(flower.base * mult);
+    const low  = Math.round(days * 0.8);
+    const high = Math.round(days * 1.2);
+
+    document.getElementById('resultDays').textContent = String(days);
+    document.getElementById('resultRange').textContent = `Khoảng ước tính: ${low}–${high} ngày`;
+    document.getElementById('flowerTipText').textContent = flower.tip;
+    const link = document.getElementById('glossaryLink');
+    link.href = `/vi/learn/${flower.slug}/`;
+    document.getElementById('flowerTipSection').hidden = false;
+
+    const wins = [];
+    if (temp === 'hot' || temp === 'warm') wins.push('Chuyển đến phòng mát hơn — có thể tiết kiệm 2–4 ngày');
+    if (water === 'never' || water === 'fewDays') wins.push('Thay nước thường xuyên hơn — tăng thêm 1–3 ngày');
+    if (recut === 'no') wins.push('Cắt lại cuống chéo 45 độ dưới nước — tăng thêm 1–2 ngày');
+    if (food === 'none') wins.push('Thêm dung dịch bảo quản hoa — tăng thêm 2–4 ngày');
+    if (leaves === 'no') wins.push('Bỏ lá ngâm dưới nước — ngăn vi khuẩn, tăng thêm 1–2 ngày');
+    if (wins.length === 0) wins.push('Bạn đang chăm sóc rất tốt! Đặt bình trong tủ lạnh qua đêm để có thêm vài ngày nữa.');
+
+    const list = document.getElementById('quickWinsList');
+    list.innerHTML = wins.map(w => `<li>${w}</li>`).join('');
+
+    document.getElementById('calculator').hidden = true;
+    document.getElementById('resultCard').hidden = false;
+  });
+
+  document.getElementById('recalcBtn')?.addEventListener('click', () => {
+    document.getElementById('calculator').hidden = false;
+    document.getElementById('resultCard').hidden = true;
+  });
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-q');
+    const ans = item.querySelector('.faq-a');
+    btn?.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-a').hidden = true;
+      });
+      if (!isOpen) { item.classList.add('open'); ans.hidden = false; }
+    });
+  });
+</script>

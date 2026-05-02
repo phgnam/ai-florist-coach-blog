@@ -1,0 +1,411 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/season-planner/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/season-planner/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/season-planner/` },
+];
+
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Công cụ', url: `${siteUrl}/vi/tools/` },
+  { name: 'Lịch hoa theo mùa', url: `${siteUrl}/vi/tools/season-planner/` },
+];
+
+const FLOWERS = [
+  { slug: 'rose',          emoji: '🌹', name: 'Hoa Hồng',         months: [1,1,1,2,2,2,2,2,2,1,1,1], bestFor: 'Đám cưới, Lễ Tình Nhân' },
+  { slug: 'peony',         emoji: '🌸', name: 'Hoa Mẫu Đơn',      months: [0,0,0,1,2,2,0,0,0,0,0,0], bestFor: 'Đám cưới, Ngày của Mẹ' },
+  { slug: 'tulip',         emoji: '🌷', name: 'Hoa Tulip',         months: [1,1,2,2,2,0,0,0,0,0,0,1], bestFor: 'Đám cưới mùa xuân, Lễ Phục Sinh' },
+  { slug: 'lily',          emoji: '🌷', name: 'Hoa Ly',            months: [0,0,0,0,1,2,2,2,1,0,0,0], bestFor: 'Tang lễ, Đám cưới hè' },
+  { slug: 'sunflower',     emoji: '🌻', name: 'Hoa Hướng Dương',   months: [0,0,0,0,0,1,2,2,2,1,0,0], bestFor: 'Sự kiện hè, Đám cưới rustic' },
+  { slug: 'hydrangea',     emoji: '💐', name: 'Hoa Cẩm Tú Cầu',   months: [0,0,0,0,1,2,2,2,2,1,0,0], bestFor: 'Trung tâm bàn đám cưới' },
+  { slug: 'dahlia',        emoji: '🌸', name: 'Hoa Thược Dược',    months: [0,0,0,0,0,0,1,2,2,2,0,0], bestFor: 'Đám cưới cuối hè, Sự kiện thu' },
+  { slug: 'sweet-pea',     emoji: '🌸', name: 'Hoa Đậu Thơm',     months: [0,0,0,1,2,2,1,0,0,0,0,0], bestFor: 'Bó hoa cô dâu' },
+  { slug: 'iris',          emoji: '💜', name: 'Hoa Diên Vĩ',       months: [0,0,1,2,2,1,0,0,0,0,0,0], bestFor: 'Đám cưới xuân, Ngày của Mẹ' },
+  { slug: 'ranunculus',    emoji: '🌸', name: 'Hoa Mao Lương',     months: [1,2,2,2,2,0,0,0,0,0,0,0], bestFor: 'Lễ Tình Nhân, Đám cưới xuân' },
+  { slug: 'anemone',       emoji: '🌸', name: 'Hoa Hải Quỳ',      months: [2,2,2,1,0,0,0,0,0,0,1,2], bestFor: 'Đám cưới đông, Lễ Tình Nhân' },
+  { slug: 'freesia',       emoji: '🌸', name: 'Hoa Freesia',       months: [1,2,2,2,2,1,0,0,0,0,0,0], bestFor: 'Đám cưới xuân, Bó hoa cô dâu' },
+  { slug: 'lavender',      emoji: '💜', name: 'Hoa Oải Hương',     months: [0,0,0,0,0,2,2,1,0,0,0,0], bestFor: 'Hoa khô, Quà sức khỏe' },
+  { slug: 'gardenia',      emoji: '🤍', name: 'Hoa Dạ Lý Hương',  months: [0,0,0,0,1,2,2,2,1,0,0,0], bestFor: 'Hoa cài áo, Corsage sang trọng' },
+  { slug: 'jasmine',       emoji: '🌼', name: 'Hoa Nhài',          months: [0,0,0,0,1,2,2,2,1,0,0,0], bestFor: 'Vòng hoa đám cưới, Lễ nghi' },
+  { slug: 'magnolia',      emoji: '🌸', name: 'Hoa Mộc Lan',       months: [0,1,2,2,1,0,0,0,0,0,0,0], bestFor: 'Khung cổng đám cưới xuân' },
+  { slug: 'chrysanthemum', emoji: '🌼', name: 'Hoa Cúc',           months: [1,1,1,1,1,1,1,1,2,2,2,1], bestFor: 'Cắm hoa thu, Tết Nguyên Đán' },
+  { slug: 'carnation',     emoji: '🌺', name: 'Hoa Cẩm Chướng',   months: [2,2,2,2,2,2,2,2,2,2,2,2], bestFor: 'Ngày của Mẹ, Sự kiện tiết kiệm' },
+  { slug: 'marigold',      emoji: '🌼', name: 'Hoa Vạn Thọ',      months: [0,0,0,0,0,1,2,2,2,1,0,0], bestFor: 'Tết Nguyên Đán, Sự kiện Ấn Độ' },
+  { slug: 'orchid',        emoji: '🌺', name: 'Hoa Lan',           months: [2,2,2,2,2,2,2,2,2,2,2,2], bestFor: 'Quà sang trọng, Cây văn phòng' },
+];
+
+const MONTHS_VI = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+const MONTHS_SHORT = ['T1','T2','T3','T4','T5','T6','T7','T8','T9','T10','T11','T12'];
+
+const monthFAQs = MONTHS_VI.map((month, mi) => {
+  const peak = FLOWERS.filter(f => f.months[mi] === 2).map(f => f.name);
+  const avail = FLOWERS.filter(f => f.months[mi] >= 1).map(f => f.name);
+  return {
+    q: `Hoa gì nở vào ${month}?`,
+    a: peak.length > 0
+      ? `Các loài hoa đang ở đỉnh mùa vào ${month} bao gồm: ${peak.join(', ')}. Cũng có thể mua được (thương mại hoặc mùa vai): ${avail.filter(n => !peak.includes(n)).join(', ') || 'các giống có quanh năm như cẩm chướng và lan'}. Những loài hoa trồng địa phương tốt nhất cho cắm hoa ${month} là ${peak.slice(0, 3).join(', ')}.`
+      : `Vào ${month}, hầu hết hoa có sẵn là các giống thương mại có quanh năm. Tìm kiếm: ${avail.join(', ')}. Tính có sẵn hoa địa phương thay đổi theo vùng khí hậu.`
+  };
+});
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": monthFAQs.map(item => ({
+    "@type": "Question",
+    "name": item.q,
+    "acceptedAnswer": { "@type": "Answer", "text": item.a }
+  }))
+};
+
+const currentMonth = new Date().getMonth();
+---
+<BaseLayout
+  lang={lang}
+  title="Lịch Hoa Theo Mùa — Hoa Gì Nở Vào Tháng Mấy?"
+  description="Lịch hoa tương tác: khám phá loài hoa nào đang nở từng tháng trong năm. Thiết yếu cho wedding planner, florist và nhà tổ chức sự kiện. Công cụ miễn phí từ Vườn Hoa."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/vi/">Trang chủ</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/vi/tools/">Công cụ</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">Lịch hoa theo mùa</li>
+      </ol>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="max-w-6xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Công cụ miễn phí</p>
+      <h1 class="page-title">Lịch Hoa Theo Mùa</h1>
+      <p class="page-sub">Loài hoa nào đang nở ngay bây giờ? Khám phá đỉnh mùa và tính có sẵn thương mại của 20 loài hoa phổ biến — từng tháng, suốt cả năm.</p>
+      <a href="/tools/season-planner/" class="lang-switch-link">🇬🇧 View in English</a>
+    </div>
+  </div>
+
+  <div class="planner-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-12">
+      <div class="planner-controls">
+        <div class="view-toggle" role="group">
+          <button class="toggle-btn active" id="btn-by-month">Theo tháng</button>
+          <button class="toggle-btn" id="btn-by-flower">Theo loài hoa</button>
+        </div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot dot-peak"></span>Đỉnh mùa</span>
+          <span class="legend-item"><span class="legend-dot dot-avail"></span>Có sẵn</span>
+          <span class="legend-item"><span class="legend-dot dot-none"></span>Hết mùa</span>
+        </div>
+      </div>
+
+      <!-- BY MONTH VIEW -->
+      <div id="view-by-month">
+        <div class="month-tabs" role="tablist">
+          {MONTHS_SHORT.map((m, i) => (
+            <button
+              class:list={['month-tab', { 'active': i === currentMonth }]}
+              role="tab"
+              data-month={i}
+              id={`tab-${i}`}
+            >{m}</button>
+          ))}
+        </div>
+
+        {MONTHS_VI.map((month, mi) => {
+          const peakFlowers = FLOWERS.filter(f => f.months[mi] === 2);
+          const availFlowers = FLOWERS.filter(f => f.months[mi] === 1);
+          const offFlowers = FLOWERS.filter(f => f.months[mi] === 0);
+          return (
+            <div class="month-panel" id={`panel-${mi}`} data-month={mi} hidden={mi !== currentMonth}>
+              <div class="month-panel-header">
+                <h2 class="month-panel-title">Hoa theo mùa: <em>{month}</em></h2>
+                <p class="month-panel-count">
+                  <strong>{peakFlowers.length}</strong> đỉnh mùa · <strong>{availFlowers.length}</strong> có sẵn · <strong>{offFlowers.length}</strong> hết mùa
+                </p>
+              </div>
+
+              {peakFlowers.length > 0 && (
+                <div class="flower-section">
+                  <h3 class="flower-section-heading peak-heading">🌟 Đỉnh mùa</h3>
+                  <div class="flower-cards">
+                    {peakFlowers.map(f => (
+                      <a href={`/vi/learn/${f.slug}/`} class="flower-card flower-card--peak">
+                        <span class="card-emoji">{f.emoji}</span>
+                        <div class="card-body">
+                          <div class="card-name">{f.name}</div>
+                          <div class="card-best">{f.bestFor}</div>
+                        </div>
+                        <span class="peak-badge">Đỉnh</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {availFlowers.length > 0 && (
+                <div class="flower-section">
+                  <h3 class="flower-section-heading avail-heading">✓ Cũng có sẵn</h3>
+                  <div class="flower-cards">
+                    {availFlowers.map(f => (
+                      <a href={`/vi/learn/${f.slug}/`} class="flower-card flower-card--avail">
+                        <span class="card-emoji">{f.emoji}</span>
+                        <div class="card-body">
+                          <div class="card-name">{f.name}</div>
+                          <div class="card-best">{f.bestFor}</div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {offFlowers.length > 0 && (
+                <div class="flower-section">
+                  <h3 class="flower-section-heading off-heading">✗ Hết mùa</h3>
+                  <div class="flower-cards">
+                    {offFlowers.map(f => (
+                      <a href={`/vi/learn/${f.slug}/`} class="flower-card flower-card--off">
+                        <span class="card-emoji card-emoji--off">{f.emoji}</span>
+                        <div class="card-body">
+                          <div class="card-name card-name--off">{f.name}</div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- BY FLOWER VIEW -->
+      <div id="view-by-flower" hidden>
+        <div class="by-flower-grid">
+          {FLOWERS.map(f => (
+            <div class="flower-row">
+              <a href={`/vi/learn/${f.slug}/`} class="flower-row-label">
+                <span class="row-emoji">{f.emoji}</span>
+                <span class="row-name">{f.name}</span>
+              </a>
+              <div class="month-dots">
+                {f.months.map((val, mi) => (
+                  <div class:list={['month-dot',{'dot-is-peak':val===2,'dot-is-avail':val===1,'dot-is-off':val===0}]}
+                    title={`${MONTHS_VI[mi]}: ${val===2?'Đỉnh mùa':val===1?'Có sẵn':'Hết mùa'}`}>
+                    <span class="dot-month-label">{MONTHS_SHORT[mi]}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="by-flower-month-row">
+          <div class="month-col-spacer"></div>
+          {MONTHS_SHORT.map(m => <span class="month-col-label">{m}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reference table -->
+  <section class="grid-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="grid-title">Bảng Lịch Hoa Theo Mùa Cả Năm</h2>
+      <p class="grid-sub">Tất cả 20 loài hoa trong 12 tháng. <span class="legend-inline"><span class="dot dot-sm dot-peak-sm"></span> Đỉnh mùa</span> <span class="legend-inline"><span class="dot dot-sm dot-avail-sm"></span> Có sẵn</span></p>
+      <div class="grid-table-wrap">
+        <table class="grid-table">
+          <thead>
+            <tr>
+              <th class="col-flower">Loài hoa</th>
+              {MONTHS_SHORT.map(m => <th class="col-month">{m}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {FLOWERS.map(f => (
+              <tr>
+                <td class="cell-name">
+                  <a href={`/vi/learn/${f.slug}/`} class="table-flower-link">{f.emoji} {f.name}</a>
+                </td>
+                {f.months.map(val => (
+                  <td class:list={['cell-month',{'cell-peak':val===2,'cell-avail':val===1,'cell-off':val===0}]}>
+                    {val===2?'●':val===1?'○':''}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-16">
+      <h2 class="faq-title">Câu Hỏi Thường Gặp Về Hoa Theo Mùa</h2>
+      <div class="faq-list">
+        {monthFAQs.map((item, i) => (
+          <div class="faq-item" data-index={i}>
+            <button class="faq-q" aria-expanded="false">
+              <span>{item.q}</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a" hidden><p>{item.a}</p></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:580px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+  .planner-wrap { background:var(--ivory); }
+  .planner-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
+  .view-toggle { display:flex; background:white; border:1px solid var(--ivory-dark); border-radius:10px; padding:3px; gap:2px; }
+  .toggle-btn { padding:0.45rem 1.25rem; border:none; background:none; border-radius:7px; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); cursor:pointer; transition:all 0.2s; }
+  .toggle-btn.active { background:var(--blush-dark); color:white; font-weight:500; }
+  .legend { display:flex; align-items:center; gap:1rem; }
+  .legend-item { display:flex; align-items:center; gap:0.4rem; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--taupe); font-weight:300; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .dot-peak { background:var(--blush-dark); }
+  .dot-avail { background:rgba(232,164,176,0.45); border:1px solid var(--blush); }
+  .dot-none { background:var(--ivory-dark); }
+  .month-tabs { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1.5rem; background:white; border:1px solid var(--ivory-dark); border-radius:14px; padding:0.5rem; }
+  .month-tab { flex:1; min-width:44px; padding:0.5rem 0.25rem; border:none; background:none; border-radius:9px; font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); cursor:pointer; transition:all 0.2s; text-align:center; }
+  .month-tab.active { background:var(--blush-dark); color:white; font-weight:500; }
+  .month-tab:hover:not(.active) { background:var(--blush-light); color:var(--mauve); }
+  .month-panel-header { margin-bottom:1.75rem; }
+  .month-panel-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:300; color:var(--mauve); margin:0 0 0.35rem; }
+  .month-panel-title em { font-style:italic; color:var(--blush-dark); }
+  .month-panel-count { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); font-weight:300; margin:0; }
+  .month-panel-count strong { color:var(--mauve); }
+  .flower-section { margin-bottom:2rem; }
+  .flower-section-heading { font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; margin:0 0 0.85rem; }
+  .peak-heading { color:var(--blush-dark); }
+  .avail-heading { color:var(--taupe); }
+  .off-heading { color:var(--ivory-dark); }
+  .flower-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:0.65rem; }
+  .flower-card { display:flex; align-items:center; gap:0.65rem; border-radius:12px; padding:0.75rem 0.9rem; text-decoration:none; transition:all 0.2s; border:1px solid transparent; }
+  .flower-card--peak { background:rgba(232,164,176,0.12); border-color:rgba(196,122,138,0.25); }
+  .flower-card--peak:hover { background:rgba(232,164,176,0.22); border-color:var(--blush-dark); transform:translateY(-1px); }
+  .flower-card--avail { background:rgba(253,240,242,0.6); border-color:var(--ivory-dark); }
+  .flower-card--avail:hover { background:rgba(232,164,176,0.1); border-color:var(--blush); transform:translateY(-1px); }
+  .flower-card--off { background:rgba(240,235,230,0.4); opacity:0.6; }
+  .card-emoji { font-size:1.5rem; flex-shrink:0; }
+  .card-emoji--off { filter:grayscale(1) opacity(0.5); }
+  .card-name { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600; color:var(--mauve); }
+  .card-name--off { color:var(--taupe); font-weight:400; }
+  .card-best { font-family:'Jost',sans-serif; font-size:0.7rem; color:var(--taupe); font-weight:300; }
+  .peak-badge { margin-left:auto; font-size:0.62rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; background:var(--blush-dark); color:white; padding:0.15rem 0.5rem; border-radius:999px; flex-shrink:0; }
+  .by-flower-grid { display:flex; flex-direction:column; gap:0.55rem; }
+  .flower-row { display:flex; align-items:center; gap:0.75rem; background:white; border:1px solid var(--ivory-dark); border-radius:12px; padding:0.65rem 1rem; }
+  .flower-row-label { display:flex; align-items:center; gap:0.5rem; width:140px; flex-shrink:0; text-decoration:none; }
+  .flower-row-label:hover .row-name { color:var(--blush-dark); }
+  .row-emoji { font-size:1.2rem; }
+  .row-name { font-family:'Cormorant Garamond',serif; font-size:0.92rem; font-weight:600; color:var(--mauve); }
+  .month-dots { display:flex; gap:3px; flex:1; }
+  .month-dot { flex:1; height:28px; border-radius:5px; display:flex; align-items:center; justify-content:center; }
+  .dot-is-peak { background:var(--blush-dark); }
+  .dot-is-avail { background:rgba(232,164,176,0.4); border:1px solid rgba(196,122,138,0.25); }
+  .dot-is-off { background:var(--ivory-dark); }
+  .dot-month-label { font-family:'Jost',sans-serif; font-size:0.5rem; font-weight:500; color:rgba(255,255,255,0.7); user-select:none; }
+  .dot-is-off .dot-month-label { color:rgba(158,138,128,0.4); }
+  .dot-is-avail .dot-month-label { color:rgba(196,122,138,0.7); }
+  .by-flower-month-row { display:flex; align-items:center; gap:0.75rem; padding:0.35rem 1rem; }
+  .month-col-spacer { width:140px; flex-shrink:0; }
+  .month-col-label { flex:1; font-family:'Jost',sans-serif; font-size:0.6rem; text-align:center; color:var(--taupe); }
+  @media (max-width:640px) { .flower-row-label { width:90px; } .row-name { font-size:0.78rem; } .month-col-spacer { width:90px; } .dot-month-label { font-size:0; } }
+  .grid-section { background:white; border-top:1px solid var(--ivory-dark); }
+  .grid-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:300; color:var(--mauve); margin:0 0 0.5rem; text-align:center; }
+  .grid-sub { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); text-align:center; margin:0 0 2rem; font-weight:300; }
+  .legend-inline { display:inline-flex; align-items:center; gap:0.35rem; margin:0 0.35rem; }
+  .dot { border-radius:50%; display:inline-block; }
+  .dot-sm { width:8px; height:8px; }
+  .dot-peak-sm { background:var(--blush-dark); }
+  .dot-avail-sm { background:rgba(232,164,176,0.5); border:1px solid var(--blush); }
+  .grid-table-wrap { overflow-x:auto; border-radius:16px; border:1px solid var(--ivory-dark); }
+  .grid-table { width:100%; border-collapse:collapse; font-family:'Jost',sans-serif; }
+  .grid-table thead { background:var(--ivory); }
+  .grid-table th { padding:0.7rem 0.3rem; font-size:0.65rem; font-weight:500; text-transform:uppercase; color:var(--taupe); border-bottom:1px solid var(--ivory-dark); text-align:center; }
+  .col-flower { text-align:left; padding-left:1rem; min-width:120px; }
+  .grid-table td { border-bottom:1px solid var(--ivory-dark); }
+  .grid-table tbody tr:last-child td { border-bottom:none; }
+  .grid-table tbody tr:hover td { background:rgba(253,240,242,0.4); }
+  .cell-name { padding:0.65rem 0.3rem 0.65rem 1rem; }
+  .table-flower-link { color:var(--blush-dark); text-decoration:none; font-size:0.85rem; font-weight:400; white-space:nowrap; }
+  .table-flower-link:hover { text-decoration:underline; }
+  .cell-month { text-align:center; font-size:0.65rem; padding:0.5rem 0.2rem; }
+  .cell-peak { color:var(--blush-dark); font-size:0.75rem; }
+  .cell-avail { color:rgba(196,122,138,0.55); }
+  .cell-off { color:transparent; }
+  .faq-section { background:var(--ivory); border-top:1px solid var(--ivory-dark); }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:300; color:var(--mauve); margin:0 0 2.5rem; text-align:center; }
+  .faq-list { display:flex; flex-direction:column; gap:0.6rem; }
+  @media (min-width:900px) { .faq-list { columns:2; column-gap:1.25rem; } .faq-item { break-inside:avoid; } }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.9rem 1.2rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.88rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.1rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.2s; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.2rem 0.9rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.86rem; color:var(--text-mid); line-height:1.8; margin:0; font-weight:300; }
+</style>
+
+<script>
+  const monthTabs = document.querySelectorAll<HTMLElement>('.month-tab');
+  const monthPanels = document.querySelectorAll<HTMLElement>('.month-panel');
+  monthTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const mi = Number(tab.dataset.month);
+      monthTabs.forEach(t => t.classList.remove('active'));
+      monthPanels.forEach(p => { p.hidden = true; });
+      tab.classList.add('active');
+      document.getElementById(`panel-${mi}`)!.hidden = false;
+    });
+  });
+  const btnMonth = document.getElementById('btn-by-month')!;
+  const btnFlower = document.getElementById('btn-by-flower')!;
+  const viewMonth = document.getElementById('view-by-month')!;
+  const viewFlower = document.getElementById('view-by-flower')!;
+  btnMonth.addEventListener('click', () => {
+    btnMonth.classList.add('active'); btnFlower.classList.remove('active');
+    viewMonth.removeAttribute('hidden'); viewFlower.hidden = true;
+  });
+  btnFlower.addEventListener('click', () => {
+    btnFlower.classList.add('active'); btnMonth.classList.remove('active');
+    viewFlower.removeAttribute('hidden'); viewMonth.hidden = true;
+  });
+  document.querySelectorAll<HTMLElement>('.faq-item').forEach(item => {
+    const btn = item.querySelector<HTMLButtonElement>('.faq-q')!;
+    const ans = item.querySelector<HTMLElement>('.faq-a')!;
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => {
+        el.classList.remove('open');
+        (el.querySelector<HTMLElement>('.faq-a')!).hidden = true;
+      });
+      if (!isOpen) { item.classList.add('open'); ans.hidden = false; }
+    });
+  });
+</script>

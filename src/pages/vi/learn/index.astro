@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { GLOSSARY_TERMS_VI } from '../../../data/glossary-vi';
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/learn/` },
+  { lang: 'vi', url: `${siteUrl}/vi/learn/` },
+  { lang: 'x-default', url: `${siteUrl}/learn/` },
+];
+
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Từ điển hoa', url: `${siteUrl}/vi/learn/` },
+];
+
+const itemListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Từ điển hoa & nghề florist",
+  "description": "Hướng dẫn toàn diện về các loài hoa dùng trong nghề florist chuyên nghiệp — ý nghĩa, mẹo chăm sóc, giống cây trồng và tính theo mùa.",
+  "url": `${siteUrl}/vi/learn/`,
+  "inLanguage": "vi",
+  "numberOfItems": GLOSSARY_TERMS_VI.length,
+  "itemListElement": GLOSSARY_TERMS_VI.map((term, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": term.name,
+    "url": `${siteUrl}/vi/learn/${term.slug}/`
+  }))
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Từ Điển Hoa — Ý Nghĩa, Chăm Sóc & Các Giống Phổ Biến"
+  description="Hướng dẫn A–Z về hoa cho florist: ý nghĩa biểu tượng, mẹo chăm sóc, tính theo mùa và các giống cho mọi loài hoa trong cắm hoa chuyên nghiệp. Từ Vườn Hoa."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} slot="head" />
+
+  <div class="page-header">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Tài liệu florist</p>
+      <h1 class="page-title">Từ Điển Hoa</h1>
+      <p class="page-sub">Hướng dẫn A–Z về ý nghĩa, cách chăm sóc, các giống cây trồng và tính theo mùa cho mọi loài hoa một florist cần biết.</p>
+      <a href="/learn/" class="lang-switch-link">🇬🇧 View in English</a>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14">
+    <div class="glossary-grid">
+      {GLOSSARY_TERMS_VI.map(term => (
+        <a href={`/vi/learn/${term.slug}/`} class="term-card">
+          <span class="term-emoji">{term.emoji}</span>
+          <div class="term-body">
+            <h2 class="term-name">{term.name}</h2>
+            <p class="term-season">{term.bloomSeason.split('(')[0].trim()}</p>
+            <div class="term-meta">
+              <span class:list={['care-badge', `care-${term.careLevel}`]}>{term.careLevel}</span>
+              <span class="color-dots">
+                {term.colors.slice(0, 3).map(c => (
+                  <span class="color-label">{c}</span>
+                ))}
+              </span>
+            </div>
+          </div>
+          <span class="term-arrow">→</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:300; color:var(--mauve); line-height:1.08; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:520px; margin:0 auto 1.25rem; line-height:1.7; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+
+  .glossary-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.25rem; }
+  .term-card { display:flex; align-items:center; gap:1rem; background:white; border:1px solid var(--ivory-dark); border-radius:16px; padding:1.25rem 1.5rem; text-decoration:none; transition:all 0.22s; position:relative; overflow:hidden; }
+  .term-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(253,240,242,0.8) 0%,transparent 60%); opacity:0; transition:opacity 0.22s; }
+  .term-card:hover { border-color:var(--blush); transform:translateY(-2px); box-shadow:0 8px 28px rgba(196,122,138,0.12); }
+  .term-card:hover::before { opacity:1; }
+  .term-card:hover .term-arrow { transform:translateX(4px); color:var(--blush-dark); }
+  .term-emoji { font-size:2rem; flex-shrink:0; position:relative; z-index:1; }
+  .term-body { flex:1; min-width:0; position:relative; z-index:1; }
+  .term-name { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; color:var(--mauve); margin:0 0 0.2rem; }
+  .term-season { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--taupe); font-weight:300; margin:0 0 0.5rem; }
+  .term-meta { display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; }
+  .care-badge { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:500; letter-spacing:0.08em; padding:0.15rem 0.6rem; border-radius:999px; text-transform:uppercase; }
+  .care-Dễ { background:rgba(134,187,134,0.15); color:#4a7a4a; border:1px solid rgba(134,187,134,0.3); }
+  .care-Trung\ bình { background:rgba(200,149,106,0.15); color:#8a5c30; border:1px solid rgba(200,149,106,0.3); }
+  .care-Khó { background:rgba(196,122,138,0.15); color:var(--blush-dark); border:1px solid rgba(196,122,138,0.3); }
+  .color-dots { display:flex; gap:0.3rem; flex-wrap:wrap; }
+  .color-label { font-family:'Jost',sans-serif; font-size:0.65rem; color:var(--taupe); font-weight:300; }
+  .color-label:not(:last-child)::after { content:' ·'; margin-left:0.2rem; }
+  .term-arrow { font-size:1rem; color:var(--ivory-dark); transition:all 0.2s; flex-shrink:0; position:relative; z-index:1; }
+</style>

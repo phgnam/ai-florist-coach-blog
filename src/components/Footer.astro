@@ -1,5 +1,5 @@
 ---
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_TITLE } from '../consts';
 import { useTranslations, localePath } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
 
@@ -39,17 +39,17 @@ const year = new Date().getFullYear();
         </ul>
       </div>
 
-      <!-- Florist Resources -->
+      <!-- Florist Resources (locale-aware) -->
       <div>
-        <h4 class="footer-heading">Florist Resources</h4>
+        <h4 class="footer-heading">{t('footer.tools')}</h4>
         <ul class="footer-links">
-          <li><a href="/learn/">Flower Glossary</a></li>
-          <li><a href="/learn/rose/">Rose Guide</a></li>
-          <li><a href="/learn/peony/">Peony Guide</a></li>
-          <li><a href="/learn/dahlia/">Dahlia Guide</a></li>
-          <li><a href="/learn/orchid/">Orchid Care</a></li>
-          <li><a href="/tools/care-calculator/">Vase Life Calculator</a></li>
-          <li><a href="/tools/season-planner/">Flower Season Planner</a></li>
+          <li><a href={p('/learn/')}>{t('footer.glossary')}</a></li>
+          <li><a href={p('/learn/rose/')}>{t('footer.roseGuide')}</a></li>
+          <li><a href={p('/learn/peony/')}>{t('footer.peonyGuide')}</a></li>
+          <li><a href={p('/learn/dahlia/')}>{t('footer.dahliaGuide')}</a></li>
+          <li><a href={p('/learn/orchid/')}>{t('footer.orchidCare')}</a></li>
+          <li><a href={p('/tools/care-calculator/')}>{t('footer.calculator')}</a></li>
+          <li><a href={p('/tools/season-planner/')}>{t('footer.seasonPlanner')}</a></li>
         </ul>
       </div>
 
