@@ -2,6 +2,7 @@
 import { SITE_TITLE } from '../consts';
 import { useTranslations, localePath, alternatePath } from '../i18n/utils';
 import type { Lang } from '../i18n/ui';
+import Search from './Search.astro';
 
 interface Props {
   lang?: Lang;
@@ -27,6 +28,8 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
       <a href={p('/posts')} class="nav-link">{t('nav.posts')}</a>
       <a href={p('/tags')}  class="nav-link">{t('nav.tags')}</a>
       <a href={p('/about')} class="nav-link">{t('nav.about')}</a>
+
+      <Search lang={lang} />
 
       <!-- Language switcher -->
       <div class="lang-switch">

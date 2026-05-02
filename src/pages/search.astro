@@ -1,0 +1,286 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations, localePath } from '../i18n/utils';
+
+const lang = 'en' as const;
+const t = useTranslations(lang);
+const p = (path: string) => localePath(lang, path);
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const searchIndex = posts.map(post => ({
+  title: post.data.title,
+  description: post.data.description ?? '',
+  tags: post.data.tags ?? [],
+  lang: post.data.lang ?? 'en',
+  slug: post.id,
+}));
+---
+
+<BaseLayout lang={lang} title="Search — Vườn Hoa" description={t('search.sub')} padTop={false}>
+
+  <div class="page-header">
+    <div class="max-w-3xl mx-auto px-6 lg:px-10 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">{t('search.title')}</p>
+      <h1 class="page-title">{t('search.title')}</h1>
+      <p class="page-sub">{t('search.sub')}</p>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto px-6 lg:px-10 pb-20">
+
+    <div class="search-box">
+      <div class="search-input-wrap">
+        <svg class="si" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          id="page-search-input"
+          type="search"
+          placeholder={t('search.placeholder')}
+          autocomplete="off"
+          spellcheck="false"
+          autofocus
+        />
+      </div>
+    </div>
+
+    <div id="page-search-results" class="results-grid"></div>
+
+    <div id="page-search-empty" class="empty-state hidden">
+      <span class="empty-icon">🔍</span>
+      <p id="page-search-msg"></p>
+      <p class="empty-hint">{t('search.hint')}</p>
+      <a href={p('/posts')} class="browse-link">Browse all articles →</a>
+    </div>
+
+    <div id="page-search-initial" class="initial-hint">
+      <p>Start typing to search across {posts.length} articles</p>
+    </div>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header {
+    background: linear-gradient(160deg, var(--blush) 0%, var(--ivory) 60%);
+    border-bottom: 1px solid var(--ivory-dark);
+  }
+  .page-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blush-dark);
+    margin-bottom: 0.75rem;
+  }
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--mauve);
+    font-weight: 700;
+    margin: 0 0 1rem;
+    line-height: 1.1;
+  }
+  .page-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    color: var(--text-mid);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .search-box {
+    margin-bottom: 2rem;
+  }
+  .search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 2px solid rgba(196, 122, 138, 0.35);
+    border-radius: 14px;
+    padding: 14px 20px;
+    box-shadow: 0 4px 20px rgba(196, 122, 138, 0.08);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-input-wrap:focus-within {
+    border-color: var(--blush-dark);
+    box-shadow: 0 0 0 4px rgba(196, 122, 138, 0.12), 0 4px 20px rgba(196, 122, 138, 0.1);
+  }
+  .si { color: var(--taupe); flex-shrink: 0; }
+  #page-search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 1.1rem;
+    color: var(--mauve);
+    background: transparent;
+  }
+  #page-search-input::placeholder { color: var(--taupe); opacity: 0.6; }
+  #page-search-input::-webkit-search-cancel-button { display: none; }
+
+  .results-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-mid);
+  }
+  .empty-state.hidden { display: none; }
+  .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 1rem; opacity: 0.5; }
+  .empty-state p { font-family: 'Jost', sans-serif; margin: 0 0 0.5rem; }
+  .empty-hint { font-size: 0.85rem; color: var(--taupe); }
+  .browse-link {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    color: var(--blush-dark);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .browse-link:hover { color: var(--mauve); }
+
+  .initial-hint {
+    text-align: center;
+    padding: 3rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    color: var(--taupe);
+  }
+
+  .result-card {
+    display: block;
+    padding: 18px 22px;
+    background: white;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 12px;
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  }
+  .result-card:hover {
+    border-color: rgba(196, 122, 138, 0.4);
+    box-shadow: 0 4px 16px rgba(196, 122, 138, 0.1);
+    transform: translateY(-1px);
+  }
+  .result-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--mauve);
+    margin-bottom: 5px;
+    line-height: 1.35;
+  }
+  .result-card-desc {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .result-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .result-card-tag {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(232, 164, 176, 0.2);
+    color: var(--blush-dark);
+    border-radius: 999px;
+    padding: 2px 9px;
+  }
+</style>
+
+<script define:vars={{ searchIndex, noResultsText: t('search.noResults') }}>
+  async function initSearch() {
+    const input = document.getElementById('page-search-input');
+    const resultsEl = document.getElementById('page-search-results');
+    const emptyEl = document.getElementById('page-search-empty');
+    const emptyMsg = document.getElementById('page-search-msg');
+    const initialEl = document.getElementById('page-search-initial');
+
+    const { default: Fuse } = await import('fuse.js');
+    const fuse = new Fuse(searchIndex, {
+      keys: [
+        { name: 'title', weight: 2 },
+        { name: 'description', weight: 1 },
+        { name: 'tags', weight: 0.8 },
+      ],
+      threshold: 0.35,
+      includeScore: true,
+      minMatchCharLength: 2,
+    });
+
+    function render(results, query) {
+      if (!resultsEl || !emptyEl || !initialEl) return;
+
+      if (!query || query.length < 2) {
+        resultsEl.innerHTML = '';
+        emptyEl.classList.add('hidden');
+        initialEl.style.display = 'block';
+        return;
+      }
+
+      initialEl.style.display = 'none';
+
+      if (results.length === 0) {
+        resultsEl.innerHTML = '';
+        if (emptyMsg) emptyMsg.textContent = `${noResultsText} "${query}"`;
+        emptyEl.classList.remove('hidden');
+        return;
+      }
+
+      emptyEl.classList.add('hidden');
+      resultsEl.innerHTML = results.map(({ item }) => `
+        <a href="/posts/${item.slug}" class="result-card">
+          <div class="result-card-title">${item.title}</div>
+          ${item.description ? `<div class="result-card-desc">${item.description}</div>` : ''}
+          ${item.tags?.length ? `<div class="result-card-tags">${item.tags.slice(0, 5).map(t => `<span class="result-card-tag">${t}</span>`).join('')}</div>` : ''}
+        </a>
+      `).join('');
+    }
+
+    input?.addEventListener('input', (e) => {
+      const q = e.target.value.trim();
+      const results = q.length >= 2 ? fuse.search(q, { limit: 12 }) : [];
+      render(results, q);
+
+      if (q) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('q', q);
+        history.replaceState({}, '', url);
+      } else {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('q');
+        history.replaceState({}, '', url);
+      }
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if (q && input) {
+      input.value = q;
+      const results = fuse.search(q, { limit: 12 });
+      render(results, q);
+    }
+  }
+
+  initSearch();
+</script>

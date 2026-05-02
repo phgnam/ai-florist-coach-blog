@@ -1,36 +1,324 @@
 ---
+import type { Lang } from '../i18n/ui';
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'en' } = Astro.props;
+const t = useTranslations(lang);
 ---
+
 <button
   id="search-btn"
-  class="text-gray-500 hover:text-rose-600 transition-colors"
-  aria-label="Tìm kiếm"
+  class="search-trigger"
+  aria-label={t('nav.search')}
+  title={t('nav.search')}
 >
-  🔍
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </svg>
 </button>
 
-<dialog id="search-dialog" class="w-full max-w-2xl rounded-2xl p-6 backdrop:bg-black/40 shadow-xl">
-  <button id="search-close" class="float-right text-gray-400 hover:text-gray-600 text-xl leading-none">&times;</button>
-  <div id="search-container"></div>
+<dialog id="search-dialog" aria-label={t('nav.search')}>
+  <div class="search-modal">
+    <div class="search-header">
+      <div class="search-input-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input
+          id="search-input"
+          type="search"
+          placeholder={t('search.placeholder')}
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <kbd class="search-esc">ESC</kbd>
+      </div>
+    </div>
+
+    <div id="search-results" class="search-results" role="listbox" aria-live="polite"></div>
+
+    <div id="search-empty" class="search-empty hidden">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <p class="search-empty-main" id="search-empty-msg"></p>
+      <p class="search-empty-hint">{t('search.hint')}</p>
+    </div>
+  </div>
 </dialog>
 
-<script>
+<style>
+  .search-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--taupe);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+    line-height: 1;
+  }
+  .search-trigger:hover { color: var(--blush-dark); }
+
+  dialog {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0 auto;
+    margin-top: 5vh;
+    width: 100%;
+    max-width: 640px;
+    max-height: 85vh;
+    overflow: visible;
+  }
+  dialog::backdrop {
+    background: rgba(60, 40, 50, 0.45);
+    backdrop-filter: blur(4px);
+  }
+
+  .search-modal {
+    background: var(--ivory);
+    border: 1px solid var(--ivory-dark);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(130, 80, 100, 0.18), 0 4px 20px rgba(130, 80, 100, 0.1);
+  }
+
+  .search-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--ivory-dark);
+  }
+
+  .search-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border: 1.5px solid rgba(196, 122, 138, 0.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    transition: border-color 0.2s;
+  }
+  .search-input-wrap:focus-within {
+    border-color: var(--blush-dark);
+    box-shadow: 0 0 0 3px rgba(196, 122, 138, 0.12);
+  }
+
+  .search-icon { color: var(--taupe); flex-shrink: 0; }
+
+  #search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    color: var(--mauve);
+    background: transparent;
+    min-width: 0;
+  }
+  #search-input::placeholder { color: var(--taupe); opacity: 0.7; }
+  #search-input::-webkit-search-cancel-button { display: none; }
+
+  .search-esc {
+    font-family: monospace;
+    font-size: 0.65rem;
+    background: var(--ivory-dark);
+    color: var(--taupe);
+    border-radius: 4px;
+    padding: 2px 5px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .search-results {
+    max-height: calc(85vh - 80px);
+    overflow-y: auto;
+    padding: 8px;
+  }
+
+  .search-empty {
+    padding: 40px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .search-empty.hidden { display: none; }
+  .search-empty-main {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+    color: var(--mauve);
+    font-weight: 500;
+    margin: 0;
+  }
+  .search-empty-hint {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    color: var(--taupe);
+    margin: 0;
+  }
+</style>
+
+<script define:vars={{ lang, noResultsText: t('search.noResults'), hintText: t('search.hint') }}>
   const btn = document.getElementById('search-btn');
-  const dialog = document.getElementById('search-dialog') as HTMLDialogElement;
-  const closeBtn = document.getElementById('search-close');
+  const dialog = document.getElementById('search-dialog');
+  const input = document.getElementById('search-input');
+  const resultsEl = document.getElementById('search-results');
+  const emptyEl = document.getElementById('search-empty');
+  const emptyMsg = document.getElementById('search-empty-msg');
 
-  btn?.addEventListener('click', async () => {
-    if (!document.querySelector('#search-container link')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/pagefind/pagefind-ui.css';
-      document.getElementById('search-container')!.prepend(link);
+  let fuse = null;
+  let allPosts = [];
+  let loaded = false;
 
-      const { PagefindUI } = await import('/pagefind/pagefind-ui.js' as any);
-      new PagefindUI({ element: '#search-container', showSubResults: true });
+  async function loadIndex() {
+    if (loaded) return;
+    const res = await fetch('/search.json');
+    allPosts = await res.json();
+    const filtered = allPosts.filter(p => p.lang === lang);
+
+    const { default: Fuse } = await import('fuse.js');
+    fuse = new Fuse(filtered, {
+      keys: [
+        { name: 'title', weight: 2 },
+        { name: 'description', weight: 1 },
+        { name: 'tags', weight: 0.8 },
+      ],
+      threshold: 0.35,
+      includeScore: true,
+      minMatchCharLength: 2,
+    });
+    loaded = true;
+  }
+
+  function renderResults(results) {
+    if (!resultsEl || !emptyEl) return;
+
+    if (results === null) {
+      resultsEl.innerHTML = '';
+      emptyEl.classList.add('hidden');
+      return;
     }
+
+    if (results.length === 0) {
+      resultsEl.innerHTML = '';
+      emptyEl.classList.remove('hidden');
+      return;
+    }
+
+    emptyEl.classList.add('hidden');
+
+    const postPath = lang === 'vi' ? '/vi/posts/' : '/posts/';
+
+    resultsEl.innerHTML = results.map(({ item }) => `
+      <a href="${postPath}${item.slug}" class="result-item" role="option">
+        <div class="result-title">${item.title}</div>
+        ${item.description ? `<div class="result-desc">${item.description}</div>` : ''}
+        ${item.tags?.length ? `<div class="result-tags">${item.tags.slice(0, 4).map(tag => `<span class="result-tag">${tag}</span>`).join('')}</div>` : ''}
+      </a>
+    `).join('');
+  }
+
+  function doSearch(query) {
+    if (!fuse || !query.trim()) {
+      renderResults(null);
+      return;
+    }
+    const q = query.trim();
+    if (q.length < 2) {
+      renderResults(null);
+      return;
+    }
+    const results = fuse.search(q, { limit: 8 });
+    if (emptyMsg) emptyMsg.textContent = `${noResultsText} "${q}"`;
+    renderResults(results.length ? results : []);
+  }
+
+  async function openSearch() {
+    await loadIndex();
     dialog?.showModal();
+    setTimeout(() => input?.focus(), 50);
+  }
+
+  btn?.addEventListener('click', openSearch);
+
+  input?.addEventListener('input', (e) => {
+    doSearch(e.target.value);
   });
 
-  closeBtn?.addEventListener('click', () => dialog?.close());
-  dialog?.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') dialog?.close();
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+  });
+
+  dialog?.addEventListener('close', () => {
+    if (input) input.value = '';
+    renderResults(null);
+  });
+
+  resultsEl?.addEventListener('click', () => dialog?.close());
 </script>
+
+<style is:global>
+  .result-item {
+    display: block;
+    padding: 12px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.15s;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+  }
+  .result-item:hover {
+    background: rgba(232, 164, 176, 0.12);
+    border-color: rgba(196, 122, 138, 0.2);
+  }
+  .result-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--mauve);
+    margin-bottom: 3px;
+    line-height: 1.35;
+  }
+  .result-desc {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .result-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .result-tag {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(232, 164, 176, 0.2);
+    color: var(--blush-dark);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+</style>
