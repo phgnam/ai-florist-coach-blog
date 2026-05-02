@@ -1,0 +1,19 @@
+---
+interface GalleryItem {
+  src: ImageMetadata;
+  alt: string;
+  caption?: string;
+}
+interface Props {
+  items: GalleryItem[];
+}
+const { items } = Astro.props;
+---
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
+  {items.map(({ src, alt, caption }) => (
+    <figure class="m-0">
+      <img src={src.src} alt={alt} width={src.width} height={src.height} class="rounded-xl w-full object-cover" loading="lazy" />
+      {caption && <figcaption class="text-center text-sm text-gray-500 mt-2">{caption}</figcaption>}
+    </figure>
+  ))}
+</div>

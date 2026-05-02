@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vuon-hoa.replit.app/sitemap-index.xml

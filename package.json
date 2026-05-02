@@ -1,14 +1,14 @@
 {
-  "name": "workspace",
+  "name": "vuon-hoa-blog",
   "version": "1.0.0",
-  "description": "Static blog about flowers built with [Astro](https://astro.build), MDX, TailwindCSS v4, and [Pagefind](https://pagefind.app) for client-side search. Companion site to the AI Florist Coach app.",
-  "main": "index.js",
+  "description": "Static blog about flowers built with Astro, MDX, TailwindCSS v4, and Pagefind.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "astro dev --host 0.0.0.0 --port 5000",
+    "build": "astro build && pagefind --site dist",
+    "build:astro": "astro build",
+    "build:search": "pagefind --site dist",
+    "preview": "astro preview --host 0.0.0.0 --port 5000"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@astrojs/mdx": "^5.0.1",
     "@astrojs/rss": "^4.0.18",
@@ -17,5 +17,8 @@
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^6.0.5",
     "tailwindcss": "^4.2.4"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }

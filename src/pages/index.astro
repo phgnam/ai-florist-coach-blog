@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const featured = allPosts[0];
+const recent = allPosts.slice(1, 7);
+
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
+---
+<BaseLayout>
+  <section class="text-center py-16">
+    <h1 class="text-5xl font-bold mb-4 text-rose-600">🌸 Vườn Hoa</h1>
+    <p class="text-xl text-gray-600 max-w-xl mx-auto">{SITE_DESCRIPTION}</p>
+  </section>
+
+  {featured && (
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold mb-6">Bài viết nổi bật</h2>
+      <PostCard
+        title={featured.data.title}
+        description={featured.data.description}
+        pubDate={featured.data.pubDate}
+        slug={featured.id}
+        tags={featured.data.tags}
+        heroImage={featured.data.heroImage as any}
+        heroAlt={featured.data.heroAlt}
+      />
+    </section>
+  )}
+
+  {recent.length > 0 && (
+    <section class="mb-16">
+      <h2 class="text-2xl font-bold mb-6">Bài viết mới nhất</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {recent.map((post) => (
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            slug={post.id}
+            tags={post.data.tags}
+            heroImage={post.data.heroImage as any}
+            heroAlt={post.data.heroAlt}
+          />
+        ))}
+      </div>
+    </section>
+  )}
+
+  {allTags.length > 0 && (
+    <section>
+      <h2 class="text-2xl font-bold mb-6">Chủ đề</h2>
+      <div class="flex flex-wrap gap-3">
+        {allTags.map((tag) => (
+          <a
+            href={`/tags/${tag}`}
+            class="px-4 py-2 rounded-full bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors text-sm font-medium"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

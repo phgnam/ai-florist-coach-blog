@@ -1,0 +1,11 @@
+---
+import { SITE_TITLE } from '../consts';
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-gray-100 mt-16 py-8 text-center text-sm text-gray-500">
+  <p>© {year} {SITE_TITLE}. Tất cả quyền được bảo lưu.</p>
+  <div class="mt-2 flex justify-center gap-4">
+    <a href="/rss.xml" class="hover:text-rose-600 transition-colors">RSS</a>
+    <a href="/sitemap-index.xml" class="hover:text-rose-600 transition-colors">Sitemap</a>
+  </div>
+</footer>
