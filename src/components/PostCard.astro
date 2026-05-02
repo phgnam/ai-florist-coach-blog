@@ -1,6 +1,5 @@
 ---
 import FormattedDate from './FormattedDate.astro';
-import TagList from './TagList.astro';
 
 interface Props {
   title: string;
@@ -10,24 +9,201 @@ interface Props {
   tags?: string[];
   heroImage?: ImageMetadata;
   heroAlt?: string;
+  featured?: boolean;
 }
 
-const { title, description, pubDate, slug, tags = [], heroImage, heroAlt } = Astro.props;
+const { title, description, pubDate, slug, tags = [], heroImage, heroAlt, featured = false } = Astro.props;
+
+const gradients = [
+  'from-rose-900/80 to-green-900/60',
+  'from-emerald-900/80 to-rose-900/60',
+  'from-amber-900/80 to-emerald-900/60',
+  'from-green-900/80 to-amber-900/60',
+];
+const colorBg = [
+  'bg-rose-100',
+  'bg-emerald-100',
+  'bg-amber-100',
+  'bg-teal-100',
+];
+const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
 ---
-<article class="flex flex-col rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-  {heroImage && (
-    <a href={`/posts/${slug}`}>
-      <img src={heroImage.src} alt={heroAlt ?? title} class="w-full h-48 object-cover" width={heroImage.width} height={heroImage.height} />
-    </a>
-  )}
-  <div class="p-5 flex flex-col gap-3 flex-1">
-    <div class="text-sm text-gray-500">
+
+<article class:list={['post-card', featured && 'post-card--featured']}>
+  <a href={`/posts/${slug}`} class="card-image-link" aria-hidden="true" tabindex="-1">
+    <div class:list={['card-image-wrap', colorBg[colorIdx]]}>
+      {heroImage ? (
+        <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" />
+      ) : (
+        <div class="card-placeholder">
+          <span class="placeholder-icon">🌸</span>
+          <div class={`card-gradient bg-gradient-to-br ${gradients[colorIdx]}`}></div>
+        </div>
+      )}
+      <!-- Overlay -->
+      <div class="card-overlay"></div>
+      <!-- Tags on image -->
+      {tags.length > 0 && (
+        <div class="card-tag-badge">
+          <span>{tags[0]}</span>
+        </div>
+      )}
+    </div>
+  </a>
+
+  <div class="card-body">
+    <div class="card-meta">
       <FormattedDate date={pubDate} />
     </div>
-    <h2 class="text-xl font-semibold leading-snug">
-      <a href={`/posts/${slug}`} class="hover:text-rose-600 transition-colors">{title}</a>
+    <h2 class:list={['card-title', featured && 'card-title--featured']}>
+      <a href={`/posts/${slug}`} class="card-title-link">{title}</a>
     </h2>
-    <p class="text-gray-600 text-sm flex-1">{description}</p>
-    {tags.length > 0 && <TagList tags={tags} />}
+    <p class="card-desc">{description}</p>
+    <a href={`/posts/${slug}`} class="card-cta">
+      Đọc tiếp
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="card-arrow">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
   </div>
 </article>
+
+<style>
+  .post-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+    position: relative;
+  }
+  .post-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(26,48,40,0.14);
+  }
+  .post-card--featured {
+    flex-direction: row;
+    min-height: 280px;
+  }
+  .post-card--featured .card-image-link {
+    flex: 0 0 45%;
+  }
+  .post-card--featured .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 2.5rem;
+  }
+  .post-card--featured .card-title--featured {
+    font-size: 1.65rem;
+    line-height: 1.25;
+  }
+
+  .card-image-link { display: block; text-decoration: none; }
+  .card-image-wrap {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+  }
+  .post-card--featured .card-image-wrap {
+    height: 100%;
+    min-height: 280px;
+  }
+  .card-image {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .post-card:hover .card-image {
+    transform: scale(1.06);
+  }
+  .card-placeholder {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+  }
+  .card-gradient {
+    position: absolute; inset: 0;
+    opacity: 0.5;
+  }
+  .placeholder-icon { position: relative; z-index: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+
+  .card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .card-tag-badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: rgba(26,48,40,0.85);
+    backdrop-filter: blur(6px);
+    color: #e8f2ec;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    flex: 1;
+  }
+  .card-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    font-weight: 300;
+  }
+  .card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--green-deep);
+    margin: 0;
+  }
+  .card-title-link {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+  }
+  .card-title-link:hover { color: var(--rose); }
+
+  .card-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rose);
+    text-decoration: none;
+    margin-top: 0.5rem;
+    transition: gap 0.2s ease, color 0.2s;
+  }
+  .card-cta:hover { color: var(--gold); gap: 10px; }
+  .card-arrow { transition: transform 0.2s; }
+  .card-cta:hover .card-arrow { transform: translateX(3px); }
+</style>

@@ -19,19 +19,56 @@ export async function getStaticPaths() {
 const { tag } = Astro.params;
 const { posts } = Astro.props;
 ---
-<BaseLayout title={`Tag: #${tag}`} description={`Bài viết với tag #${tag}`}>
-  <h1 class="text-3xl font-bold mb-8">Tag: <span class="text-rose-600">#{tag}</span></h1>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    {posts.map((post: any) => (
-      <PostCard
-        title={post.data.title}
-        description={post.data.description}
-        pubDate={post.data.pubDate}
-        slug={post.id}
-        tags={post.data.tags}
-        heroImage={post.data.heroImage}
-        heroAlt={post.data.heroAlt}
-      />
-    ))}
+<BaseLayout title={`#${tag}`} description={`Bài viết với chủ đề #${tag}`}>
+
+  <div class="page-header">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20 text-center">
+      <p class="page-eyebrow">Chủ đề</p>
+      <h1 class="page-title">#{tag}</h1>
+      <p class="page-sub">{posts.length} bài viết trong chủ đề này</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14">
+    <div class="posts-grid">
+      {posts.map((post: any) => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          slug={post.id}
+          tags={post.data.tags}
+          heroImage={post.data.heroImage}
+          heroAlt={post.data.heroAlt}
+        />
+      ))}
+    </div>
+    <div class="text-center mt-12">
+      <a href="/tags" class="back-link">← Tất cả chủ đề</a>
+    </div>
   </div>
 </BaseLayout>
+
+<style>
+  .page-header {
+    background: linear-gradient(165deg, #0e2218 0%, #1a3028 60%, #2d3a20 100%);
+    position: relative;
+  }
+  .page-header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to top, var(--cream), transparent);
+  }
+  .page-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .page-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; color: white; line-height: 1.1; margin: 0 0 1rem; }
+  .page-sub { color: rgba(255,255,255,0.55); font-size: 1rem; font-weight: 300; }
+  .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.75rem; }
+  .back-link {
+    display: inline-block; padding: 0.7rem 2rem;
+    border: 1px solid var(--cream-dark); border-radius: 999px;
+    color: var(--text-muted); font-size: 0.82rem; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .back-link:hover { border-color: var(--green-deep); color: var(--green-deep); }
+</style>

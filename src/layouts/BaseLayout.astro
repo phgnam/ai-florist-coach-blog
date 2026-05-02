@@ -9,9 +9,10 @@ interface Props {
   description?: string;
   image?: string;
   type?: 'website' | 'article';
+  padTop?: boolean;
 }
 
-const { title, description, image, type } = Astro.props;
+const { title, description, image, type, padTop = true } = Astro.props;
 ---
 <!doctype html>
 <html lang="vi">
@@ -20,7 +21,7 @@ const { title, description, image, type } = Astro.props;
   </head>
   <body>
     <Header />
-    <main class="max-w-5xl mx-auto px-4 py-10">
+    <main class:list={['relative z-10', padTop && 'pt-16']}>
       <slot />
     </main>
     <Footer />

@@ -1,18 +1,49 @@
 ---
 interface Props {
   tags: string[];
+  small?: boolean;
 }
-const { tags } = Astro.props;
+const { tags, small = false } = Astro.props;
 ---
-<ul class="flex flex-wrap gap-2 list-none p-0 m-0">
+<ul class:list={['tag-list', small && 'tag-list--small']}>
   {tags.map((tag) => (
     <li>
-      <a
-        href={`/tags/${tag}`}
-        class="inline-block px-3 py-1 text-sm rounded-full bg-rose-100 text-rose-700 hover:bg-rose-200 transition-colors no-underline"
-      >
-        #{tag}
+      <a href={`/tags/${tag}`} class="tag-item">
+        {tag}
       </a>
     </li>
   ))}
 </ul>
+
+<style>
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .tag-item {
+    display: inline-block;
+    padding: 0.3rem 0.85rem;
+    background: var(--green-light);
+    color: var(--green-mid);
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+    border: 1px solid transparent;
+  }
+  .tag-item:hover {
+    background: var(--green-deep);
+    color: white;
+    transform: translateY(-1px);
+  }
+  .tag-list--small .tag-item {
+    padding: 0.2rem 0.65rem;
+    font-size: 0.72rem;
+  }
+</style>

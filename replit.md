@@ -54,6 +54,17 @@ npm run preview    # Serve dist/ locally
     └── robots.txt
 ```
 
+## Design System — "Botanical Luxury"
+
+- **Color palette**: Deep forest green (`#1a3028`), warm cream (`#fdf8f0`), dusty rose (`#c4697e`), amber gold (`#b8935a`)
+- **Typography**: Playfair Display (serif, headings/hero) + Lato (body) loaded from Google Fonts
+- **Hero pattern**: All pages use a dark forest green gradient hero that fades into the cream content area via a CSS gradient
+- **Header**: Transparent over hero, glassmorphism dark green on scroll — JS-driven
+- **Cards**: Magazine-style with category badge overlay, smooth `translateY` hover lift
+- **Blog posts**: Full-bleed dark hero, reading progress bar (gradient rose→gold), warm cream article area
+- **Animations**: `fadeUp` keyframe with staggered delays, `floatPetal` for decorative elements
+- **Texture**: Subtle SVG noise overlay on `body::before` for depth
+
 ## Key Notes
 
 - **Astro 6 content layer**: Uses `glob` loader from `astro/loaders` in `content.config.ts` (required for Astro 6, unlike older `type: 'content'` collections).

@@ -1,11 +1,100 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 const year = new Date().getFullYear();
 ---
-<footer class="border-t border-gray-100 mt-16 py-8 text-center text-sm text-gray-500">
-  <p>© {year} {SITE_TITLE}. Tất cả quyền được bảo lưu.</p>
-  <div class="mt-2 flex justify-center gap-4">
-    <a href="/rss.xml" class="hover:text-rose-600 transition-colors">RSS</a>
-    <a href="/sitemap-index.xml" class="hover:text-rose-600 transition-colors">Sitemap</a>
+<footer class="footer-wrap mt-24">
+  <div class="footer-body max-w-7xl mx-auto px-6 lg:px-10 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+
+      <!-- Brand -->
+      <div class="col-span-1 md:col-span-1">
+        <a href="/" class="footer-logo flex items-center gap-3 mb-4 no-underline">
+          <span class="text-2xl">🌸</span>
+          <span class="font-serif font-bold text-xl text-white">Vườn Hoa</span>
+        </a>
+        <p class="footer-desc text-sm leading-relaxed">{SITE_DESCRIPTION}</p>
+        <div class="flex gap-3 mt-6">
+          <a href="/rss.xml" class="footer-badge">RSS</a>
+          <a href="/sitemap-index.xml" class="footer-badge">Sitemap</a>
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div>
+        <h4 class="footer-heading">Khám phá</h4>
+        <ul class="footer-links">
+          <li><a href="/posts">Tất cả bài viết</a></li>
+          <li><a href="/tags">Chủ đề</a></li>
+          <li><a href="/about">Giới thiệu</a></li>
+        </ul>
+      </div>
+
+      <!-- Tagline -->
+      <div>
+        <h4 class="footer-heading">Vườn Hoa</h4>
+        <p class="footer-desc text-sm leading-relaxed italic">
+          "Hoa không chỉ là vẻ đẹp — đó là ngôn ngữ của tình cảm, của nghề thủ công, và của nghệ thuật sống."
+        </p>
+        <p class="footer-desc text-xs mt-4 opacity-60">Companion to AI Florist Coach App</p>
+      </div>
+    </div>
+
+    <div class="footer-divider mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="footer-desc text-xs">© {year} {SITE_TITLE}. Tất cả quyền được bảo lưu.</p>
+      <p class="footer-desc text-xs opacity-50">Built with Astro · TailwindCSS · ❤️</p>
+    </div>
   </div>
+
+  <!-- Decorative bottom bar -->
+  <div class="h-1 bg-gradient-to-r from-rose-400 via-amber-400 to-emerald-400"></div>
 </footer>
+
+<style>
+  .footer-wrap {
+    background: var(--green-deep);
+    position: relative;
+    overflow: hidden;
+  }
+  .footer-wrap::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(196,105,126,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .footer-logo { text-decoration: none; }
+  .footer-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .footer-desc { color: rgba(255,255,255,0.5); }
+  .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+  .footer-links a {
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 999px;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .footer-badge:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .footer-divider { border-top: 1px solid rgba(255,255,255,0.06); }
+</style>

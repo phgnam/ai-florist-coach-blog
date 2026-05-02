@@ -7,22 +7,85 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 <BaseLayout title="Tất cả bài viết" description="Danh sách tất cả bài viết trên Vườn Hoa">
-  <h1 class="text-3xl font-bold mb-8">Tất cả bài viết</h1>
-  {posts.length === 0 ? (
-    <p class="text-gray-500">Chưa có bài viết nào.</p>
-  ) : (
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {posts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          description={post.data.description}
-          pubDate={post.data.pubDate}
-          slug={post.id}
-          tags={post.data.tags}
-          heroImage={post.data.heroImage as any}
-          heroAlt={post.data.heroAlt}
-        />
-      ))}
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20 text-center">
+      <p class="page-eyebrow">Thư viện tri thức</p>
+      <h1 class="page-title">Tất cả bài viết</h1>
+      <p class="page-sub">Khám phá bộ sưu tập bài viết về hoa, nghề florist và nghệ thuật sống.</p>
     </div>
-  )}
+  </div>
+
+  <!-- Grid -->
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14">
+    {posts.length === 0 ? (
+      <div class="empty-state">
+        <span class="empty-icon">🌱</span>
+        <p>Chưa có bài viết nào. Vườn hoa đang lớn dần...</p>
+      </div>
+    ) : (
+      <div class="posts-grid">
+        {posts.map((post) => (
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            slug={post.id}
+            tags={post.data.tags}
+            heroImage={post.data.heroImage as any}
+            heroAlt={post.data.heroAlt}
+          />
+        ))}
+      </div>
+    )}
+  </div>
 </BaseLayout>
+
+<style>
+  .page-header {
+    background: linear-gradient(165deg, #0e2218 0%, #1a3028 60%, #2d3a20 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to top, var(--cream), transparent);
+  }
+  .page-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .page-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    color: white;
+    line-height: 1.1;
+    margin: 0 0 1.2rem;
+  }
+  .page-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.75rem;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 6rem 0;
+    color: var(--text-muted);
+  }
+  .empty-icon { display: block; font-size: 3rem; margin-bottom: 1rem; }
+</style>

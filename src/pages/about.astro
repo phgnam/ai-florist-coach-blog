@@ -2,24 +2,135 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Giới thiệu" description="Về blog Vườn Hoa — AI Florist Coach">
-  <article class="prose prose-rose max-w-3xl mx-auto">
-    <h1>Về Vườn Hoa</h1>
-    <p>
-      <strong>Vườn Hoa</strong> là blog đồng hành với ứng dụng AI Florist Coach — nơi chia sẻ kiến thức,
-      kinh nghiệm và cảm hứng về nghề florist và thế giới hoa.
-    </p>
-    <h2>Chúng tôi viết về gì?</h2>
-    <ul>
-      <li>Cách chăm sóc và bảo quản các loại hoa</li>
-      <li>Kỹ thuật cắm hoa và thiết kế bó hoa</li>
-      <li>Xu hướng hoa trang trí theo mùa</li>
-      <li>Kinh nghiệm kinh doanh nghề florist</li>
-      <li>Ứng dụng AI trong nghề hoa</li>
-    </ul>
-    <h2>Liên hệ</h2>
-    <p>
-      Nếu bạn muốn đóng góp bài viết hoặc hợp tác, hãy liên hệ qua phần bình luận bên dưới mỗi bài viết
-      hoặc thông qua GitHub Discussions.
-    </p>
-  </article>
+
+  <!-- Hero -->
+  <div class="about-hero">
+    <div class="max-w-4xl mx-auto px-6 py-24 text-center">
+      <p class="page-eyebrow">Câu chuyện của chúng tôi</p>
+      <h1 class="about-title">Về <em>Vườn Hoa</em></h1>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="max-w-3xl mx-auto px-6 py-16">
+    <div class="about-grid">
+      <div class="about-card accent-green">
+        <span class="card-icon">🌿</span>
+        <h3>Về Blog</h3>
+        <p><strong>Vườn Hoa</strong> là blog đồng hành với ứng dụng AI Florist Coach — nơi chia sẻ kiến thức, kinh nghiệm và cảm hứng về nghề florist và thế giới hoa.</p>
+      </div>
+      <div class="about-card accent-rose">
+        <span class="card-icon">🌹</span>
+        <h3>Nội dung</h3>
+        <ul>
+          <li>Cách chăm sóc và bảo quản các loại hoa</li>
+          <li>Kỹ thuật cắm hoa và thiết kế bó hoa</li>
+          <li>Xu hướng hoa trang trí theo mùa</li>
+          <li>Kinh nghiệm kinh doanh nghề florist</li>
+        </ul>
+      </div>
+      <div class="about-card accent-gold">
+        <span class="card-icon">🤖</span>
+        <h3>AI Florist Coach</h3>
+        <p>Blog này là người bạn đồng hành của ứng dụng <strong>AI Florist Coach</strong> — giúp các florist chuyên nghiệp và người yêu hoa tìm kiếm cảm hứng và phát triển sự nghiệp.</p>
+      </div>
+    </div>
+
+    <div class="about-quote">
+      <blockquote>
+        <p>"Hoa không chỉ là vẻ đẹp — đó là ngôn ngữ của tình cảm, của nghề thủ công, và của nghệ thuật sống."</p>
+        <cite>— Vườn Hoa Team</cite>
+      </blockquote>
+    </div>
+
+    <div class="about-cta text-center mt-12">
+      <a href="/posts" class="btn-primary-dark">Đọc bài viết đầu tiên</a>
+    </div>
+  </div>
 </BaseLayout>
+
+<style>
+  .about-hero {
+    background: linear-gradient(165deg, #0e2218 0%, #1a3028 60%, #2d3a20 100%);
+    position: relative;
+  }
+  .about-hero::after {
+    content: '';
+    position: absolute; bottom: -1px; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to top, var(--cream), transparent);
+  }
+  .page-eyebrow {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
+  }
+  .about-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    color: white; font-weight: 900; margin: 0;
+    line-height: 1.1;
+  }
+  .about-title em { color: var(--rose); font-style: italic; font-weight: 400; }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  .about-card {
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid transparent;
+  }
+  .about-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    margin: 0.75rem 0 0.5rem;
+    color: var(--green-deep);
+  }
+  .about-card p, .about-card ul {
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+    margin: 0;
+  }
+  .about-card ul { padding-left: 1.2rem; }
+  .about-card ul li { margin-bottom: 0.4rem; }
+  .card-icon { font-size: 2rem; }
+  .accent-green { background: var(--green-light); border-color: rgba(45,80,64,0.1); }
+  .accent-rose { background: var(--rose-light); border-color: rgba(196,105,126,0.1); }
+  .accent-gold { background: var(--gold-light); border-color: rgba(184,147,90,0.1); }
+
+  .about-quote {
+    background: var(--green-deep);
+    border-radius: 16px;
+    padding: 2.5rem 3rem;
+    text-align: center;
+  }
+  .about-quote blockquote { margin: 0; }
+  .about-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+  .about-quote cite { font-size: 0.8rem; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .btn-primary-dark {
+    display: inline-block;
+    padding: 0.9rem 2.5rem;
+    background: var(--green-deep);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 999px;
+    transition: all 0.25s;
+  }
+  .btn-primary-dark:hover { background: var(--green-mid); transform: translateY(-2px); }
+</style>

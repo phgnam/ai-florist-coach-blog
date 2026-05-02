@@ -2,25 +2,68 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_DESCRIPTION } from '../consts';
 
 const allPosts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
-
 const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
 ---
-<BaseLayout>
-  <section class="text-center py-16">
-    <h1 class="text-5xl font-bold mb-4 text-rose-600">🌸 Vườn Hoa</h1>
-    <p class="text-xl text-gray-600 max-w-xl mx-auto">{SITE_DESCRIPTION}</p>
+<BaseLayout padTop={false}>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <!-- Botanical SVG decoration -->
+    <div class="hero-deco hero-deco-left" aria-hidden="true">
+      <svg viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 380 Q60 300 80 200 Q100 100 60 20" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none"/>
+        <ellipse cx="80" cy="200" rx="40" ry="22" fill="rgba(255,255,255,0.06)" transform="rotate(-25 80 200)"/>
+        <ellipse cx="70" cy="150" rx="30" ry="16" fill="rgba(255,255,255,0.05)" transform="rotate(15 70 150)"/>
+        <ellipse cx="90" cy="260" rx="35" ry="18" fill="rgba(255,255,255,0.04)" transform="rotate(-10 90 260)"/>
+        <circle cx="60" cy="20" r="6" fill="rgba(184,147,90,0.5)"/>
+        <circle cx="78" cy="100" r="4" fill="rgba(196,105,126,0.4)"/>
+        <circle cx="85" cy="320" r="5" fill="rgba(184,147,90,0.3)"/>
+      </svg>
+    </div>
+    <div class="hero-deco hero-deco-right" aria-hidden="true">
+      <svg viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 380 Q140 300 120 200 Q100 100 140 20" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none"/>
+        <ellipse cx="120" cy="190" rx="40" ry="22" fill="rgba(255,255,255,0.06)" transform="rotate(25 120 190)"/>
+        <ellipse cx="130" cy="140" rx="30" ry="16" fill="rgba(255,255,255,0.05)" transform="rotate(-15 130 140)"/>
+        <circle cx="140" cy="20" r="6" fill="rgba(196,105,126,0.5)"/>
+        <circle cx="122" cy="110" r="4" fill="rgba(184,147,90,0.4)"/>
+      </svg>
+    </div>
+
+    <div class="hero-content max-w-4xl mx-auto px-6 text-center">
+      <p class="hero-eyebrow fade-up fade-up-1">AI Florist Coach · Blog</p>
+      <h1 class="hero-title fade-up fade-up-2">
+        Vườn Hoa<br/>
+        <em>của chúng tôi</em>
+      </h1>
+      <p class="hero-sub fade-up fade-up-3">{SITE_DESCRIPTION}</p>
+      <div class="hero-actions fade-up fade-up-4">
+        <a href="/posts" class="btn-primary">Khám phá bài viết</a>
+        <a href="/about" class="btn-ghost">Giới thiệu →</a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator" aria-hidden="true">
+      <div class="scroll-line"></div>
+    </div>
   </section>
 
+  <!-- ── FEATURED ── -->
   {featured && (
-    <section class="mb-16">
-      <h2 class="text-2xl font-bold mb-6">Bài viết nổi bật</h2>
+    <section class="section-featured max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="section-label">
+        <span class="label-line"></span>
+        <span class="label-text">Bài viết nổi bật</span>
+        <span class="label-line"></span>
+      </div>
       <PostCard
         title={featured.data.title}
         description={featured.data.description}
@@ -29,14 +72,20 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
         tags={featured.data.tags}
         heroImage={featured.data.heroImage as any}
         heroAlt={featured.data.heroAlt}
+        featured={true}
       />
     </section>
   )}
 
+  <!-- ── RECENT ── -->
   {recent.length > 0 && (
-    <section class="mb-16">
-      <h2 class="text-2xl font-bold mb-6">Bài viết mới nhất</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <section class="section-recent max-w-7xl mx-auto px-6 lg:px-10">
+      <div class="section-label">
+        <span class="label-line"></span>
+        <span class="label-text">Bài viết mới nhất</span>
+        <span class="label-line"></span>
+      </div>
+      <div class="posts-grid">
         {recent.map((post) => (
           <PostCard
             title={post.data.title}
@@ -49,22 +98,279 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
           />
         ))}
       </div>
-    </section>
-  )}
-
-  {allTags.length > 0 && (
-    <section>
-      <h2 class="text-2xl font-bold mb-6">Chủ đề</h2>
-      <div class="flex flex-wrap gap-3">
-        {allTags.map((tag) => (
-          <a
-            href={`/tags/${tag}`}
-            class="px-4 py-2 rounded-full bg-rose-50 text-rose-700 hover:bg-rose-100 transition-colors text-sm font-medium"
-          >
-            #{tag}
-          </a>
-        ))}
+      <div class="text-center mt-12">
+        <a href="/posts" class="btn-outline">Xem tất cả bài viết</a>
       </div>
     </section>
   )}
+
+  <!-- ── TAG CLOUD ── -->
+  {allTags.length > 0 && (
+    <section class="section-tags">
+      <div class="tags-inner max-w-7xl mx-auto px-6 lg:px-10">
+        <div class="section-label">
+          <span class="label-line"></span>
+          <span class="label-text">Khám phá theo chủ đề</span>
+          <span class="label-line"></span>
+        </div>
+        <div class="tag-cloud">
+          {allTags.map((tag) => (
+            <a href={`/tags/${tag}`} class="tag-cloud-item">
+              <span class="tag-hash">#</span>{tag}
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- ── NEWSLETTER TEASER ── -->
+  <section class="section-newsletter max-w-7xl mx-auto px-6 lg:px-10">
+    <div class="newsletter-card">
+      <div class="newsletter-deco" aria-hidden="true">🌹</div>
+      <div class="newsletter-content">
+        <h2 class="newsletter-title">Đăng ký RSS Feed</h2>
+        <p class="newsletter-sub">Nhận ngay thông báo khi có bài viết mới về hoa và nghề florist.</p>
+        <a href="/rss.xml" class="btn-gold">Đăng ký RSS →</a>
+      </div>
+    </div>
+  </section>
+
 </BaseLayout>
+
+<style>
+  /* ── HERO ── */
+  .hero {
+    min-height: 100svh;
+    background: linear-gradient(165deg, #0e2218 0%, #1a3028 40%, #2d3a20 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 7rem 1rem 5rem;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 70%, rgba(196,105,126,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 20% 30%, rgba(184,147,90,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-deco-left, .hero-deco-right {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 200px;
+    pointer-events: none;
+  }
+  .hero-deco-left { left: 0; }
+  .hero-deco-right { right: 0; }
+  .hero-deco-left svg, .hero-deco-right svg {
+    width: 100%; height: 100%;
+  }
+
+  .hero-content { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(3rem, 9vw, 7rem);
+    font-weight: 900;
+    color: white;
+    line-height: 1.05;
+    margin: 0 0 1.5rem;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--rose);
+    font-weight: 400;
+  }
+  .hero-sub {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(255,255,255,0.6);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+
+  .scroll-indicator {
+    position: absolute; bottom: 2rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.4));
+    animation: floatPetal 2.5s ease-in-out infinite;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    background: var(--rose);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 999px;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .btn-primary:hover { background: #b8566b; transform: translateY(-2px); }
+
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.25s;
+  }
+  .btn-ghost:hover { color: white; border-color: rgba(255,255,255,0.5); }
+
+  .btn-outline {
+    display: inline-block;
+    padding: 0.8rem 2.5rem;
+    border: 2px solid var(--green-deep);
+    color: var(--green-deep);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 999px;
+    transition: all 0.25s;
+  }
+  .btn-outline:hover { background: var(--green-deep); color: white; }
+
+  .btn-gold {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background: var(--gold);
+    color: var(--green-deep);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border-radius: 999px;
+    transition: all 0.25s;
+  }
+  .btn-gold:hover { background: #a8823a; }
+
+  /* ── Sections ── */
+  .section-featured { padding: 6rem 0 3rem; }
+  .section-recent { padding: 3rem 0 5rem; }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+  .label-line { flex: 1; height: 1px; background: var(--cream-dark); }
+  .label-text {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.75rem;
+  }
+
+  /* ── Tags cloud ── */
+  .section-tags {
+    background: var(--cream-dark);
+    padding: 5rem 0;
+  }
+  .tags-inner { }
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  .tag-cloud-item {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--green-deep);
+    text-decoration: none;
+    transition: all 0.25s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .tag-cloud-item:hover {
+    background: var(--green-deep);
+    color: white;
+    border-color: var(--green-deep);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26,48,40,0.2);
+  }
+  .tag-hash { color: var(--rose); margin-right: 2px; }
+
+  /* ── Newsletter ── */
+  .section-newsletter { padding: 5rem 0 6rem; }
+  .newsletter-card {
+    background: linear-gradient(135deg, var(--green-deep) 0%, #2d5040 100%);
+    border-radius: 24px;
+    padding: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .newsletter-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(184,147,90,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .newsletter-deco {
+    font-size: 3.5rem;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3));
+    animation: floatPetal 4s ease-in-out infinite;
+    position: relative; z-index: 1;
+  }
+  .newsletter-content { position: relative; z-index: 1; }
+  .newsletter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: white;
+    margin: 0 0 0.75rem;
+  }
+  .newsletter-sub {
+    color: rgba(255,255,255,0.65);
+    max-width: 420px;
+    font-size: 0.95rem;
+    margin: 0 auto 1.5rem;
+  }
+</style>
