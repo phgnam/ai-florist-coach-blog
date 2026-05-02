@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const lang = 'en' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: `${siteUrl}/` },
+  { name: 'Tools', url: `${siteUrl}/tools/` },
+];
+---
+<BaseLayout
+  lang={lang}
+  title="Florist Tools — Free Resources for Flower Professionals"
+  description="Free floristry tools from Vườn Hoa: vase life calculator, care guides, and more resources for professional florists and flower enthusiasts."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <div class="page-header">
+    <div class="max-w-5xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Free Resources</p>
+      <h1 class="page-title">Florist Tools</h1>
+      <p class="page-sub">Practical tools for florists, flower enthusiasts, and anyone who wants their flowers to last longer.</p>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-14">
+    <div class="tools-grid">
+      <a href="/tools/care-calculator/" class="tool-card">
+        <div class="tool-icon">🌸⏱️</div>
+        <div class="tool-body">
+          <h2 class="tool-name">Vase Life Calculator</h2>
+          <p class="tool-desc">Estimate how long your cut flowers will last based on flower type, room temperature, and care routine. Get personalised tips to maximise freshness.</p>
+          <span class="tool-cta">Use calculator →</span>
+        </div>
+      </a>
+      <a href="/learn/" class="tool-card">
+        <div class="tool-icon">📖🌹</div>
+        <div class="tool-body">
+          <h2 class="tool-name">Flower Glossary</h2>
+          <p class="tool-desc">A–Z guide to 20 flowers: symbolism, care tips, best varieties, seasonal availability, and interesting facts for every flower a florist needs to know.</p>
+          <span class="tool-cta">Browse glossary →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.5rem,6vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:480px; margin:0 auto; line-height:1.75; }
+  .tools-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:1.5rem; }
+  .tool-card { display:flex; gap:1.25rem; background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:2rem; text-decoration:none; transition:all 0.22s; }
+  .tool-card:hover { border-color:var(--blush); transform:translateY(-2px); box-shadow:0 8px 28px rgba(196,122,138,0.1); }
+  .tool-icon { font-size:2.5rem; flex-shrink:0; }
+  .tool-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--mauve); margin:0 0 0.5rem; }
+  .tool-desc { font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text-mid); font-weight:300; line-height:1.7; margin:0 0 1rem; }
+  .tool-cta { font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; color:var(--blush-dark); }
+</style>

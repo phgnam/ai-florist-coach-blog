@@ -1,0 +1,807 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const lang = 'en' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/care-calculator/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/care-calculator/` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: `${siteUrl}/` },
+  { name: 'Tools', url: `${siteUrl}/tools/` },
+  { name: 'Vase Life Calculator', url: `${siteUrl}/tools/care-calculator/` },
+];
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Make Cut Flowers Last Longer",
+  "description": "Step-by-step guide to extending the vase life of cut flowers using proper care techniques.",
+  "totalTime": "PT5M",
+  "supply": [
+    { "@type": "HowToSupply", "name": "Clean vase" },
+    { "@type": "HowToSupply", "name": "Flower food (preservative)" },
+    { "@type": "HowToSupply", "name": "Sharp scissors or knife" },
+    { "@type": "HowToSupply", "name": "Cold water" }
+  ],
+  "step": [
+    { "@type": "HowToStep", "name": "Fill vase with cold water and flower food", "text": "Use cold water and dissolve flower food according to package directions. Cold water slows bacterial growth and keeps stems firm." },
+    { "@type": "HowToStep", "name": "Recut stems at a 45-degree angle underwater", "text": "Cut 2–3 cm from the base of each stem while holding it under water. The angled cut maximises the water-absorbing surface area." },
+    { "@type": "HowToStep", "name": "Remove all leaves below the waterline", "text": "Any foliage submerged in water will rot, introducing bacteria that block the stem and cause premature wilting." },
+    { "@type": "HowToStep", "name": "Place in a cool location away from direct sun", "text": "Heat is the number one enemy of cut flower longevity. Keep arrangements away from direct sunlight, radiators, and ripening fruit (which emits ethylene gas)." },
+    { "@type": "HowToStep", "name": "Change water and recut stems every 1–2 days", "text": "Fresh water removes bacteria. Recutting opens up the stem's vascular system which can become blocked after 24–48 hours." }
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How long do cut flowers last in a vase?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vase life varies significantly by flower type. Carnations and chrysanthemums last 2–3 weeks. Roses and lilies last 7–14 days with good care. Dahlias and gardenias are among the shortest-lived at 3–8 days. Use our calculator above to get an estimate based on your specific conditions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the best way to make cut flowers last longer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The five most impactful actions are: (1) Recut stems at a 45-degree angle under water every 1–2 days. (2) Change vase water daily or every 2 days. (3) Add commercial flower food (extends life by 25–40%). (4) Keep flowers in a cool room below 20°C. (5) Remove all foliage below the waterline immediately."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does aspirin or sugar help flowers last longer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Aspirin has minimal scientific evidence supporting vase life extension. Sugar can help (it feeds the flower) but without an antibacterial agent it accelerates bacterial growth, often shortening life. Commercial flower food contains the right balance of sugar + antibacterial + pH adjuster — it is by far the most effective home treatment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I put flowers in cold or warm water?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cold water (2–8°C) is generally best for maintaining cut flower freshness — it slows bacterial growth and cellular respiration. Exception: when forcing closed bulb flowers like tulips or ranunculus to open faster, lukewarm water encourages quicker blooming. For long-term preservation, always use cold water."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do my flowers wilt so quickly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most common causes of rapid wilting are: bacterial buildup in the vase water blocking the stem (fix: change water daily and recut stems), placing flowers near heat sources or direct sunlight, ethylene gas from ripening fruit nearby, and not removing submerged foliage. Some flowers like dahlias, gardenias, and sweet peas are naturally short-lived regardless of care."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which flowers last the longest in a vase?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Carnations are the longest-lasting cut flower, surviving 2–4 weeks with proper care. Chrysanthemums follow at 10–21 days. Orchid sprays, lilies, and alstroemerias all regularly exceed 2 weeks. Roses typically last 7–12 days. Dahlias, gardenias, and sweet peas are among the shortest-lived at 3–7 days."
+      }
+    }
+  ]
+};
+
+const softwareAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Flower Vase Life Calculator",
+  "applicationCategory": "UtilitiesApplication",
+  "description": "Interactive calculator that estimates how long cut flowers will last based on flower type, room temperature, water care, and handling practices.",
+  "url": `${siteUrl}/tools/care-calculator/`,
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+};
+
+const flowers = [
+  { slug: 'rose',          emoji: '🌹', name: 'Rose',          min: 5,  max: 12, careLevel: 'Moderate', tip: 'Recut stems at 45° under water daily.' },
+  { slug: 'lily',          emoji: '🌷', name: 'Lily',          min: 7,  max: 14, careLevel: 'Easy',     tip: 'Remove stamens immediately to avoid pollen staining.' },
+  { slug: 'peony',         emoji: '🌸', name: 'Peony',         min: 5,  max: 10, careLevel: 'Moderate', tip: 'Buy in soft-bud stage; refrigerate at 2°C to slow opening.' },
+  { slug: 'tulip',         emoji: '🌷', name: 'Tulip',         min: 5,  max: 10, careLevel: 'Easy',     tip: 'Pin a pin through the stem below the head to keep it upright.' },
+  { slug: 'sunflower',     emoji: '🌻', name: 'Sunflower',     min: 6,  max: 12, careLevel: 'Easy',     tip: 'Fill vase deeply — sunflowers drink enormous amounts of water.' },
+  { slug: 'orchid',        emoji: '🌺', name: 'Orchid (cut)',  min: 7,  max: 14, careLevel: 'Moderate', tip: 'Mist the blooms lightly daily with cool water.' },
+  { slug: 'lavender',      emoji: '💜', name: 'Lavender',      min: 5,  max: 7,  careLevel: 'Easy',     tip: 'Use minimal water — lavender prefers drier conditions than most flowers.' },
+  { slug: 'hydrangea',     emoji: '💐', name: 'Hydrangea',     min: 5,  max: 10, careLevel: 'Moderate', tip: 'Submerge the entire bloom in cold water for 30–60 min when it wilts.' },
+  { slug: 'dahlia',        emoji: '🌸', name: 'Dahlia',        min: 4,  max: 8,  careLevel: 'Moderate', tip: 'Plunge stem tips in boiling water for 10 sec immediately after cutting.' },
+  { slug: 'carnation',     emoji: '🌺', name: 'Carnation',     min: 14, max: 28, careLevel: 'Easy',     tip: 'Cut between nodes (not at a node) for maximum water uptake.' },
+  { slug: 'chrysanthemum', emoji: '🌼', name: 'Chrysanthemum', min: 10, max: 21, careLevel: 'Easy',     tip: 'Remove all lower leaves immediately — they decay very rapidly in water.' },
+  { slug: 'freesia',       emoji: '🌸', name: 'Freesia',       min: 7,  max: 14, careLevel: 'Easy',     tip: 'Snap off each spent bloom as it fades to encourage remaining buds to open.' },
+  { slug: 'gardenia',      emoji: '🤍', name: 'Gardenia',      min: 3,  max: 5,  careLevel: 'Advanced', tip: 'Handle as little as possible — finger oils instantly bruise the petals.' },
+  { slug: 'iris',          emoji: '💜', name: 'Iris',          min: 5,  max: 10, careLevel: 'Easy',     tip: 'Remove the outer spathe (papery sheath) to encourage buds to open.' },
+  { slug: 'jasmine',       emoji: '🌼', name: 'Jasmine',       min: 2,  max: 4,  careLevel: 'Easy',     tip: 'Use as garlands or clusters of buds — individual blooms are very short-lived.' },
+  { slug: 'magnolia',      emoji: '🌸', name: 'Magnolia',      min: 2,  max: 5,  careLevel: 'Moderate', tip: 'Hammer the base of woody stems to maximise water uptake.' },
+  { slug: 'marigold',      emoji: '🌼', name: 'Marigold',      min: 7,  max: 14, careLevel: 'Easy',     tip: 'Strip all leaves — the foliage has a very strong smell and decays quickly.' },
+  { slug: 'anemone',       emoji: '🌸', name: 'Anemone',       min: 5,  max: 10, careLevel: 'Moderate', tip: 'Keep extremely cold (2–5°C) when not on display — warmth causes rapid opening.' },
+  { slug: 'ranunculus',    emoji: '🌸', name: 'Ranunculus',    min: 7,  max: 12, careLevel: 'Easy',     tip: 'Do not use flower food with sugar — it accelerates petal drop in ranunculus.' },
+  { slug: 'sweet-pea',     emoji: '🌸', name: 'Sweet Pea',     min: 4,  max: 7,  careLevel: 'Advanced', tip: 'Use only 5–8 cm of water — sweet peas rot quickly when stems are deeply submerged.' },
+];
+---
+<BaseLayout
+  lang={lang}
+  title="Flower Vase Life Calculator — How Long Will Your Flowers Last?"
+  description="Instantly estimate how long your cut flowers will last based on flower type, room temperature, and care routine. Free florist tool with expert tips from Vườn Hoa."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(softwareAppSchema)} slot="head" />
+
+  <!-- Breadcrumb nav -->
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-5xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li aria-hidden="true">›</li>
+        <li>Tools</li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">Vase Life Calculator</li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="max-w-5xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Free Florist Tool</p>
+      <h1 class="page-title">Flower Vase Life Calculator</h1>
+      <p class="page-sub">How long will your cut flowers last? Enter your flower type and care routine to get an instant estimate — plus personalised tips to maximise freshness.</p>
+    </div>
+  </div>
+
+  <!-- Calculator -->
+  <div class="calc-wrap">
+    <div class="max-w-5xl mx-auto px-6 py-14">
+      <div class="calc-layout">
+
+        <!-- Inputs panel -->
+        <div class="inputs-panel">
+          <h2 class="panel-heading">Your Conditions</h2>
+
+          <!-- Flower picker -->
+          <div class="field-group">
+            <label class="field-label" for="flower-select">Flower type</label>
+            <div class="select-wrap">
+              <select id="flower-select" class="field-select">
+                <option value="">— Choose a flower —</option>
+                {flowers.map(f => (
+                  <option
+                    value={f.slug}
+                    data-min={f.min}
+                    data-max={f.max}
+                    data-tip={f.tip}
+                    data-care={f.careLevel}
+                    data-emoji={f.emoji}
+                    data-name={f.name}
+                  >{f.emoji} {f.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <!-- Room temperature -->
+          <div class="field-group">
+            <label class="field-label">Room temperature</label>
+            <div class="radio-grid" id="temp-options">
+              <label class="radio-card selected" data-val="hot">
+                <input type="radio" name="temp" value="hot" class="sr-only" />
+                <span class="radio-icon">🌡️</span>
+                <span class="radio-title">Hot</span>
+                <span class="radio-sub">&gt; 25 °C</span>
+              </label>
+              <label class="radio-card" data-val="warm">
+                <input type="radio" name="temp" value="warm" class="sr-only" />
+                <span class="radio-icon">☀️</span>
+                <span class="radio-title">Warm</span>
+                <span class="radio-sub">20–25 °C</span>
+              </label>
+              <label class="radio-card" data-val="cool">
+                <input type="radio" name="temp" value="cool" class="sr-only" />
+                <span class="radio-icon">🍃</span>
+                <span class="radio-title">Cool</span>
+                <span class="radio-sub">15–20 °C</span>
+              </label>
+              <label class="radio-card" data-val="cold">
+                <input type="radio" name="temp" value="cold" class="sr-only" />
+                <span class="radio-icon">❄️</span>
+                <span class="radio-title">Cold</span>
+                <span class="radio-sub">&lt; 15 °C</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Water changes -->
+          <div class="field-group">
+            <label class="field-label">How often do you change the water?</label>
+            <div class="radio-grid radio-grid--2" id="water-options">
+              <label class="radio-card selected" data-val="never">
+                <input type="radio" name="water" value="never" class="sr-only" />
+                <span class="radio-icon">🚫</span>
+                <span class="radio-title">Never</span>
+              </label>
+              <label class="radio-card" data-val="few-days">
+                <input type="radio" name="water" value="few-days" class="sr-only" />
+                <span class="radio-icon">📅</span>
+                <span class="radio-title">Every 3–4 days</span>
+              </label>
+              <label class="radio-card" data-val="every-2">
+                <input type="radio" name="water" value="every-2" class="sr-only" />
+                <span class="radio-icon">💧</span>
+                <span class="radio-title">Every 2 days</span>
+              </label>
+              <label class="radio-card" data-val="daily">
+                <input type="radio" name="water" value="daily" class="sr-only" />
+                <span class="radio-icon">✨</span>
+                <span class="radio-title">Daily</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Stem recutting -->
+          <div class="field-group">
+            <label class="field-label">Do you recut stems when changing water?</label>
+            <div class="radio-grid radio-grid--2" id="recut-options">
+              <label class="radio-card selected" data-val="no">
+                <input type="radio" name="recut" value="no" class="sr-only" />
+                <span class="radio-icon">✂️</span>
+                <span class="radio-title">No</span>
+              </label>
+              <label class="radio-card" data-val="yes">
+                <input type="radio" name="recut" value="yes" class="sr-only" />
+                <span class="radio-icon">✂️✅</span>
+                <span class="radio-title">Yes, at an angle</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Flower food -->
+          <div class="field-group">
+            <label class="field-label">Using flower food / preservative?</label>
+            <div class="radio-grid radio-grid--2" id="food-options">
+              <label class="radio-card selected" data-val="no">
+                <input type="radio" name="food" value="no" class="sr-only" />
+                <span class="radio-icon">💧</span>
+                <span class="radio-title">Water only</span>
+              </label>
+              <label class="radio-card" data-val="yes">
+                <input type="radio" name="food" value="yes" class="sr-only" />
+                <span class="radio-icon">🌿</span>
+                <span class="radio-title">Yes, flower food</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Leaves removed -->
+          <div class="field-group">
+            <label class="field-label">Did you remove leaves below the waterline?</label>
+            <div class="radio-grid radio-grid--2" id="leaves-options">
+              <label class="radio-card selected" data-val="no">
+                <input type="radio" name="leaves" value="no" class="sr-only" />
+                <span class="radio-icon">🍃</span>
+                <span class="radio-title">No</span>
+              </label>
+              <label class="radio-card" data-val="yes">
+                <input type="radio" name="leaves" value="yes" class="sr-only" />
+                <span class="radio-icon">🍃✅</span>
+                <span class="radio-title">Yes</span>
+              </label>
+            </div>
+          </div>
+
+          <button id="calc-btn" class="calc-btn" disabled>Calculate →</button>
+        </div>
+
+        <!-- Results panel -->
+        <div class="results-panel" id="results-panel">
+          <div class="results-empty" id="results-empty">
+            <div class="empty-icon">🌸</div>
+            <p class="empty-text">Select a flower and fill in your conditions to see your vase life estimate.</p>
+          </div>
+
+          <div class="results-content hidden" id="results-content">
+            <!-- Flower ID strip -->
+            <div class="result-flower-id" id="result-flower-id">
+              <span id="result-emoji" class="result-flower-emoji">🌹</span>
+              <div>
+                <div class="result-flower-name" id="result-flower-name">Rose</div>
+                <div class="result-care-level" id="result-care-level">Moderate care</div>
+              </div>
+            </div>
+
+            <!-- Score arc -->
+            <div class="score-arc-wrap">
+              <svg class="score-arc" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <!-- Track arc -->
+                <path d="M 20 110 A 80 80 0 0 1 180 110" stroke="#F0E8E5" stroke-width="14" stroke-linecap="round" fill="none"/>
+                <!-- Progress arc — animated via JS -->
+                <path id="arc-progress"
+                  d="M 20 110 A 80 80 0 0 1 180 110"
+                  stroke="url(#arcGrad)"
+                  stroke-width="14"
+                  stroke-linecap="round"
+                  fill="none"
+                  stroke-dasharray="251.2"
+                  stroke-dashoffset="251.2"
+                  style="transition: stroke-dashoffset 0.9s cubic-bezier(0.34,1.56,0.64,1)"/>
+                <defs>
+                  <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#E8A4B0"/>
+                    <stop offset="100%" stop-color="#C47A8A"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="score-inner">
+                <div class="score-days" id="score-days">—</div>
+                <div class="score-label">days</div>
+              </div>
+            </div>
+
+            <p class="score-range-text" id="score-range-text"></p>
+
+            <!-- Factor breakdown -->
+            <div class="factor-list" id="factor-list"></div>
+
+            <!-- Personalised tip -->
+            <div class="result-tip" id="result-tip">
+              <div class="tip-label">Top tip for this flower</div>
+              <div class="tip-text" id="tip-text"></div>
+            </div>
+
+            <!-- Action tips -->
+            <div class="upgrade-box" id="upgrade-box"></div>
+
+            <!-- Glossary link -->
+            <a id="glossary-link" href="/learn/rose/" class="glossary-cta">
+              Full Rose care guide →
+            </a>
+          </div>
+        </div>
+
+      </div><!-- /calc-layout -->
+    </div>
+  </div>
+
+  <!-- How To section (SEO content + rich result) -->
+  <section class="howto-section">
+    <div class="max-w-5xl mx-auto px-6 py-16">
+      <h2 class="howto-title">5 Steps to Make Cut Flowers Last Longer</h2>
+      <div class="howto-steps">
+        {[
+          { n: '01', head: 'Fill vase with cold water + flower food', body: 'Cold water (2–8 °C) slows bacterial growth significantly. Commercial flower food contains a precisely balanced mix of sugar (nutrition), acidifier (pH control), and biocide — more effective than any DIY substitute.' },
+          { n: '02', head: 'Recut stems at a 45° angle underwater', body: 'Cut 2–3 cm from each stem base while holding it underwater. The angled cut maximises the surface area for water uptake. Recutting daily re-opens the vascular tissue that becomes blocked by bacteria and air bubbles.' },
+          { n: '03', head: 'Strip all leaves below the waterline', body: 'Submerged foliage decays rapidly, introducing millions of bacteria per hour into your vase water. This blocks the stem and poisons the water. Remove every leaf that will touch water — immediately.' },
+          { n: '04', head: 'Position away from heat and ethylene', body: 'The four enemies of cut flowers: direct sunlight (heat), radiators (heat), ripening fruit (ethylene gas), and air conditioning vents (cold drafts). A cool, shaded spot at 15–18 °C is optimal for most flowers.' },
+          { n: '05', head: 'Change water and recut every 1–2 days', body: 'This single habit has the largest impact on vase life. Bacterial counts double roughly every 20 minutes in vase water at room temperature. Fresh water + fresh stem cuts every 48 hours can extend vase life by 50–80% compared to doing nothing.' },
+        ].map(step => (
+          <div class="howto-step">
+            <div class="step-num">{step.n}</div>
+            <div class="step-content">
+              <h3 class="step-head">{step.head}</h3>
+              <p class="step-body">{step.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ section -->
+  <section class="faq-section">
+    <div class="max-w-5xl mx-auto px-6 py-16">
+      <h2 class="faq-title">Frequently Asked Questions</h2>
+      <div class="faq-list" id="faq-accordion">
+        {[
+          { q: 'How long do cut flowers last in a vase?', a: 'Vase life varies significantly by flower type. Carnations and chrysanthemums last 2–3 weeks. Roses and lilies last 7–14 days with good care. Dahlias and gardenias are among the shortest-lived at 3–8 days. Use our calculator above to get an estimate based on your specific conditions.' },
+          { q: 'What is the best way to make cut flowers last longer?', a: 'The five most impactful actions are: (1) Recut stems at a 45-degree angle under water every 1–2 days. (2) Change vase water daily or every 2 days. (3) Add commercial flower food (extends life by 25–40%). (4) Keep flowers in a cool room below 20°C. (5) Remove all foliage below the waterline immediately.' },
+          { q: 'Does aspirin or sugar help flowers last longer?', a: 'Aspirin has minimal scientific evidence supporting vase life extension. Sugar can help (it feeds the flower) but without an antibacterial agent it accelerates bacterial growth, often shortening life. Commercial flower food contains the right balance of sugar + antibacterial + pH adjuster — it is by far the most effective home treatment.' },
+          { q: 'Should I put flowers in cold or warm water?', a: 'Cold water (2–8°C) is generally best for maintaining cut flower freshness — it slows bacterial growth and cellular respiration. Exception: when forcing closed bulb flowers like tulips or ranunculus to open faster, lukewarm water encourages quicker blooming. For long-term preservation, always use cold water.' },
+          { q: 'Why do my flowers wilt so quickly?', a: 'The most common causes of rapid wilting are: bacterial buildup in vase water blocking the stem (fix: change water daily and recut stems), placing flowers near heat or direct sunlight, ethylene gas from ripening fruit nearby, and not removing submerged foliage. Some flowers like dahlias, gardenias, and sweet peas are naturally short-lived regardless of care.' },
+          { q: 'Which flowers last the longest in a vase?', a: 'Carnations are the longest-lasting cut flower, surviving 2–4 weeks with proper care. Chrysanthemums follow at 10–21 days. Orchid sprays, lilies, and alstroemerias all regularly exceed 2 weeks. Roses typically last 7–12 days. Dahlias, gardenias, and sweet peas are among the shortest-lived at 3–7 days.' },
+        ].map((item, i) => (
+          <div class="faq-item" data-index={i}>
+            <button class="faq-q" aria-expanded="false">
+              <span>{item.q}</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>{item.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Vase life table -->
+  <section class="table-section">
+    <div class="max-w-5xl mx-auto px-6 pb-16">
+      <h2 class="table-title">Cut Flower Vase Life Reference Chart</h2>
+      <p class="table-sub">Baseline estimates under optimal care conditions (cool room, fresh water every 2 days, flower food used).</p>
+      <div class="table-wrap">
+        <table class="ref-table">
+          <thead>
+            <tr>
+              <th>Flower</th>
+              <th>Minimum (days)</th>
+              <th>Maximum (days)</th>
+              <th>Care Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            {flowers.sort((a, b) => b.max - a.max).map(f => (
+              <tr>
+                <td><a href={`/learn/${f.slug}/`} class="table-flower-link">{f.emoji} {f.name}</a></td>
+                <td>{f.min}</td>
+                <td>{f.max}</td>
+                <td>
+                  <span class:list={['care-pill', `care-${f.careLevel.toLowerCase()}`]}>{f.careLevel}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .breadcrumb-list a:hover { text-decoration:underline; }
+
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:580px; margin:0 auto; line-height:1.75; }
+
+  /* ── CALCULATOR ── */
+  .calc-wrap { background:var(--ivory); }
+
+  .calc-layout { display:grid; grid-template-columns:1fr 1fr; gap:2.5rem; align-items:start; }
+  @media (max-width:860px) { .calc-layout { grid-template-columns:1fr; } }
+
+  .inputs-panel { background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:2rem; }
+  .panel-heading { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:600; color:var(--mauve); margin:0 0 1.75rem; }
+
+  .field-group { margin-bottom:1.75rem; }
+  .field-label { display:block; font-family:'Jost',sans-serif; font-size:0.75rem; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; color:var(--taupe); margin-bottom:0.7rem; }
+
+  .select-wrap { position:relative; }
+  .field-select { width:100%; padding:0.75rem 1rem; border:1.5px solid var(--ivory-dark); border-radius:12px; font-family:'Jost',sans-serif; font-size:0.95rem; color:var(--mauve); background:var(--ivory); appearance:none; cursor:pointer; transition:border-color 0.2s; }
+  .field-select:focus { outline:none; border-color:var(--blush-dark); }
+  .select-wrap::after { content:'▾'; position:absolute; right:1rem; top:50%; transform:translateY(-50%); color:var(--taupe); pointer-events:none; font-size:0.8rem; }
+
+  .radio-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0.5rem; }
+  .radio-grid--2 { grid-template-columns:repeat(2,1fr); }
+  @media (max-width:500px) { .radio-grid { grid-template-columns:repeat(2,1fr); } }
+
+  .radio-card { display:flex; flex-direction:column; align-items:center; gap:0.25rem; padding:0.65rem 0.4rem; border:1.5px solid var(--ivory-dark); border-radius:12px; cursor:pointer; transition:all 0.2s; text-align:center; position:relative; }
+  .radio-card:hover { border-color:var(--blush); }
+  .radio-card.selected { border-color:var(--blush-dark); background:rgba(232,164,176,0.08); }
+  .radio-card input { position:absolute; opacity:0; width:0; height:0; }
+  .radio-icon { font-size:1.3rem; }
+  .radio-title { font-family:'Jost',sans-serif; font-size:0.75rem; font-weight:500; color:var(--mauve); }
+  .radio-sub { font-family:'Jost',sans-serif; font-size:0.65rem; color:var(--taupe); font-weight:300; }
+
+  .calc-btn { width:100%; padding:1rem; background:var(--blush-dark); color:white; font-family:'Jost',sans-serif; font-size:0.9rem; font-weight:500; letter-spacing:0.08em; border:none; border-radius:12px; cursor:pointer; transition:all 0.25s; margin-top:0.5rem; }
+  .calc-btn:hover:not(:disabled) { background:var(--mauve); transform:translateY(-1px); }
+  .calc-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+  /* ── RESULTS ── */
+  .results-panel { background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:2rem; min-height:400px; display:flex; flex-direction:column; }
+  .results-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:1rem; padding:3rem 1rem; }
+  .empty-icon { font-size:3.5rem; opacity:0.35; animation:floatPetal 5s ease-in-out infinite; }
+  .empty-text { font-family:'Jost',sans-serif; color:var(--taupe); font-size:0.9rem; font-weight:300; max-width:220px; line-height:1.65; }
+  .hidden { display:none !important; }
+
+  .results-content { display:flex; flex-direction:column; gap:1.5rem; }
+  .result-flower-id { display:flex; align-items:center; gap:0.75rem; padding-bottom:1.25rem; border-bottom:1px solid var(--ivory-dark); }
+  .result-flower-emoji { font-size:2.5rem; }
+  .result-flower-name { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--mauve); }
+  .result-care-level { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); font-weight:300; }
+
+  .score-arc-wrap { position:relative; display:flex; align-items:center; justify-content:center; }
+  .score-arc { width:200px; height:120px; }
+  .score-inner { position:absolute; bottom:8px; text-align:center; }
+  .score-days { font-family:'Cormorant Garamond',serif; font-size:3rem; font-weight:600; color:var(--mauve); line-height:1; }
+  .score-label { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); letter-spacing:0.12em; text-transform:uppercase; font-weight:300; }
+  .score-range-text { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); text-align:center; font-weight:300; margin-top:-0.5rem; }
+
+  .factor-list { display:flex; flex-direction:column; gap:0.5rem; }
+  .factor-row { display:flex; align-items:center; gap:0.75rem; font-family:'Jost',sans-serif; font-size:0.82rem; }
+  .factor-icon { width:20px; text-align:center; flex-shrink:0; }
+  .factor-name { color:var(--taupe); font-weight:300; flex:1; }
+  .factor-badge { font-size:0.7rem; font-weight:500; padding:0.15rem 0.55rem; border-radius:999px; }
+  .badge-boost { background:rgba(134,187,134,0.15); color:#4a7a4a; border:1px solid rgba(134,187,134,0.3); }
+  .badge-neutral { background:rgba(200,149,106,0.12); color:#8a6840; border:1px solid rgba(200,149,106,0.2); }
+  .badge-penalty { background:rgba(196,122,138,0.12); color:var(--blush-dark); border:1px solid rgba(196,122,138,0.2); }
+
+  .result-tip { background:linear-gradient(135deg,#FDF0F2 0%,#F5E6EA 100%); border-left:3px solid var(--blush-dark); border-radius:0 12px 12px 0; padding:1rem 1.25rem; }
+  .tip-label { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:0.4rem; }
+  .tip-text { font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text-mid); font-weight:300; line-height:1.65; }
+
+  .upgrade-box { background:white; border:1px solid var(--ivory-dark); border-radius:12px; padding:1rem 1.25rem; display:flex; flex-direction:column; gap:0.5rem; }
+  .upgrade-item { display:flex; align-items:flex-start; gap:0.5rem; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--text-mid); font-weight:300; line-height:1.5; }
+  .upgrade-check { color:var(--blush-dark); font-weight:600; flex-shrink:0; }
+  .upgrade-title { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--taupe); margin-bottom:0.4rem; }
+
+  .glossary-cta { display:block; text-align:center; padding:0.75rem; border:1.5px solid var(--blush-dark); border-radius:10px; font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; color:var(--blush-dark); text-decoration:none; transition:all 0.2s; }
+  .glossary-cta:hover { background:var(--blush-dark); color:white; }
+
+  /* ── HOW TO ── */
+  .howto-section { background:white; border-top:1px solid var(--ivory-dark); }
+  .howto-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.7rem,3.5vw,2.5rem); font-weight:300; color:var(--mauve); margin:0 0 2.5rem; text-align:center; }
+  .howto-steps { display:flex; flex-direction:column; gap:1.5rem; }
+  .howto-step { display:flex; gap:1.5rem; align-items:flex-start; padding:1.5rem; background:var(--ivory); border-radius:16px; border:1px solid var(--ivory-dark); }
+  .step-num { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--blush); line-height:1; flex-shrink:0; width:44px; }
+  .step-head { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:600; color:var(--mauve); margin:0 0 0.5rem; }
+  .step-body { font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--text-mid); line-height:1.75; margin:0; font-weight:300; }
+
+  /* ── FAQ ── */
+  .faq-section { background:var(--ivory); border-top:1px solid var(--ivory-dark); }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.7rem,3.5vw,2.5rem); font-weight:300; color:var(--mauve); margin:0 0 2.5rem; text-align:center; }
+  .faq-list { display:flex; flex-direction:column; gap:0.75rem; }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; transition:border-color 0.2s; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.1rem 1.4rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.95rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.2rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.25s; font-weight:300; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.4rem 1.1rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--text-mid); line-height:1.8; margin:0; font-weight:300; }
+
+  /* ── REFERENCE TABLE ── */
+  .table-section { background:white; border-top:1px solid var(--ivory-dark); }
+  .table-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.5rem,3vw,2rem); font-weight:300; color:var(--mauve); margin:0 0 0.6rem; text-align:center; }
+  .table-sub { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); text-align:center; margin:0 0 2rem; font-weight:300; }
+  .table-wrap { overflow-x:auto; border-radius:16px; border:1px solid var(--ivory-dark); }
+  .ref-table { width:100%; border-collapse:collapse; font-family:'Jost',sans-serif; }
+  .ref-table thead { background:var(--ivory); }
+  .ref-table th { padding:0.85rem 1.25rem; font-size:0.7rem; font-weight:500; letter-spacing:0.15em; text-transform:uppercase; color:var(--taupe); text-align:left; border-bottom:1px solid var(--ivory-dark); }
+  .ref-table td { padding:0.8rem 1.25rem; font-size:0.88rem; color:var(--text-mid); font-weight:300; border-bottom:1px solid var(--ivory-dark); }
+  .ref-table tbody tr:last-child td { border-bottom:none; }
+  .ref-table tbody tr:hover td { background:rgba(253,240,242,0.5); }
+  .table-flower-link { color:var(--blush-dark); text-decoration:none; font-weight:400; }
+  .table-flower-link:hover { text-decoration:underline; }
+  .care-pill { font-size:0.68rem; font-weight:500; padding:0.18rem 0.6rem; border-radius:999px; }
+  .care-easy { background:rgba(134,187,134,0.15); color:#4a7a4a; border:1px solid rgba(134,187,134,0.3); }
+  .care-moderate { background:rgba(200,149,106,0.15); color:#8a5c30; border:1px solid rgba(200,149,106,0.3); }
+  .care-advanced { background:rgba(196,122,138,0.15); color:var(--blush-dark); border:1px solid rgba(196,122,138,0.2); }
+</style>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────
+  const state = {
+    flower: null as null | { slug: string; name: string; emoji: string; min: number; max: number; tip: string; careLevel: string },
+    temp: 'hot',
+    water: 'never',
+    recut: 'no',
+    food: 'no',
+    leaves: 'no',
+  };
+
+  // ── Multipliers ────────────────────────────────────────────────────
+  const FACTORS: Record<string, { label: string; icon: string; values: Record<string, { mult: number; text: string; badge: 'boost'|'neutral'|'penalty' }> }> = {
+    temp: {
+      label: 'Room temperature',
+      icon: '🌡️',
+      values: {
+        hot:  { mult: 0.62, text: 'Hot room reduces life significantly', badge: 'penalty' },
+        warm: { mult: 0.82, text: 'Warm room — mild reduction', badge: 'penalty' },
+        cool: { mult: 1.00, text: 'Cool room — ideal', badge: 'neutral' },
+        cold: { mult: 1.22, text: 'Cold room — extends life considerably', badge: 'boost' },
+      }
+    },
+    water: {
+      label: 'Water changes',
+      icon: '💧',
+      values: {
+        never:    { mult: 0.50, text: 'No water changes — heavy bacterial buildup', badge: 'penalty' },
+        'few-days':{ mult: 0.82, text: 'Every 3–4 days — moderate bacteria control', badge: 'penalty' },
+        'every-2': { mult: 0.96, text: 'Every 2 days — good freshness', badge: 'neutral' },
+        daily:    { mult: 1.16, text: 'Daily changes — optimal bacteria control', badge: 'boost' },
+      }
+    },
+    recut: {
+      label: 'Stem recutting',
+      icon: '✂️',
+      values: {
+        no:  { mult: 0.85, text: 'No recut — blocked stem vascular tissue', badge: 'penalty' },
+        yes: { mult: 1.12, text: 'Recutting at angle — maximises uptake', badge: 'boost' },
+      }
+    },
+    food: {
+      label: 'Flower food',
+      icon: '🌿',
+      values: {
+        no:  { mult: 0.90, text: 'Water only — no nutrition or pH control', badge: 'neutral' },
+        yes: { mult: 1.17, text: 'Flower food — sugar + antibacterial + pH', badge: 'boost' },
+      }
+    },
+    leaves: {
+      label: 'Leaves removed',
+      icon: '🍃',
+      values: {
+        no:  { mult: 0.85, text: 'Submerged leaves — bacterial contamination', badge: 'penalty' },
+        yes: { mult: 1.06, text: 'Clean stems — minimal bacterial load', badge: 'boost' },
+      }
+    },
+  };
+
+  // ── DOM helpers ────────────────────────────────────────────────────
+  const $ = (id: string) => document.getElementById(id)!;
+  const flowerSelect = $('flower-select') as HTMLSelectElement;
+  const calcBtn = $('calc-btn') as HTMLButtonElement;
+  const resultsEmpty = $('results-empty');
+  const resultsContent = $('results-content');
+
+  // ── Radio card clicks ──────────────────────────────────────────────
+  function setupRadioGroup(groupId: string, stateKey: keyof typeof state) {
+    const container = $(groupId);
+    container.querySelectorAll<HTMLElement>('.radio-card').forEach(card => {
+      card.addEventListener('click', () => {
+        container.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        (state as any)[stateKey] = card.dataset.val!;
+      });
+    });
+  }
+
+  setupRadioGroup('temp-options', 'temp');
+  setupRadioGroup('water-options', 'water');
+  setupRadioGroup('recut-options', 'recut');
+  setupRadioGroup('food-options', 'food');
+  setupRadioGroup('leaves-options', 'leaves');
+
+  // ── Flower select ──────────────────────────────────────────────────
+  flowerSelect.addEventListener('change', () => {
+    const opt = flowerSelect.selectedOptions[0];
+    if (opt.value) {
+      state.flower = {
+        slug: opt.value,
+        name: opt.dataset.name!,
+        emoji: opt.dataset.emoji!,
+        min: Number(opt.dataset.min),
+        max: Number(opt.dataset.max),
+        tip: opt.dataset.tip!,
+        careLevel: opt.dataset.care!,
+      };
+      calcBtn.disabled = false;
+    } else {
+      state.flower = null;
+      calcBtn.disabled = true;
+    }
+  });
+
+  // ── Calculate ──────────────────────────────────────────────────────
+  calcBtn.addEventListener('click', () => {
+    if (!state.flower) return;
+
+    // Compute multiplied estimate
+    const baseMid = (state.flower.min + state.flower.max) / 2;
+    let mult = 1;
+    mult *= FACTORS.temp.values[state.temp].mult;
+    mult *= FACTORS.water.values[state.water].mult;
+    mult *= FACTORS.recut.values[state.recut].mult;
+    mult *= FACTORS.food.values[state.food].mult;
+    mult *= FACTORS.leaves.values[state.leaves].mult;
+
+    const estimated = Math.round(baseMid * mult);
+    const low  = Math.max(1, Math.round(state.flower.min * mult));
+    const high = Math.round(state.flower.max * mult);
+
+    // Render
+    renderResults(estimated, low, high);
+  });
+
+  function renderResults(days: number, low: number, high: number) {
+    const f = state.flower!;
+
+    // Header
+    ($('result-emoji') as HTMLElement).textContent = f.emoji;
+    ($('result-flower-name') as HTMLElement).textContent = f.name;
+    ($('result-care-level') as HTMLElement).textContent = `${f.careLevel} care level`;
+
+    // Score number
+    ($('score-days') as HTMLElement).textContent = String(days);
+    ($('score-range-text') as HTMLElement).textContent = `Estimated range: ${low}–${high} days`;
+
+    // Arc animation — map days 1–30 to 0–100%
+    const pct = Math.min(days / 30, 1);
+    const arcLen = 251.2;
+    const arc = document.getElementById('arc-progress')!;
+    // Reset first then animate
+    arc.style.transition = 'none';
+    arc.style.strokeDashoffset = String(arcLen);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      arc.style.transition = 'stroke-dashoffset 0.9s cubic-bezier(0.34,1.56,0.64,1)';
+      arc.style.strokeDashoffset = String(arcLen * (1 - pct));
+    }));
+
+    // Factor breakdown
+    const factorList = $('factor-list');
+    factorList.innerHTML = '';
+    const factorKeys = ['temp', 'water', 'recut', 'food', 'leaves'] as const;
+    factorKeys.forEach(key => {
+      const fac = FACTORS[key];
+      const val = fac.values[(state as any)[key]];
+      const row = document.createElement('div');
+      row.className = 'factor-row';
+      row.innerHTML = `
+        <span class="factor-icon">${fac.icon}</span>
+        <span class="factor-name">${fac.label}</span>
+        <span class="factor-badge badge-${val.badge}">${val.text}</span>
+      `;
+      factorList.appendChild(row);
+    });
+
+    // Flower tip
+    ($('tip-text') as HTMLElement).textContent = f.tip;
+
+    // Upgrade suggestions
+    const upgradeBox = $('upgrade-box');
+    const improvements: string[] = [];
+    if (state.water === 'never' || state.water === 'few-days') improvements.push('Change vase water every 1–2 days to dramatically reduce bacterial buildup.');
+    if (state.recut === 'no') improvements.push('Recut stems at a 45° angle each time you change the water.');
+    if (state.food === 'no') improvements.push('Add commercial flower food — it alone can extend vase life by 25–40%.');
+    if (state.leaves === 'no') improvements.push('Remove all leaves below the waterline immediately.');
+    if (state.temp === 'hot' || state.temp === 'warm') improvements.push('Move to a cooler room (below 20°C) to slow cellular respiration.');
+
+    if (improvements.length > 0) {
+      upgradeBox.innerHTML = `
+        <div class="upgrade-title">Quick wins to add more days</div>
+        ${improvements.map(t => `<div class="upgrade-item"><span class="upgrade-check">+</span><span>${t}</span></div>`).join('')}
+      `;
+      upgradeBox.style.display = 'flex';
+      upgradeBox.style.flexDirection = 'column';
+    } else {
+      upgradeBox.innerHTML = `<div class="upgrade-item"><span class="upgrade-check">✓</span><span>Excellent care! You\'re already following best practices for this flower.</span></div>`;
+      upgradeBox.style.display = 'flex';
+    }
+
+    // Glossary link
+    const glink = $('glossary-link') as HTMLAnchorElement;
+    glink.href = `/learn/${f.slug}/`;
+    glink.textContent = `Full ${f.name} care guide →`;
+
+    // Show results
+    resultsEmpty.classList.add('hidden');
+    resultsContent.classList.remove('hidden');
+
+    // Scroll results into view on mobile
+    if (window.innerWidth < 860) {
+      $('results-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  // ── FAQ accordion ──────────────────────────────────────────────────
+  document.querySelectorAll<HTMLElement>('.faq-item').forEach(item => {
+    const btn = item.querySelector<HTMLButtonElement>('.faq-q')!;
+    const ans = item.querySelector<HTMLElement>('.faq-a')!;
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector<HTMLButtonElement>('.faq-q')!.setAttribute('aria-expanded', 'false');
+        el.querySelector<HTMLElement>('.faq-a')!.hidden = true;
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        ans.hidden = false;
+      }
+    });
+  });
+</script>
