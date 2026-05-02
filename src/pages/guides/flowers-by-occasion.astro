@@ -1,0 +1,438 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const lang = 'en' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en',       url: `${siteUrl}/guides/flowers-by-occasion/` },
+  { lang: 'vi',       url: `${siteUrl}/vi/guides/flowers-by-occasion/` },
+  { lang: 'x-default',url: `${siteUrl}/guides/flowers-by-occasion/` },
+];
+const breadcrumbs = [
+  { name: 'Home',   url: `${siteUrl}/` },
+  { name: 'Guides', url: `${siteUrl}/guides/flowers-by-occasion/` },
+  { name: 'Flowers by Occasion', url: `${siteUrl}/guides/flowers-by-occasion/` },
+];
+
+const FLOWER_NAMES: Record<string,string> = {
+  rose:'Rose', peony:'Peony', ranunculus:'Ranunculus', tulip:'Tulip',
+  lily:'Lily', sunflower:'Sunflower', orchid:'Orchid', hydrangea:'Hydrangea',
+  dahlia:'Dahlia', anemone:'Anemone', 'sweet-pea':'Sweet Pea', freesia:'Freesia',
+  iris:'Iris', carnation:'Carnation', chrysanthemum:'Chrysanthemum',
+  lavender:'Lavender', marigold:'Marigold', magnolia:'Magnolia',
+  gardenia:'Gardenia', jasmine:'Jasmine',
+};
+const FLOWER_EMOJI: Record<string,string> = {
+  rose:'🌹', peony:'🌸', ranunculus:'🌸', tulip:'🌷', lily:'🌷', sunflower:'🌻',
+  orchid:'🌺', hydrangea:'💐', dahlia:'🌸', anemone:'🌸', 'sweet-pea':'🌸',
+  freesia:'🌸', iris:'💜', carnation:'🌺', chrysanthemum:'🌼', lavender:'💜',
+  marigold:'🌼', magnolia:'🌸', gardenia:'🤍', jasmine:'🌼',
+};
+
+interface Flower { id: string; note: string; }
+interface Occasion {
+  id: string; icon: string; name: string; tagline: string; intro: string;
+  best: Flower[]; avoid: string; colors: string; colorDots: string[];
+  proTip: string; combo: { flowers: string[]; label: string; url: string };
+  searchTerms: string[];
+}
+
+const OCCASIONS: Occasion[] = [
+  {
+    id: 'wedding', icon: '💍', name: 'Wedding Flowers',
+    tagline: 'The most searched floral occasion in the world',
+    intro: 'Wedding flowers set the entire visual tone of the day. The best wedding flowers are those in season, meaningful to the couple, and able to survive a long ceremony day without wilting. These are the florist community\'s most proven choices.',
+    best: [
+      { id: 'rose',      note: 'Available in every white and blush shade; stays fresh 6–8 hours out of water' },
+      { id: 'peony',     note: 'The most coveted wedding flower — book early, peaks May–June' },
+      { id: 'hydrangea', note: 'Fills bouquet volume beautifully; pairs with almost any flower' },
+      { id: 'ranunculus',note: 'Layered petals photograph like roses; lighter and more delicate' },
+      { id: 'sweet-pea', note: 'Trailing tendrils add movement to bouquets and arches alike' },
+      { id: 'lily',      note: 'White orientals for ceremony; consider removing pollen stamens' },
+    ],
+    avoid: 'Allergy-triggering flowers like chrysanthemums near guests; avoid strong-scented lilies if anyone is pregnant. Marigolds carry funeral associations in some South Asian and Latin cultures.',
+    colors: 'White · Blush · Ivory · Champagne · Soft sage',
+    colorDots: ['#FFF5F7','#F5D5DC','#FFF8F0','#E8C99A','#C8D8C0'],
+    proTip: 'Choose flowers in season — peonies in May–June, dahlias in August–October. Off-season flowers cost 3–4× more and arrive from further afield, which affects freshness. Ask your florist to see samples at the farm before committing.',
+    combo: { flowers: ['rose','peony','hydrangea'], label: 'Rose + Peony + Hydrangea — "The Lush Romantic"', url: '/tools/combination-builder/' },
+    searchTerms: ['wedding flowers','bridal bouquet flowers','what flowers for a wedding'],
+  },
+  {
+    id: 'sympathy', icon: '🕊️', name: 'Sympathy & Funeral Flowers',
+    tagline: 'What flowers to send when words aren\'t enough',
+    intro: 'Sympathy flowers communicate care, peace, and respect. Universally, white and pale flowers are most appropriate. The arrangement style matters too: a hand-tied bouquet is personal; a formal wreath or spray is for the service.',
+    best: [
+      { id: 'lily',         note: 'White Oriental lily is the most universally understood sympathy flower' },
+      { id: 'chrysanthemum',note: 'In many Asian cultures, white chrysanthemum is the definitive funeral flower' },
+      { id: 'carnation',    note: 'Long-lasting and available in pure white; a dignified, classic choice' },
+      { id: 'orchid',       note: 'White Phalaenopsis orchid for a modern, long-lasting tribute' },
+      { id: 'iris',         note: 'Blue or white iris represents faith, hope, and wisdom in bereavement' },
+      { id: 'gardenia',     note: 'White gardenia signals deep respect; its fragrance is distinctive and memorable' },
+    ],
+    avoid: 'Bright festive colours (orange, hot pink, vivid red). Heavily perfumed arrangements can be overwhelming at services. Avoid purely cheerful flowers like sunflowers unless you knew the deceased well and know they were their favourite.',
+    colors: 'White · Cream · Pale lavender · Soft blue · Pale yellow',
+    colorDots: ['#FFFFFF','#FFF8F0','#E8D8F0','#C8D8E8','#FFFACC'],
+    proTip: 'White lilies are the safest choice for any sympathy situation. If sending to a hospital or home, remove the orange pollen stamens — they stain clothing and can trigger allergies in immunocompromised patients. A simple, elegant arrangement says more than a large complex one.',
+    combo: { flowers: ['lily','orchid','carnation'], label: 'Lily + Orchid + Carnation — quiet, lasting dignity', url: '/tools/combination-builder/' },
+    searchTerms: ['sympathy flowers','funeral flowers','what flowers to send when someone dies'],
+  },
+  {
+    id: 'birthday', icon: '🎂', name: 'Birthday Flowers',
+    tagline: 'Joyful, personal, celebratory',
+    intro: 'Birthday flowers are the most versatile of all — there are almost no rules, just the personality of the recipient. The goal is joy and energy. Bold colours, interesting textures, and flowers the recipient actually loves beat a "correct" choice every time.',
+    best: [
+      { id: 'sunflower', note: 'Radiates joy and energy; long-lasting (7–10 days) and visually striking' },
+      { id: 'dahlia',    note: 'Spectacular for milestone birthdays — bold, architectural, celebratory' },
+      { id: 'rose',      note: 'Any colour except white (traditionally reserved for more sombre occasions)' },
+      { id: 'tulip',     note: 'Cheerful and architectural; great for spring birthdays' },
+      { id: 'freesia',   note: 'Fragrant and thoughtful; available in every colour' },
+      { id: 'ranunculus',note: 'Sweet, layered petals that photograph beautifully; lasts 7+ days' },
+    ],
+    avoid: 'All-white arrangements can read as sympathy flowers in some contexts. Otherwise, almost anything goes — the main risk is sending something the recipient is allergic to.',
+    colors: 'Match the recipient\'s favourite; or go bright: coral · sunshine yellow · fuchsia · violet',
+    colorDots: ['#FF7043','#FDD835','#E91E8C','#7C4DFF','#4CAF50'],
+    proTip: 'For milestone birthdays (30, 40, 50), ask your florist to include exactly that many stems as a personal touch — 40 stems of the person\'s favourite flower is far more meaningful than any generic arrangement. Freesia ages beautifully and lasts 10+ days, making it the best choice for someone who lives alone.',
+    combo: { flowers: ['sunflower','dahlia','rose'], label: 'Sunflower + Dahlia + Rose — vibrant and celebratory', url: '/tools/combination-builder/' },
+    searchTerms: ['birthday flower ideas','what flowers for a birthday','birthday bouquet ideas'],
+  },
+  {
+    id: 'anniversary', icon: '💑', name: 'Anniversary Flowers',
+    tagline: 'From the first year to the golden',
+    intro: 'Traditional anniversary flowers track the progression of a relationship — from the sweetness of a first year to the grandeur of decades together. While red roses are always appropriate, matching the traditional flower for the year is a gesture that shows thought.',
+    best: [
+      { id: 'rose',      note: '1st year: single red rose. Any year: red roses mean enduring love' },
+      { id: 'carnation', note: 'Traditional 1st anniversary flower — surprisingly romantic in deep red or coral' },
+      { id: 'iris',      note: '25th anniversary flower; also represents faith and admiration' },
+      { id: 'orchid',    note: 'Best for milestone anniversaries (10th, 25th, 50th) — signals deep luxury' },
+      { id: 'lily',      note: 'Elegance and commitment; white lily for 30th anniversary' },
+      { id: 'gardenia',  note: 'Signals "you are lovely" and lasting love — a deeply personal choice' },
+    ],
+    avoid: 'Yellow flowers in some cultures signal jealousy or friendship rather than romance. Blue flowers can read as cold. Avoid anything that reads as casual for a significant milestone.',
+    colors: 'Red · Deep rose · Burgundy · Purple · Gold · Champagne',
+    colorDots: ['#C0392B','#E8618C','#7A2040','#6A1B9A','#B8860B','#E8C99A'],
+    proTip: 'Traditional anniversary flowers by year: 1st = Carnation, 5th = Freesia (for daisy), 10th = Iris (for daffodil), 25th = Iris, 50th = Yellow Rose or Orchid. Even if your partner doesn\'t know the tradition, you do — and you can explain it when you give the flowers, which doubles their meaning.',
+    combo: { flowers: ['rose','orchid','gardenia'], label: 'Rose + Orchid + Gardenia — romantic, luxurious, unforgettable', url: '/tools/combination-builder/' },
+    searchTerms: ['anniversary flowers','first anniversary flowers','what flowers for anniversary'],
+  },
+  {
+    id: 'get-well', icon: '🌿', name: 'Get Well Flowers',
+    tagline: 'Cheerful, hopeful, uplifting',
+    intro: 'Get well flowers should lift the spirit without overwhelming a sick room. The best choices are uplifting in colour, low in pollen, and long-lasting enough to brighten the room throughout recovery. Smaller, cheerful arrangements work better than large formal ones.',
+    best: [
+      { id: 'sunflower',  note: 'The single most uplifting flower — its face communicates warmth and positivity' },
+      { id: 'freesia',    note: 'Low pollen, fragrant, cheerful; the safest fragrant option for medical settings' },
+      { id: 'tulip',      note: 'Bright and hopeful; available in orange and yellow for maximum cheerfulness' },
+      { id: 'ranunculus', note: 'Soft, cheerful layers without heavy scent; lasts 7–9 days' },
+      { id: 'sweet-pea',  note: 'Delicate and personal; a thoughtful alternative to standard arrangements' },
+      { id: 'carnation',  note: 'Incredibly long-lasting (up to 3 weeks) — perfect for extended recovery' },
+    ],
+    avoid: 'Lilies in hospitals — their pollen is dangerous for immunocompromised patients and many wards explicitly ban them. Heavy-scented flowers (gardenia, jasmine, hyacinth) can cause nausea in the unwell. Very large arrangements are difficult to manage in small hospital rooms.',
+    colors: 'Sunshine yellow · Soft peach · Bright coral · Lavender · Fresh green',
+    colorDots: ['#FDD835','#FFAB76','#FF7043','#CE93D8','#A5D6A7'],
+    proTip: 'Always call ahead to check the hospital\'s flower policy — many ICUs, oncology wards, and transplant units ban fresh flowers entirely. A potted plant (kalanchoe, mini orchid) or freesia in a sealed box is the safest hospital gift. For home recovery, anything cheerful and long-lasting is perfect.',
+    combo: { flowers: ['sunflower','freesia','tulip'], label: 'Sunflower + Freesia + Tulip — maximum cheer, minimum pollen', url: '/tools/combination-builder/' },
+    searchTerms: ['get well flowers','what flowers to send in hospital','get well soon bouquet'],
+  },
+  {
+    id: 'thank-you', icon: '🙏', name: 'Thank You Flowers',
+    tagline: 'Sincere, warm, thoughtful',
+    intro: 'Thank you flowers should feel genuine rather than extravagant — a gesture of sincere appreciation rather than a performance. Soft colours, fragrance, and delicacy signal thoughtfulness. The best choices feel personal rather than corporate.',
+    best: [
+      { id: 'freesia',    note: 'The classic thank-you flower — delicate form and sweet fragrance mean sincerity' },
+      { id: 'sweet-pea',  note: 'Victorian language: sweet pea = thank you for a lovely time. Still holds perfectly.' },
+      { id: 'iris',       note: 'Represents thoughtfulness and wisdom — exactly right for a mentor or teacher' },
+      { id: 'hydrangea',  note: 'Means heartfelt gratitude in the Victorian language of flowers' },
+      { id: 'sunflower',  note: 'Warm, generous, unpretentious — says thank you with a smile' },
+      { id: 'carnation',  note: 'Long-lasting and sincere; pink carnation specifically means "I\'ll never forget you"' },
+    ],
+    avoid: 'Red roses (too romantic for most thank-you contexts). All-white arrangements can read as formal or sympathy-adjacent. Avoid very expensive or elaborate arrangements which can make the recipient feel awkward.',
+    colors: 'Warm peach · Soft yellow · Lavender · Ivory · Blush pink',
+    colorDots: ['#FFAB76','#FDD835','#CE93D8','#FFF8F0','#F8BBD9'],
+    proTip: 'A hand-tied bunch of freesia and sweet pea — simple, fragrant, wrapped in tissue — is infinitely more personal than a formal arrangement. For a teacher, mentor, or host: add a handwritten note explaining which flower means what. The story makes the gesture unforgettable.',
+    combo: { flowers: ['freesia','sweet-pea','hydrangea'], label: 'Freesia + Sweet Pea + Hydrangea — sincere and fragrant gratitude', url: '/tools/combination-builder/' },
+    searchTerms: ['thank you flowers','flowers that mean thank you','what flowers to give as thanks'],
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type":"Question","name":"What flowers are best for a wedding?",
+      "acceptedAnswer":{"@type":"Answer","text":"The most popular wedding flowers are roses (available in every white and blush shade), peonies (coveted for their full petals, best in spring), hydrangeas (fill volume beautifully), ranunculus (layered and photogenic), sweet peas (add trailing movement), and white lilies. Choose flowers in season to maximise quality and control cost — peonies peak May–June, dahlias peak August–October."} },
+    { "@type":"Question","name":"What are appropriate sympathy or funeral flowers?",
+      "acceptedAnswer":{"@type":"Answer","text":"The most universally appropriate sympathy flower is the white oriental lily. White chrysanthemums are traditional in Asian cultures; white carnations are long-lasting and dignified; white orchids are a modern, lasting tribute. Avoid bright colours, heavy perfume, and cheerful arrangements unless they were the deceased's explicit favourite."} },
+    { "@type":"Question","name":"What are the best birthday flower ideas?",
+      "acceptedAnswer":{"@type":"Answer","text":"Birthday flowers are the most flexible — almost anything goes. Top choices are sunflowers (joy and energy), dahlias (bold and celebratory for milestones), roses in bright colours, tulips (spring birthdays), freesia (fragrant and thoughtful), and ranunculus (sweet layers). Avoid all-white arrangements which can read as sympathy flowers. For milestone birthdays, consider matching the stem count to the recipient's age."} },
+    { "@type":"Question","name":"What flowers are traditional for anniversaries?",
+      "acceptedAnswer":{"@type":"Answer","text":"Traditional anniversary flowers by year: 1st = Carnation, 5th = Freesia (for Daisy), 10th = Iris (for Daffodil), 25th = Iris, 50th = Yellow Rose or Orchid. Red roses are appropriate for any anniversary year. Orchids signal luxury for milestone anniversaries (10th, 25th, 50th). Gardenia means 'lasting love' and is a deeply personal choice."} },
+    { "@type":"Question","name":"What flowers should I avoid sending to hospital?",
+      "acceptedAnswer":{"@type":"Answer","text":"Never send lilies to a hospital — their pollen is dangerous for immunocompromised patients and many wards explicitly ban them. Avoid heavily scented flowers (gardenia, jasmine) which can cause nausea. Very large arrangements are hard to manage in small rooms. Freesia, tulips, and carnations are the safest hospital flowers. Always check the ward's flower policy before sending."} },
+    { "@type":"Question","name":"What flowers mean thank you?",
+      "acceptedAnswer":{"@type":"Answer","text":"The classic thank-you flower is freesia — its delicate form and sweet fragrance have long signified sincerity. Sweet pea traditionally means 'thank you for a lovely time' in the Victorian language of flowers. Hydrangea means heartfelt gratitude. Iris represents thoughtfulness and is ideal for a mentor or teacher. Sunflower conveys warm, generous thanks without formality."} },
+    { "@type":"Question","name":"How do I choose flowers for the right occasion?",
+      "acceptedAnswer":{"@type":"Answer","text":"Consider three things: colour (white/pale for sympathy and formal occasions, bright for celebrations), fragrance (avoid heavy scent in hospitals and enclosed venues), and seasonality (in-season flowers are fresher, cheaper, and more beautiful). When in doubt: freesia for thanks, sunflowers for birthdays, white lilies for sympathy, red roses for love, and peonies or ranunculus for weddings."} },
+    { "@type":"Question","name":"What is the language of flowers?",
+      "acceptedAnswer":{"@type":"Answer","text":"The language of flowers (floriography) is a Victorian-era system in which specific flowers carry coded meanings. Key meanings: red rose = love, white lily = purity and sympathy, sunflower = adoration and warmth, freesia = sincerity, sweet pea = appreciation, iris = faith and wisdom, carnation = deep love (red) or remembrance (white), hydrangea = heartfelt gratitude, gardenia = secret love and lasting devotion."} },
+  ],
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Flowers by Occasion: The Complete Guide",
+  "description": "Expert florist guide to choosing the right flowers for weddings, sympathy, birthdays, anniversaries, get well, and thank you — with specific recommendations and what to avoid.",
+  "url": `${siteUrl}/guides/flowers-by-occasion/`,
+  "inLanguage": "en",
+  "author": { "@type": "Organization", "name": "Vườn Hoa" },
+  "publisher": { "@type": "Organization", "name": "Vườn Hoa", "url": siteUrl },
+  "dateModified": new Date().toISOString().split('T')[0],
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Flowers by Occasion: Wedding, Sympathy, Birthday, Anniversary & More"
+  description="Find the right flowers for every occasion. Expert florist guide covering weddings, sympathy & funeral, birthdays, anniversaries, get well, and thank you — with specific recommendations, what to avoid, and pro tips."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li><li aria-hidden="true">›</li>
+        <li aria-current="page">Flowers by Occasion</li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="max-w-4xl mx-auto px-6 py-20 text-center hero-inner">
+      <p class="page-eyebrow">Florist's Guide</p>
+      <h1 class="page-title">Flowers by Occasion</h1>
+      <p class="page-sub">The right flower for the right moment — expert advice on what to choose, what to avoid, and why it matters, for every occasion from weddings to thank-yous.</p>
+      <a href="/vi/guides/flowers-by-occasion/" class="lang-pill">🇻🇳 Xem bằng tiếng Việt</a>
+      <!-- Jump nav -->
+      <div class="jump-nav">
+        {OCCASIONS.map(o => (
+          <a href={`#${o.id}`} class="jump-pill">{o.icon} {o.name.split(' ')[0]}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Occasions -->
+  <div class="guide-wrap">
+    <div class="max-w-5xl mx-auto px-4 lg:px-6 py-14">
+      {OCCASIONS.map((occ, idx) => (
+        <section class="occasion-section" id={occ.id}>
+          <div class="oc-header">
+            <div class="oc-icon-wrap">
+              <span class="oc-icon">{occ.icon}</span>
+              <span class="oc-idx">{String(idx + 1).padStart(2,'0')}</span>
+            </div>
+            <div>
+              <h2 class="oc-name">{occ.name}</h2>
+              <p class="oc-tagline">{occ.tagline}</p>
+            </div>
+          </div>
+
+          <p class="oc-intro">{occ.intro}</p>
+
+          <div class="oc-grid">
+            <!-- Best flowers -->
+            <div class="oc-col">
+              <h3 class="oc-sub-heading">Best flowers to choose</h3>
+              <div class="flower-list">
+                {occ.best.map(f => (
+                  <a href={`/learn/${f.id}/`} class="flower-row">
+                    <span class="fr-emoji">{FLOWER_EMOJI[f.id]}</span>
+                    <div class="fr-body">
+                      <span class="fr-name">{FLOWER_NAMES[f.id]}</span>
+                      <span class="fr-note">{f.note}</span>
+                    </div>
+                    <span class="fr-arrow">→</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <!-- Right column -->
+            <div class="oc-col">
+              <!-- Avoid -->
+              <div class="avoid-box">
+                <h3 class="oc-sub-heading avoid-heading">⚠️ What to avoid</h3>
+                <p class="avoid-text">{occ.avoid}</p>
+              </div>
+
+              <!-- Colour palette -->
+              <div class="palette-box">
+                <h3 class="oc-sub-heading">Colour palette</h3>
+                <div class="palette-dots">
+                  {occ.colorDots.map(c => (
+                    <span class="palette-dot" style={`background:${c};border:1.5px solid rgba(0,0,0,0.08)`}></span>
+                  ))}
+                </div>
+                <p class="palette-label">{occ.colors}</p>
+              </div>
+
+              <!-- Pro tip -->
+              <div class="tip-box">
+                <span class="tip-label">Florist tip</span>
+                <p class="tip-text">{occ.proTip}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Combination CTA -->
+          <a href={occ.combo.url} class="combo-cta">
+            <div class="combo-flowers">
+              {occ.combo.flowers.map(f => (
+                <span class="cf-pill">{FLOWER_EMOJI[f]} {FLOWER_NAMES[f]}</span>
+              ))}
+            </div>
+            <div class="combo-text">
+              <span class="combo-name">{occ.combo.label}</span>
+              <span class="combo-link">See all pairings →</span>
+            </div>
+          </a>
+        </section>
+      ))}
+
+      <!-- FAQ -->
+      <div class="faq-section">
+        <h2 class="faq-title">Flower Occasion FAQ</h2>
+        <div class="faq-grid">
+          {faqSchema.mainEntity.map(item => (
+            <div class="faq-item">
+              <button class="faq-q"><span>{item.name}</span><span class="faq-icon">+</span></button>
+              <div class="faq-a" hidden><p>{item.acceptedAnswer.text}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Related tools -->
+      <div class="related-tools">
+        <h2 class="related-title">More florist tools</h2>
+        <div class="related-grid">
+          <a href="/tools/combination-builder/" class="rel-card">
+            <span class="rel-icon">🌸🔗</span>
+            <span class="rel-name">Flower Combination Suggester</span>
+            <span class="rel-desc">Find which flowers pair well together</span>
+          </a>
+          <a href="/tools/season-planner/" class="rel-card">
+            <span class="rel-icon">📅🌸</span>
+            <span class="rel-name">Flower Season Planner</span>
+            <span class="rel-desc">Which flowers are in bloom this month</span>
+          </a>
+          <a href="/tools/budget-planner/" class="rel-card">
+            <span class="rel-icon">💐💰</span>
+            <span class="rel-name">Bouquet Budget Planner</span>
+            <span class="rel-desc">Calculate stems and costs for any arrangement</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+
+  .page-hero { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-hero::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .hero-inner { position:relative; z-index:2; }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.4rem,6vw,4.2rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:580px; margin:0 auto 1.25rem; line-height:1.8; }
+  .lang-pill { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; margin-bottom:1.5rem; transition:all 0.2s; }
+  .lang-pill:hover { color:var(--mauve); border-color:var(--mauve); }
+  .jump-nav { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-top:0.5rem; }
+  .jump-pill { font-family:'Jost',sans-serif; font-size:0.75rem; font-weight:500; color:var(--mauve); background:rgba(255,255,255,0.7); border:1px solid rgba(196,122,138,0.3); border-radius:999px; padding:0.35rem 0.9rem; text-decoration:none; transition:all 0.2s; backdrop-filter:blur(4px); }
+  .jump-pill:hover { background:white; border-color:var(--blush-dark); box-shadow:0 2px 8px rgba(196,122,138,0.15); }
+
+  .guide-wrap { background:var(--ivory); }
+  .occasion-section { background:white; border:1px solid var(--ivory-dark); border-radius:24px; padding:2.5rem; margin-bottom:2rem; position:relative; overflow:hidden; }
+  .occasion-section::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--blush) 0%,var(--gold) 100%); }
+  .oc-header { display:flex; align-items:flex-start; gap:1.25rem; margin-bottom:1.25rem; }
+  .oc-icon-wrap { position:relative; flex-shrink:0; }
+  .oc-icon { font-size:2.5rem; display:block; line-height:1; }
+  .oc-idx { position:absolute; bottom:-4px; right:-6px; font-family:'Jost',sans-serif; font-size:0.6rem; font-weight:700; color:var(--blush-dark); background:var(--ivory); border-radius:4px; padding:0 3px; line-height:1.4; }
+  .oc-name { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3.5vw,2.2rem); font-weight:600; color:var(--mauve); margin:0 0 0.2rem; line-height:1.2; }
+  .oc-tagline { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--gold); font-weight:400; margin:0; letter-spacing:0.04em; }
+  .oc-intro { font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--text-mid); line-height:1.9; font-weight:300; margin-bottom:1.75rem; }
+
+  .oc-grid { display:grid; grid-template-columns:1fr; gap:1.5rem; margin-bottom:1.5rem; }
+  @media (min-width:800px) { .oc-grid { grid-template-columns:1fr 1fr; } }
+  .oc-col { display:flex; flex-direction:column; gap:1.25rem; }
+  .oc-sub-heading { font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--blush-dark); margin:0 0 0.75rem; }
+
+  .flower-list { display:flex; flex-direction:column; gap:0.4rem; }
+  .flower-row { display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0.8rem; border:1px solid var(--ivory-dark); border-radius:12px; text-decoration:none; background:var(--ivory); transition:all 0.18s; }
+  .flower-row:hover { border-color:var(--blush); background:rgba(232,164,176,0.05); transform:translateX(2px); }
+  .fr-emoji { font-size:1.25rem; flex-shrink:0; }
+  .fr-body { flex:1; display:flex; flex-direction:column; }
+  .fr-name { font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:600; color:var(--mauve); }
+  .fr-note { font-family:'Jost',sans-serif; font-size:0.72rem; color:var(--taupe); font-weight:300; line-height:1.4; }
+  .fr-arrow { font-size:0.75rem; color:var(--blush-dark); flex-shrink:0; opacity:0; transition:opacity 0.18s; }
+  .flower-row:hover .fr-arrow { opacity:1; }
+
+  .avoid-box, .palette-box, .tip-box { border-radius:14px; padding:1.1rem 1.25rem; }
+  .avoid-box { background:#FFF8F0; border:1px solid rgba(200,149,106,0.25); }
+  .avoid-heading { color:var(--gold) !important; }
+  .avoid-text { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--text-mid); line-height:1.8; font-weight:300; margin:0; }
+  .palette-box { background:var(--ivory); border:1px solid var(--ivory-dark); }
+  .palette-dots { display:flex; gap:0.4rem; margin-bottom:0.5rem; }
+  .palette-dot { width:28px; height:28px; border-radius:50%; flex-shrink:0; }
+  .palette-label { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); font-style:italic; margin:0; }
+  .tip-box { background:linear-gradient(135deg,rgba(232,164,176,0.08) 0%,rgba(200,149,106,0.06) 100%); border:1px solid rgba(196,122,138,0.2); }
+  .tip-label { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--blush-dark); display:block; margin-bottom:0.4rem; }
+  .tip-text { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--text-mid); line-height:1.85; font-weight:300; margin:0; }
+
+  .combo-cta { display:flex; align-items:center; flex-wrap:wrap; gap:1rem; padding:1rem 1.25rem; background:var(--ivory); border:1.5px solid rgba(196,122,138,0.25); border-radius:14px; text-decoration:none; transition:all 0.2s; }
+  .combo-cta:hover { border-color:var(--blush-dark); background:rgba(232,164,176,0.06); box-shadow:0 4px 16px rgba(196,122,138,0.1); }
+  .combo-flowers { display:flex; gap:0.4rem; flex-wrap:wrap; }
+  .cf-pill { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:500; color:var(--mauve); background:white; border:1px solid rgba(196,122,138,0.3); border-radius:999px; padding:0.25rem 0.65rem; }
+  .combo-text { display:flex; flex-direction:column; gap:0.1rem; margin-left:auto; text-align:right; }
+  .combo-name { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve); font-weight:400; }
+  .combo-link { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:600; color:var(--blush-dark); }
+
+  .faq-section { margin-top:4rem; }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:300; color:var(--mauve); margin:0 0 1.5rem; }
+  .faq-grid { display:grid; grid-template-columns:1fr; gap:0.6rem; }
+  @media (min-width:900px) { .faq-grid { grid-template-columns:1fr 1fr; } }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.9rem 1.2rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.87rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.1rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.2s; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.2rem 0.9rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.84rem; color:var(--text-mid); line-height:1.9; margin:0; font-weight:300; }
+
+  .related-tools { margin-top:3.5rem; padding-top:2rem; border-top:1px solid var(--ivory-dark); }
+  .related-title { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300; color:var(--mauve); margin:0 0 1.25rem; }
+  .related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; }
+  .rel-card { display:flex; flex-direction:column; gap:0.3rem; padding:1.25rem; background:white; border:1px solid var(--ivory-dark); border-radius:16px; text-decoration:none; transition:all 0.2s; }
+  .rel-card:hover { border-color:var(--blush); box-shadow:0 4px 16px rgba(196,122,138,0.1); transform:translateY(-2px); }
+  .rel-icon { font-size:1.5rem; }
+  .rel-name { font-family:'Jost',sans-serif; font-size:0.85rem; font-weight:600; color:var(--mauve); }
+  .rel-desc { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); font-weight:300; }
+</style>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q')!.addEventListener('click', () => {
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => { el.classList.remove('open'); (el.querySelector('.faq-a') as HTMLElement).hidden = true; });
+      if (!open) { item.classList.add('open'); (item.querySelector('.faq-a') as HTMLElement).hidden = false; }
+    });
+  });
+</script>

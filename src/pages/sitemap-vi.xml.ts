@@ -14,6 +14,8 @@ const VI_URLS = [
   { loc: '/vi/tools/season-planner/', priority: '0.85', changefreq: 'monthly' },
   { loc: '/vi/tools/budget-planner/', priority: '0.85', changefreq: 'monthly' },
   { loc: '/vi/tools/combination-builder/', priority: '0.85', changefreq: 'monthly' },
+  // Guides
+  { loc: '/vi/guides/flowers-by-occasion/', priority: '0.88', changefreq: 'monthly' },
   // Glossary hub
   { loc: '/vi/learn/', priority: '0.9', changefreq: 'monthly' },
   // Glossary terms (20 flowers)

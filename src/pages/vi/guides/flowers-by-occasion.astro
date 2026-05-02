@@ -1,0 +1,409 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en',        url: `${siteUrl}/guides/flowers-by-occasion/` },
+  { lang: 'vi',        url: `${siteUrl}/vi/guides/flowers-by-occasion/` },
+  { lang: 'x-default', url: `${siteUrl}/guides/flowers-by-occasion/` },
+];
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Hoa theo dịp', url: `${siteUrl}/vi/guides/flowers-by-occasion/` },
+];
+
+const FLOWER_NAMES: Record<string,string> = {
+  rose:'Hoa Hồng', peony:'Hoa Mẫu Đơn', ranunculus:'Hoa Mao Lương', tulip:'Hoa Tulip',
+  lily:'Hoa Ly', sunflower:'Hoa Hướng Dương', orchid:'Hoa Lan', hydrangea:'Hoa Cẩm Tú Cầu',
+  dahlia:'Hoa Thược Dược', anemone:'Hoa Hải Quỳ', 'sweet-pea':'Hoa Đậu Thơm', freesia:'Hoa Freesia',
+  iris:'Hoa Diên Vĩ', carnation:'Hoa Cẩm Chướng', chrysanthemum:'Hoa Cúc',
+  lavender:'Hoa Oải Hương', marigold:'Hoa Vạn Thọ', magnolia:'Hoa Mộc Lan',
+  gardenia:'Hoa Dạ Lý Hương', jasmine:'Hoa Nhài',
+};
+const FLOWER_EMOJI: Record<string,string> = {
+  rose:'🌹', peony:'🌸', ranunculus:'🌸', tulip:'🌷', lily:'🌷', sunflower:'🌻',
+  orchid:'🌺', hydrangea:'💐', dahlia:'🌸', anemone:'🌸', 'sweet-pea':'🌸',
+  freesia:'🌸', iris:'💜', carnation:'🌺', chrysanthemum:'🌼', lavender:'💜',
+  marigold:'🌼', magnolia:'🌸', gardenia:'🤍', jasmine:'🌼',
+};
+
+interface Flower { id: string; note: string; }
+interface Occasion {
+  id: string; icon: string; name: string; tagline: string; intro: string;
+  best: Flower[]; avoid: string; colors: string; colorDots: string[];
+  proTip: string; combo: { flowers: string[]; label: string; url: string };
+}
+
+const OCCASIONS: Occasion[] = [
+  {
+    id: 'wedding', icon: '💍', name: 'Hoa Đám Cưới',
+    tagline: 'Dịp hoa được tìm kiếm nhiều nhất thế giới',
+    intro: 'Hoa đám cưới thiết lập toàn bộ tông màu hình ảnh của ngày trọng đại. Những loài hoa đám cưới tốt nhất là loài đúng mùa, có ý nghĩa với cặp đôi, và có thể chịu đựng một ngày lễ dài mà không héo. Đây là những lựa chọn được cộng đồng florist chứng minh nhiều nhất.',
+    best: [
+      { id: 'rose',      note: 'Có trong mọi tông trắng và hồng phấn; giữ tươi 6–8 giờ ngoài nước' },
+      { id: 'peony',     note: 'Loài hoa đám cưới được thèm muốn nhất — đặt sớm, đỉnh tháng 5–6' },
+      { id: 'hydrangea', note: 'Lấp đầy thể tích bó hoa đẹp; kết hợp với hầu hết mọi loài hoa' },
+      { id: 'ranunculus',note: 'Cánh hoa phân lớp chụp ảnh đẹp như hoa hồng; nhẹ nhàng và tinh tế hơn' },
+      { id: 'sweet-pea', note: 'Những tua rua buông thả thêm chuyển động cho bó hoa và vòm hoa' },
+      { id: 'lily',      note: 'Hoa ly trắng cho lễ; cân nhắc loại bỏ nhị phấn cam để tránh ố vải' },
+    ],
+    avoid: 'Những loài hoa gây dị ứng như cúc gần khách mời; tránh hoa ly có mùi nồng nếu có người mang thai. Hoa vạn thọ mang liên tưởng đám tang trong một số văn hóa châu Á và châu Mỹ Latin.',
+    colors: 'Trắng · Hồng phấn · Ngà · Champagne · Xanh lá nhạt',
+    colorDots: ['#FFF5F7','#F5D5DC','#FFF8F0','#E8C99A','#C8D8C0'],
+    proTip: 'Chọn hoa đúng mùa — mẫu đơn tháng 5–6, thược dược tháng 8–10. Hoa trái mùa đắt gấp 3–4 lần và đến từ nơi xa hơn, ảnh hưởng đến độ tươi. Hỏi florist của bạn xem mẫu ở trang trại trước khi quyết định.',
+    combo: { flowers: ['rose','peony','hydrangea'], label: 'Hồng + Mẫu Đơn + Cẩm Tú Cầu — "Lãng Mạn Nồng Nàn"', url: '/vi/tools/combination-builder/' },
+  },
+  {
+    id: 'sympathy', icon: '🕊️', name: 'Hoa Chia Buồn & Tang Lễ',
+    tagline: 'Hoa gửi khi lời nói không đủ',
+    intro: 'Hoa chia buồn truyền đạt sự quan tâm, bình yên và tôn trọng. Theo phổ quát, hoa trắng và nhạt màu là phù hợp nhất. Phong cách sắp xếp cũng quan trọng: bó hoa buộc tay mang tính cá nhân; vòng hoa hoặc cành cắm chính thức dành cho tang lễ.',
+    best: [
+      { id: 'lily',         note: 'Hoa ly trắng là loài hoa chia buồn được hiểu phổ quát nhất' },
+      { id: 'chrysanthemum',note: 'Trong nhiều văn hóa châu Á, cúc trắng là hoa tang lễ điển hình' },
+      { id: 'carnation',    note: 'Lâu bền và có màu trắng tinh khiết; lựa chọn trang trọng, cổ điển' },
+      { id: 'orchid',       note: 'Hoa lan Phalaenopsis trắng cho lời tri ân hiện đại, lâu bền' },
+      { id: 'iris',         note: 'Diên vĩ lam hoặc trắng đại diện cho đức tin, hy vọng và trí tuệ trong tang chế' },
+      { id: 'gardenia',     note: 'Dạ lý hương trắng biểu hiện sự tôn trọng sâu sắc; hương thơm đặc trưng và đáng nhớ' },
+    ],
+    avoid: 'Màu sắc lễ hội rực rỡ (cam, hồng nóng, đỏ tươi). Hoa quá thơm có thể ngột ngạt trong tang lễ. Tránh những loài hoa vui vẻ thuần túy như hướng dương trừ khi bạn biết chắc đó là loài yêu thích của người đã mất.',
+    colors: 'Trắng · Kem · Oải hương nhạt · Lam nhạt · Vàng nhạt',
+    colorDots: ['#FFFFFF','#FFF8F0','#E8D8F0','#C8D8E8','#FFFACC'],
+    proTip: 'Hoa ly trắng là lựa chọn an toàn nhất cho mọi tình huống chia buồn. Nếu gửi đến bệnh viện hoặc nhà riêng, hãy loại bỏ nhị phấn cam — chúng làm ố quần áo và có thể gây dị ứng cho bệnh nhân suy giảm miễn dịch. Một sắp xếp đơn giản, thanh lịch nói lên nhiều hơn một bó hoa lớn phức tạp.',
+    combo: { flowers: ['lily','orchid','carnation'], label: 'Hoa Ly + Hoa Lan + Cẩm Chướng — phẩm giá yên tĩnh, lâu bền', url: '/vi/tools/combination-builder/' },
+  },
+  {
+    id: 'birthday', icon: '🎂', name: 'Hoa Sinh Nhật',
+    tagline: 'Vui tươi, cá nhân, lễ kỷ niệm',
+    intro: 'Hoa sinh nhật là linh hoạt nhất trong tất cả — gần như không có quy tắc, chỉ cần phản ánh tính cách của người nhận. Mục tiêu là niềm vui và năng lượng. Màu sắc táo bạo, kết cấu thú vị, và những loài hoa mà người nhận thực sự yêu thích luôn tốt hơn lựa chọn "đúng đắn".',
+    best: [
+      { id: 'sunflower', note: 'Tỏa ra niềm vui và năng lượng; lâu bền (7–10 ngày) và ấn tượng thị giác' },
+      { id: 'dahlia',    note: 'Ngoạn mục cho sinh nhật cột mốc — táo bạo, kiến trúc, lễ kỷ niệm' },
+      { id: 'rose',      note: 'Bất kỳ màu nào ngoại trừ trắng (truyền thống dành cho dịp trang trọng hơn)' },
+      { id: 'tulip',     note: 'Vui vẻ và kiến trúc; tuyệt vời cho sinh nhật mùa xuân' },
+      { id: 'freesia',   note: 'Thơm ngát và chu đáo; có trong mọi màu sắc' },
+      { id: 'ranunculus',note: 'Cánh hoa ngọt ngào, phân lớp chụp ảnh đẹp; giữ được 7+ ngày' },
+    ],
+    avoid: 'Sắp xếp thuần trắng có thể đọc như hoa chia buồn trong một số ngữ cảnh. Ngoài ra, hầu hết mọi thứ đều được — rủi ro chính là gửi thứ gì đó người nhận bị dị ứng.',
+    colors: 'Theo màu yêu thích của người nhận; hoặc chọn rực rỡ: san hô · vàng nắng · hồng fuchsia · tím',
+    colorDots: ['#FF7043','#FDD835','#E91E8C','#7C4DFF','#4CAF50'],
+    proTip: 'Cho sinh nhật cột mốc (30, 40, 50), hỏi florist để bao gồm đúng số cành đó như một dấu ấn cá nhân — 40 cành hoa yêu thích của người đó có ý nghĩa hơn nhiều so với bất kỳ sắp xếp chung chung nào. Freesia già đi đẹp và lâu 10+ ngày, là lựa chọn tốt nhất cho ai sống một mình.',
+    combo: { flowers: ['sunflower','dahlia','rose'], label: 'Hướng Dương + Thược Dược + Hồng — sôi động và mừng vui', url: '/vi/tools/combination-builder/' },
+  },
+  {
+    id: 'anniversary', icon: '💑', name: 'Hoa Kỷ Niệm',
+    tagline: 'Từ năm đầu tiên đến năm vàng',
+    intro: 'Hoa kỷ niệm theo truyền thống theo dõi sự tiến triển của một mối quan hệ — từ sự ngọt ngào của năm đầu tiên đến sự hoành tráng của nhiều thập kỷ bên nhau. Trong khi hoa hồng đỏ luôn phù hợp, việc phù hợp với loài hoa truyền thống cho năm đó là một cử chỉ thể hiện sự suy nghĩ.',
+    best: [
+      { id: 'rose',      note: 'Năm 1: một hoa hồng đỏ. Mọi năm: hoa hồng đỏ có nghĩa là tình yêu bền vững' },
+      { id: 'carnation', note: 'Hoa kỷ niệm năm 1 theo truyền thống — đáng ngạc nhiên lãng mạn màu đỏ đậm hoặc san hô' },
+      { id: 'iris',      note: 'Hoa kỷ niệm năm 25; cũng đại diện cho đức tin và ngưỡng mộ' },
+      { id: 'orchid',    note: 'Tốt nhất cho kỷ niệm cột mốc (năm 10, 25, 50) — biểu hiện sự xa hoa sâu sắc' },
+      { id: 'lily',      note: 'Sự thanh lịch và cam kết; hoa ly trắng cho kỷ niệm năm 30' },
+      { id: 'gardenia',  note: 'Biểu hiện "em thật tuyệt vời" và tình yêu bền vững — lựa chọn rất cá nhân' },
+    ],
+    avoid: 'Hoa vàng trong một số văn hóa biểu hiện ghen tuông hoặc tình bạn hơn là tình yêu. Hoa xanh có thể đọc như lạnh lùng. Tránh bất cứ thứ gì có vẻ bình thường cho một kỷ niệm quan trọng.',
+    colors: 'Đỏ · Hồng đậm · Đỏ đậm · Tím · Vàng · Champagne',
+    colorDots: ['#C0392B','#E8618C','#7A2040','#6A1B9A','#B8860B','#E8C99A'],
+    proTip: 'Hoa kỷ niệm theo năm truyền thống: năm 1 = Cẩm Chướng, năm 5 = Freesia (cho Cúc Vạn Thọ Nhỏ), năm 10 = Diên Vĩ (cho Thủy Tiên), năm 25 = Diên Vĩ, năm 50 = Hoa Hồng Vàng hoặc Hoa Lan. Ngay cả khi đối tác của bạn không biết truyền thống, bạn biết — và bạn có thể giải thích khi tặng hoa, điều này nhân đôi ý nghĩa của chúng.',
+    combo: { flowers: ['rose','orchid','gardenia'], label: 'Hồng + Hoa Lan + Dạ Lý Hương — lãng mạn, xa hoa, khó quên', url: '/vi/tools/combination-builder/' },
+  },
+  {
+    id: 'get-well', icon: '🌿', name: 'Hoa Chúc Mau Khỏe',
+    tagline: 'Vui vẻ, hy vọng, nâng cao tinh thần',
+    intro: 'Hoa chúc mau khỏe nên nâng cao tinh thần mà không áp đảo phòng bệnh. Những lựa chọn tốt nhất là những loài có màu sắc tươi sáng, ít phấn hoa, và đủ lâu để làm sáng phòng trong suốt thời gian hồi phục. Sắp xếp nhỏ, vui vẻ hoạt động tốt hơn những loại lớn trang trọng.',
+    best: [
+      { id: 'sunflower',  note: 'Loài hoa nâng cao tinh thần nhất — gương mặt của nó truyền đạt sự ấm áp và tích cực' },
+      { id: 'freesia',    note: 'Ít phấn, thơm ngát, vui vẻ; tùy chọn thơm ngát an toàn nhất cho môi trường y tế' },
+      { id: 'tulip',      note: 'Tươi sáng và hy vọng; có màu cam và vàng để tăng tối đa sự vui vẻ' },
+      { id: 'ranunculus', note: 'Các lớp nhẹ nhàng, vui vẻ không có mùi nặng; lâu 7–9 ngày' },
+      { id: 'sweet-pea',  note: 'Tinh tế và cá nhân; thay thế chu đáo cho sắp xếp tiêu chuẩn' },
+      { id: 'carnation',  note: 'Cực kỳ lâu bền (đến 3 tuần) — hoàn hảo cho hồi phục kéo dài' },
+    ],
+    avoid: 'Hoa ly trong bệnh viện — phấn hoa của chúng nguy hiểm cho bệnh nhân suy giảm miễn dịch và nhiều khoa bệnh viện cấm chúng. Hoa có mùi nặng (dạ lý hương, nhài) có thể gây buồn nôn cho người bệnh. Sắp xếp rất lớn khó quản lý trong phòng bệnh viện nhỏ.',
+    colors: 'Vàng nắng · Đào nhạt · San hô tươi · Oải hương · Xanh lá tươi',
+    colorDots: ['#FDD835','#FFAB76','#FF7043','#CE93D8','#A5D6A7'],
+    proTip: 'Luôn gọi điện trước để kiểm tra chính sách hoa của bệnh viện — nhiều phòng ICU, khoa ung thư và đơn vị ghép tạng cấm hoa tươi hoàn toàn. Cây trồng chậu (kalanchoe, hoa lan mini) hoặc freesia trong hộp kín là quà bệnh viện an toàn nhất. Để hồi phục tại nhà, bất cứ thứ gì vui vẻ và lâu bền đều hoàn hảo.',
+    combo: { flowers: ['sunflower','freesia','tulip'], label: 'Hướng Dương + Freesia + Tulip — tối đa vui vẻ, tối thiểu phấn hoa', url: '/vi/tools/combination-builder/' },
+  },
+  {
+    id: 'thank-you', icon: '🙏', name: 'Hoa Cảm Ơn',
+    tagline: 'Chân thành, ấm áp, chu đáo',
+    intro: 'Hoa cảm ơn nên cảm thấy chân thành hơn là phô trương — một cử chỉ đánh giá cao chân thành hơn là một màn trình diễn. Màu sắc mềm mại, hương thơm và sự tinh tế biểu hiện sự chu đáo. Những lựa chọn tốt nhất cảm thấy cá nhân hơn là doanh nghiệp.',
+    best: [
+      { id: 'freesia',    note: 'Hoa cảm ơn cổ điển — hình dáng tinh tế và hương thơm ngọt ngào có nghĩa là chân thành' },
+      { id: 'sweet-pea',  note: 'Theo ngôn ngữ hoa thời Victoria: đậu thơm = cảm ơn vì thời gian tuyệt vời. Vẫn còn đúng.' },
+      { id: 'iris',       note: 'Đại diện cho sự chu đáo và trí tuệ — rất phù hợp cho người cố vấn hoặc giáo viên' },
+      { id: 'hydrangea',  note: 'Có nghĩa là lòng biết ơn chân thành trong ngôn ngữ hoa thời Victoria' },
+      { id: 'sunflower',  note: 'Ấm áp, hào phóng, khiêm tốn — nói cảm ơn với nụ cười' },
+      { id: 'carnation',  note: 'Lâu bền và chân thành; cẩm chướng hồng có nghĩa là "tôi sẽ không bao giờ quên bạn"' },
+    ],
+    avoid: 'Hoa hồng đỏ (quá lãng mạn cho hầu hết ngữ cảnh cảm ơn). Sắp xếp thuần trắng có thể đọc như trang trọng hoặc liên quan đến chia buồn. Tránh sắp xếp rất đắt tiền hoặc phức tạp có thể khiến người nhận cảm thấy khó xử.',
+    colors: 'Đào ấm · Vàng nhạt · Oải hương · Ngà · Hồng phấn',
+    colorDots: ['#FFAB76','#FDD835','#CE93D8','#FFF8F0','#F8BBD9'],
+    proTip: 'Một bó freesia và đậu thơm buộc tay — đơn giản, thơm ngát, gói trong giấy tissue — cá nhân hơn vô cùng so với sắp xếp trang trọng. Cho giáo viên, người cố vấn hoặc chủ nhà: thêm ghi chú viết tay giải thích ý nghĩa của từng loài hoa. Câu chuyện làm cho cử chỉ trở nên khó quên.',
+    combo: { flowers: ['freesia','sweet-pea','hydrangea'], label: 'Freesia + Đậu Thơm + Cẩm Tú Cầu — lòng biết ơn chân thành và thơm ngát', url: '/vi/tools/combination-builder/' },
+  },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type":"Question","name":"Hoa gì phù hợp nhất cho đám cưới?",
+      "acceptedAnswer":{"@type":"Answer","text":"Những loài hoa đám cưới phổ biến nhất là hoa hồng (có trong mọi tông trắng và hồng phấn), hoa mẫu đơn (đỉnh tháng 5–6, đặt sớm), cẩm tú cầu (lấp đầy thể tích bó hoa), mao lương (phân lớp và chụp ảnh đẹp), đậu thơm (thêm chuyển động), và hoa ly trắng. Chọn hoa đúng mùa để tối đa hóa chất lượng và kiểm soát chi phí."} },
+    { "@type":"Question","name":"Nên gửi hoa gì khi chia buồn?",
+      "acceptedAnswer":{"@type":"Answer","text":"Loài hoa chia buồn phù hợp phổ quát nhất là hoa ly trắng phương Đông. Cúc trắng là truyền thống trong văn hóa châu Á; cẩm chướng trắng lâu bền và trang trọng; hoa lan trắng là lời tri ân hiện đại lâu bền. Tránh màu sắc rực rỡ, hương thơm nặng, và sắp xếp vui vẻ thuần túy."} },
+    { "@type":"Question","name":"Ý tưởng hoa sinh nhật nào tốt nhất?",
+      "acceptedAnswer":{"@type":"Answer","text":"Hoa sinh nhật linh hoạt nhất — gần như mọi thứ đều được. Lựa chọn hàng đầu là hoa hướng dương (niềm vui và năng lượng), thược dược (táo bạo và lễ kỷ niệm cho cột mốc), hoa hồng màu tươi sáng, tulip (sinh nhật mùa xuân), freesia (thơm ngát và chu đáo), và mao lương (cánh hoa ngọt ngào phân lớp). Tránh sắp xếp thuần trắng có thể đọc như hoa chia buồn."} },
+    { "@type":"Question","name":"Hoa nào truyền thống cho ngày kỷ niệm?",
+      "acceptedAnswer":{"@type":"Answer","text":"Hoa kỷ niệm theo năm truyền thống: năm 1 = Cẩm Chướng, năm 5 = Freesia, năm 10 = Diên Vĩ, năm 25 = Diên Vĩ, năm 50 = Hoa Hồng Vàng hoặc Hoa Lan. Hoa hồng đỏ phù hợp cho mọi năm kỷ niệm. Hoa lan biểu hiện sự xa hoa cho các kỷ niệm cột mốc."} },
+    { "@type":"Question","name":"Nên tránh gửi hoa gì đến bệnh viện?",
+      "acceptedAnswer":{"@type":"Answer","text":"Không bao giờ gửi hoa ly đến bệnh viện — phấn hoa của chúng nguy hiểm cho bệnh nhân suy giảm miễn dịch và nhiều khoa bệnh viện cấm chúng. Tránh hoa có mùi nặng (dạ lý hương, nhài) có thể gây buồn nôn. Freesia, tulip và cẩm chướng là những loài hoa bệnh viện an toàn nhất. Luôn kiểm tra chính sách hoa của khoa trước khi gửi."} },
+    { "@type":"Question","name":"Hoa nào có nghĩa là cảm ơn?",
+      "acceptedAnswer":{"@type":"Answer","text":"Hoa cảm ơn cổ điển là freesia — hình dáng tinh tế và hương thơm ngọt ngào từ lâu đã biểu hiện sự chân thành. Đậu thơm theo truyền thống có nghĩa là 'cảm ơn vì thời gian tuyệt vời' trong ngôn ngữ hoa thời Victoria. Cẩm tú cầu có nghĩa là lòng biết ơn chân thành. Hoa diên vĩ đại diện cho sự chu đáo, lý tưởng cho người cố vấn hoặc giáo viên."} },
+  ],
+};
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Hoa Theo Dịp: Hướng Dẫn Đầy Đủ",
+  "description": "Hướng dẫn florist chuyên nghiệp về cách chọn hoa phù hợp cho đám cưới, chia buồn, sinh nhật, kỷ niệm, chúc mau khỏe và cảm ơn — với khuyến nghị cụ thể và những gì cần tránh.",
+  "url": `${siteUrl}/vi/guides/flowers-by-occasion/`,
+  "inLanguage": "vi",
+  "author": { "@type": "Organization", "name": "Vườn Hoa" },
+  "publisher": { "@type": "Organization", "name": "Vườn Hoa", "url": siteUrl },
+  "dateModified": new Date().toISOString().split('T')[0],
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Hoa Theo Dịp: Đám Cưới, Chia Buồn, Sinh Nhật, Kỷ Niệm & Hơn Thế"
+  description="Tìm loài hoa phù hợp cho mọi dịp. Hướng dẫn florist chuyên nghiệp cho đám cưới, tang lễ, sinh nhật, kỷ niệm, chúc mau khỏe và cảm ơn — với khuyến nghị cụ thể, những gì cần tránh, và mẹo chuyên gia."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/vi/">Trang chủ</a></li><li aria-hidden="true">›</li>
+        <li aria-current="page">Hoa theo dịp</li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="max-w-4xl mx-auto px-6 py-20 text-center hero-inner">
+      <p class="page-eyebrow">Hướng dẫn Florist</p>
+      <h1 class="page-title">Hoa Theo Dịp</h1>
+      <p class="page-sub">Loài hoa phù hợp cho đúng khoảnh khắc — lời khuyên chuyên gia về những gì cần chọn, những gì cần tránh, và tại sao lại quan trọng, cho mọi dịp từ đám cưới đến lời cảm ơn.</p>
+      <a href="/guides/flowers-by-occasion/" class="lang-pill">🇬🇧 View in English</a>
+      <div class="jump-nav">
+        {OCCASIONS.map(o => (
+          <a href={`#${o.id}`} class="jump-pill">{o.icon} {o.name.split(' ').slice(0,2).join(' ')}</a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- Occasions -->
+  <div class="guide-wrap">
+    <div class="max-w-5xl mx-auto px-4 lg:px-6 py-14">
+      {OCCASIONS.map((occ, idx) => (
+        <section class="occasion-section" id={occ.id}>
+          <div class="oc-header">
+            <div class="oc-icon-wrap">
+              <span class="oc-icon">{occ.icon}</span>
+              <span class="oc-idx">{String(idx + 1).padStart(2,'0')}</span>
+            </div>
+            <div>
+              <h2 class="oc-name">{occ.name}</h2>
+              <p class="oc-tagline">{occ.tagline}</p>
+            </div>
+          </div>
+
+          <p class="oc-intro">{occ.intro}</p>
+
+          <div class="oc-grid">
+            <div class="oc-col">
+              <h3 class="oc-sub-heading">Những loài hoa nên chọn</h3>
+              <div class="flower-list">
+                {occ.best.map(f => (
+                  <a href={`/vi/learn/${f.id}/`} class="flower-row">
+                    <span class="fr-emoji">{FLOWER_EMOJI[f.id]}</span>
+                    <div class="fr-body">
+                      <span class="fr-name">{FLOWER_NAMES[f.id]}</span>
+                      <span class="fr-note">{f.note}</span>
+                    </div>
+                    <span class="fr-arrow">→</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div class="oc-col">
+              <div class="avoid-box">
+                <h3 class="oc-sub-heading avoid-heading">⚠️ Những gì cần tránh</h3>
+                <p class="avoid-text">{occ.avoid}</p>
+              </div>
+              <div class="palette-box">
+                <h3 class="oc-sub-heading">Bảng màu</h3>
+                <div class="palette-dots">
+                  {occ.colorDots.map(c => (
+                    <span class="palette-dot" style={`background:${c};border:1.5px solid rgba(0,0,0,0.08)`}></span>
+                  ))}
+                </div>
+                <p class="palette-label">{occ.colors}</p>
+              </div>
+              <div class="tip-box">
+                <span class="tip-label">Mẹo của florist</span>
+                <p class="tip-text">{occ.proTip}</p>
+              </div>
+            </div>
+          </div>
+
+          <a href={occ.combo.url} class="combo-cta">
+            <div class="combo-flowers">
+              {occ.combo.flowers.map(f => (
+                <span class="cf-pill">{FLOWER_EMOJI[f]} {FLOWER_NAMES[f]}</span>
+              ))}
+            </div>
+            <div class="combo-text">
+              <span class="combo-name">{occ.combo.label}</span>
+              <span class="combo-link">Xem tất cả kết hợp →</span>
+            </div>
+          </a>
+        </section>
+      ))}
+
+      <!-- FAQ -->
+      <div class="faq-section">
+        <h2 class="faq-title">Câu Hỏi Về Hoa Theo Dịp</h2>
+        <div class="faq-grid">
+          {faqSchema.mainEntity.map(item => (
+            <div class="faq-item">
+              <button class="faq-q"><span>{item.name}</span><span class="faq-icon">+</span></button>
+              <div class="faq-a" hidden><p>{item.acceptedAnswer.text}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Related tools -->
+      <div class="related-tools">
+        <h2 class="related-title">Công cụ florist khác</h2>
+        <div class="related-grid">
+          <a href="/vi/tools/combination-builder/" class="rel-card">
+            <span class="rel-icon">🌸🔗</span>
+            <span class="rel-name">Gợi Ý Kết Hợp Hoa</span>
+            <span class="rel-desc">Tìm loài hoa nào kết hợp tốt với nhau</span>
+          </a>
+          <a href="/vi/tools/season-planner/" class="rel-card">
+            <span class="rel-icon">📅🌸</span>
+            <span class="rel-name">Lịch Hoa Theo Mùa</span>
+            <span class="rel-desc">Loài hoa nào đang nở trong tháng này</span>
+          </a>
+          <a href="/vi/tools/budget-planner/" class="rel-card">
+            <span class="rel-icon">💐💰</span>
+            <span class="rel-name">Máy Tính Ngân Sách Hoa</span>
+            <span class="rel-desc">Tính số cành và chi phí cho mọi sắp xếp</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .page-hero { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-hero::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .hero-inner { position:relative; z-index:2; }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.4rem,6vw,4.2rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:580px; margin:0 auto 1.25rem; line-height:1.8; }
+  .lang-pill { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; margin-bottom:1.5rem; transition:all 0.2s; }
+  .lang-pill:hover { color:var(--mauve); border-color:var(--mauve); }
+  .jump-nav { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-top:0.5rem; }
+  .jump-pill { font-family:'Jost',sans-serif; font-size:0.75rem; font-weight:500; color:var(--mauve); background:rgba(255,255,255,0.7); border:1px solid rgba(196,122,138,0.3); border-radius:999px; padding:0.35rem 0.9rem; text-decoration:none; transition:all 0.2s; backdrop-filter:blur(4px); }
+  .jump-pill:hover { background:white; border-color:var(--blush-dark); box-shadow:0 2px 8px rgba(196,122,138,0.15); }
+  .guide-wrap { background:var(--ivory); }
+  .occasion-section { background:white; border:1px solid var(--ivory-dark); border-radius:24px; padding:2.5rem; margin-bottom:2rem; position:relative; overflow:hidden; }
+  .occasion-section::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--blush) 0%,var(--gold) 100%); }
+  .oc-header { display:flex; align-items:flex-start; gap:1.25rem; margin-bottom:1.25rem; }
+  .oc-icon-wrap { position:relative; flex-shrink:0; }
+  .oc-icon { font-size:2.5rem; display:block; line-height:1; }
+  .oc-idx { position:absolute; bottom:-4px; right:-6px; font-family:'Jost',sans-serif; font-size:0.6rem; font-weight:700; color:var(--blush-dark); background:var(--ivory); border-radius:4px; padding:0 3px; line-height:1.4; }
+  .oc-name { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3.5vw,2.2rem); font-weight:600; color:var(--mauve); margin:0 0 0.2rem; line-height:1.2; }
+  .oc-tagline { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--gold); font-weight:400; margin:0; letter-spacing:0.04em; }
+  .oc-intro { font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--text-mid); line-height:1.9; font-weight:300; margin-bottom:1.75rem; }
+  .oc-grid { display:grid; grid-template-columns:1fr; gap:1.5rem; margin-bottom:1.5rem; }
+  @media (min-width:800px) { .oc-grid { grid-template-columns:1fr 1fr; } }
+  .oc-col { display:flex; flex-direction:column; gap:1.25rem; }
+  .oc-sub-heading { font-family:'Jost',sans-serif; font-size:0.7rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--blush-dark); margin:0 0 0.75rem; }
+  .flower-list { display:flex; flex-direction:column; gap:0.4rem; }
+  .flower-row { display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0.8rem; border:1px solid var(--ivory-dark); border-radius:12px; text-decoration:none; background:var(--ivory); transition:all 0.18s; }
+  .flower-row:hover { border-color:var(--blush); background:rgba(232,164,176,0.05); transform:translateX(2px); }
+  .fr-emoji { font-size:1.25rem; flex-shrink:0; }
+  .fr-body { flex:1; display:flex; flex-direction:column; }
+  .fr-name { font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:600; color:var(--mauve); }
+  .fr-note { font-family:'Jost',sans-serif; font-size:0.72rem; color:var(--taupe); font-weight:300; line-height:1.4; }
+  .fr-arrow { font-size:0.75rem; color:var(--blush-dark); flex-shrink:0; opacity:0; transition:opacity 0.18s; }
+  .flower-row:hover .fr-arrow { opacity:1; }
+  .avoid-box, .palette-box, .tip-box { border-radius:14px; padding:1.1rem 1.25rem; }
+  .avoid-box { background:#FFF8F0; border:1px solid rgba(200,149,106,0.25); }
+  .avoid-heading { color:var(--gold) !important; }
+  .avoid-text { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--text-mid); line-height:1.8; font-weight:300; margin:0; }
+  .palette-box { background:var(--ivory); border:1px solid var(--ivory-dark); }
+  .palette-dots { display:flex; gap:0.4rem; margin-bottom:0.5rem; }
+  .palette-dot { width:28px; height:28px; border-radius:50%; flex-shrink:0; }
+  .palette-label { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); font-style:italic; margin:0; }
+  .tip-box { background:linear-gradient(135deg,rgba(232,164,176,0.08) 0%,rgba(200,149,106,0.06) 100%); border:1px solid rgba(196,122,138,0.2); }
+  .tip-label { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--blush-dark); display:block; margin-bottom:0.4rem; }
+  .tip-text { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--text-mid); line-height:1.85; font-weight:300; margin:0; }
+  .combo-cta { display:flex; align-items:center; flex-wrap:wrap; gap:1rem; padding:1rem 1.25rem; background:var(--ivory); border:1.5px solid rgba(196,122,138,0.25); border-radius:14px; text-decoration:none; transition:all 0.2s; }
+  .combo-cta:hover { border-color:var(--blush-dark); background:rgba(232,164,176,0.06); box-shadow:0 4px 16px rgba(196,122,138,0.1); }
+  .combo-flowers { display:flex; gap:0.4rem; flex-wrap:wrap; }
+  .cf-pill { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:500; color:var(--mauve); background:white; border:1px solid rgba(196,122,138,0.3); border-radius:999px; padding:0.25rem 0.65rem; }
+  .combo-text { display:flex; flex-direction:column; gap:0.1rem; margin-left:auto; text-align:right; }
+  .combo-name { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve); font-weight:400; }
+  .combo-link { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:600; color:var(--blush-dark); }
+  .faq-section { margin-top:4rem; }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:300; color:var(--mauve); margin:0 0 1.5rem; }
+  .faq-grid { display:grid; grid-template-columns:1fr; gap:0.6rem; }
+  @media (min-width:900px) { .faq-grid { grid-template-columns:1fr 1fr; } }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.9rem 1.2rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.87rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.1rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.2s; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.2rem 0.9rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.84rem; color:var(--text-mid); line-height:1.9; margin:0; font-weight:300; }
+  .related-tools { margin-top:3.5rem; padding-top:2rem; border-top:1px solid var(--ivory-dark); }
+  .related-title { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:300; color:var(--mauve); margin:0 0 1.25rem; }
+  .related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1rem; }
+  .rel-card { display:flex; flex-direction:column; gap:0.3rem; padding:1.25rem; background:white; border:1px solid var(--ivory-dark); border-radius:16px; text-decoration:none; transition:all 0.2s; }
+  .rel-card:hover { border-color:var(--blush); box-shadow:0 4px 16px rgba(196,122,138,0.1); transform:translateY(-2px); }
+  .rel-icon { font-size:1.5rem; }
+  .rel-name { font-family:'Jost',sans-serif; font-size:0.85rem; font-weight:600; color:var(--mauve); }
+  .rel-desc { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); font-weight:300; }
+</style>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q')!.addEventListener('click', () => {
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => { el.classList.remove('open'); (el.querySelector('.faq-a') as HTMLElement).hidden = true; });
+      if (!open) { item.classList.add('open'); (item.querySelector('.faq-a') as HTMLElement).hidden = false; }
+    });
+  });
+</script>

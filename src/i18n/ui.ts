@@ -73,6 +73,7 @@ export const ui = {
     'footer.orchidCare':    'Chăm sóc Hoa Lan',
     'footer.budgetPlanner':     'Máy tính ngân sách hoa',
     'footer.combinationBuilder':'Gợi ý kết hợp hoa',
+    'footer.occasionGuide':     'Hoa theo dịp',
   },
   en: {
     'site.title':        'Vườn Hoa — AI Florist Coach Blog',
@@ -141,6 +142,7 @@ export const ui = {
     'footer.orchidCare':    'Orchid Care',
     'footer.budgetPlanner':     'Bouquet Budget Planner',
     'footer.combinationBuilder':'Flower Combination Suggester',
+    'footer.occasionGuide':     'Flowers by Occasion',
   },
 } as const;
 
