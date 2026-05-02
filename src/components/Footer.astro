@@ -14,7 +14,7 @@ const year = new Date().getFullYear();
 ---
 <footer class="footer-wrap mt-24">
   <div class="footer-body max-w-7xl mx-auto px-6 lg:px-10 py-16">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
 
       <!-- Brand -->
       <div class="col-span-1 md:col-span-1">
@@ -29,13 +29,25 @@ const year = new Date().getFullYear();
         </div>
       </div>
 
-      <!-- Links -->
+      <!-- Explore Links -->
       <div>
         <h4 class="footer-heading">{t('footer.explore')}</h4>
         <ul class="footer-links">
           <li><a href={p('/posts')}>{t('footer.allPosts')}</a></li>
           <li><a href={p('/tags')}>{t('footer.topics')}</a></li>
           <li><a href={p('/about')}>{t('footer.about')}</a></li>
+        </ul>
+      </div>
+
+      <!-- Florist Resources -->
+      <div>
+        <h4 class="footer-heading">Florist Resources</h4>
+        <ul class="footer-links">
+          <li><a href="/learn/">Flower Glossary</a></li>
+          <li><a href="/learn/rose/">Rose Guide</a></li>
+          <li><a href="/learn/peony/">Peony Guide</a></li>
+          <li><a href="/learn/dahlia/">Dahlia Guide</a></li>
+          <li><a href="/learn/orchid/">Orchid Care</a></li>
         </ul>
       </div>
 

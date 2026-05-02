@@ -1,0 +1,325 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { GLOSSARY_TERMS, getTermBySlug } from '../../data/glossary';
+
+const lang = 'en' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+export async function getStaticPaths() {
+  return GLOSSARY_TERMS.map(term => ({
+    params: { term: term.slug },
+    props: { term },
+  }));
+}
+
+const { term } = Astro.props;
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/learn/${term.slug}/` },
+  { lang: 'x-default', url: `${siteUrl}/learn/${term.slug}/` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: `${siteUrl}/` },
+  { name: 'Flower Glossary', url: `${siteUrl}/learn/` },
+  { name: term.name, url: `${siteUrl}/learn/${term.slug}/` },
+];
+
+const definedTermSchema = {
+  "@context": "https://schema.org",
+  "@type": "DefinedTerm",
+  "name": term.name,
+  "description": term.summary,
+  "url": `${siteUrl}/learn/${term.slug}/`,
+  "inDefinedTermSet": {
+    "@type": "DefinedTermSet",
+    "name": "Flower & Floristry Glossary",
+    "url": `${siteUrl}/learn/`
+  }
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": `What does ${term.name} symbolise?`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": term.meaning
+      }
+    },
+    {
+      "@type": "Question",
+      "name": `How long do ${term.name}s last in a vase?`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": term.lifespan
+      }
+    },
+    {
+      "@type": "Question",
+      "name": `When are ${term.name}s in season?`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": term.bloomSeason
+      }
+    },
+    {
+      "@type": "Question",
+      "name": `What are the best uses for ${term.name}s in floristry?`,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": `${term.name}s are best for: ${term.bestFor.join(', ')}.`
+      }
+    }
+  ]
+};
+
+const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6);
+---
+<BaseLayout
+  lang={lang}
+  title={term.title}
+  description={term.metaDescription}
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(definedTermSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <!-- Breadcrumb nav -->
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-4xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/learn/">Flower Glossary</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">{term.name}</li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="term-hero">
+    <div class="max-w-4xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <span class="term-hero-emoji">{term.emoji}</span>
+      <h1 class="term-hero-title">{term.name}</h1>
+      <p class="term-hero-sub">{term.summary}</p>
+      <div class="term-hero-badges">
+        <span class:list={['care-badge', `care-${term.careLevel.toLowerCase()}`]}>
+          Care: {term.careLevel}
+        </span>
+        <span class="season-badge">{term.bloomSeason.split('(')[0].trim()}</span>
+        <span class="lifespan-badge">Vase life: {term.lifespan}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="term-body-wrap">
+    <div class="max-w-4xl mx-auto px-6 py-14">
+
+      <!-- Quick facts bar -->
+      <div class="quick-facts">
+        <div class="fact-item">
+          <span class="fact-label">Colors</span>
+          <span class="fact-value">{term.colors.join(' · ')}</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Best For</span>
+          <span class="fact-value">{term.bestFor.slice(0, 3).join(', ')}</span>
+        </div>
+        <div class="fact-item">
+          <span class="fact-label">Bloom Season</span>
+          <span class="fact-value">{term.bloomSeason}</span>
+        </div>
+      </div>
+
+      <!-- Meaning & Symbolism -->
+      <section class="content-section">
+        <h2 class="section-heading">
+          <span class="heading-icon">🌐</span>
+          Meaning & Symbolism
+        </h2>
+        <p class="section-text">{term.meaning}</p>
+      </section>
+
+      <!-- Care Tips -->
+      <section class="content-section">
+        <h2 class="section-heading">
+          <span class="heading-icon">✂️</span>
+          Florist Care Tips
+        </h2>
+        <ul class="care-list">
+          {term.careTips.map(tip => (
+            <li class="care-item">
+              <span class="care-check">✓</span>
+              <span>{tip}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Common Varieties -->
+      <section class="content-section">
+        <h2 class="section-heading">
+          <span class="heading-icon">🌿</span>
+          Common Varieties
+        </h2>
+        <div class="varieties-grid">
+          {term.commonVarieties.map(v => (
+            <div class="variety-card">
+              <h3 class="variety-name">{v.name}</h3>
+              <p class="variety-desc">{v.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Best For -->
+      <section class="content-section">
+        <h2 class="section-heading">
+          <span class="heading-icon">🎯</span>
+          Best Used For
+        </h2>
+        <div class="best-for-list">
+          {term.bestFor.map(use => (
+            <span class="use-tag">{use}</span>
+          ))}
+        </div>
+      </section>
+
+      <!-- Interesting Fact -->
+      <div class="fact-callout">
+        <div class="fact-callout-icon">{term.emoji}</div>
+        <div>
+          <p class="fact-callout-label">Did You Know?</p>
+          <p class="fact-callout-text">{term.interestingFact}</p>
+        </div>
+      </div>
+
+      <!-- FAQ section -->
+      <section class="content-section">
+        <h2 class="section-heading">
+          <span class="heading-icon">❓</span>
+          Frequently Asked Questions
+        </h2>
+        <div class="faq-list">
+          <div class="faq-item">
+            <h3 class="faq-q">What does {term.name} symbolise?</h3>
+            <p class="faq-a">{term.meaning.split('.')[0]}.</p>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-q">How long do {term.name}s last in a vase?</h3>
+            <p class="faq-a">{term.lifespan}</p>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-q">When are {term.name}s in season?</h3>
+            <p class="faq-a">{term.bloomSeason}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <div class="section-divider"></div>
+
+      <!-- Related terms -->
+      <section class="content-section">
+        <h2 class="section-heading">
+          <span class="heading-icon">🌺</span>
+          Explore More Flowers
+        </h2>
+        <div class="related-grid">
+          {relatedTerms.map(rel => (
+            <a href={`/learn/${rel.slug}/`} class="related-card">
+              <span class="related-emoji">{rel.emoji}</span>
+              <span class="related-name">{rel.name}</span>
+              <span class="related-arrow">→</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <div class="back-link-wrap">
+        <a href="/learn/" class="back-link">← Back to Flower Glossary</a>
+        <a href="/posts" class="posts-link">Read Floristry Articles →</a>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .breadcrumb-list a:hover { text-decoration:underline; }
+
+  .term-hero { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .term-hero::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .term-hero-emoji { font-size:4rem; display:block; margin-bottom:1rem; animation:floatPetal 5s ease-in-out infinite; }
+  .term-hero-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.5rem,6vw,4.5rem); font-weight:300; color:var(--mauve); margin:0 0 1rem; line-height:1.1; }
+  .term-hero-sub { font-family:'Jost',sans-serif; font-size:1rem; color:var(--mauve-mid); max-width:600px; margin:0 auto 1.5rem; font-weight:300; line-height:1.75; }
+  .term-hero-badges { display:flex; flex-wrap:wrap; gap:0.6rem; justify-content:center; }
+
+  .care-badge { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:500; letter-spacing:0.08em; padding:0.3rem 0.9rem; border-radius:999px; text-transform:uppercase; }
+  .care-easy { background:rgba(134,187,134,0.15); color:#4a7a4a; border:1px solid rgba(134,187,134,0.3); }
+  .care-moderate { background:rgba(200,149,106,0.15); color:#8a5c30; border:1px solid rgba(200,149,106,0.3); }
+  .care-advanced { background:rgba(196,122,138,0.15); color:var(--blush-dark); border:1px solid rgba(196,122,138,0.3); }
+
+  .season-badge { font-family:'Jost',sans-serif; font-size:0.72rem; padding:0.3rem 0.9rem; border-radius:999px; background:rgba(232,164,176,0.15); color:var(--blush-dark); border:1px solid rgba(232,164,176,0.3); }
+  .lifespan-badge { font-family:'Jost',sans-serif; font-size:0.72rem; padding:0.3rem 0.9rem; border-radius:999px; background:rgba(74,45,53,0.06); color:var(--mauve-mid); border:1px solid rgba(74,45,53,0.12); }
+
+  .term-body-wrap { background:var(--ivory); }
+
+  .quick-facts { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; background:white; border:1px solid var(--ivory-dark); border-radius:16px; padding:1.5rem; margin-bottom:3rem; }
+  .fact-item { display:flex; flex-direction:column; gap:0.25rem; }
+  .fact-label { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--taupe); }
+  .fact-value { font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--mauve-mid); font-weight:300; line-height:1.5; }
+
+  .content-section { margin-bottom:3rem; }
+  .section-heading { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-weight:600; color:var(--mauve); margin:0 0 1.2rem; display:flex; align-items:center; gap:0.6rem; }
+  .heading-icon { font-size:1.2rem; }
+  .section-text { font-family:'Jost',sans-serif; font-size:0.95rem; color:var(--text-mid); line-height:1.85; font-weight:300; }
+
+  .care-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.75rem; }
+  .care-item { display:flex; gap:0.75rem; font-family:'Jost',sans-serif; font-size:0.92rem; color:var(--text-mid); line-height:1.7; font-weight:300; }
+  .care-check { color:var(--blush-dark); font-weight:600; flex-shrink:0; margin-top:0.05rem; }
+
+  .varieties-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1rem; }
+  .variety-card { background:white; border:1px solid var(--ivory-dark); border-radius:12px; padding:1.25rem; }
+  .variety-name { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--mauve); margin:0 0 0.4rem; }
+  .variety-desc { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text-mid); margin:0; font-weight:300; line-height:1.65; }
+
+  .best-for-list { display:flex; flex-wrap:wrap; gap:0.6rem; }
+  .use-tag { display:inline-block; padding:0.4rem 1rem; background:var(--blush-light); border:1px solid rgba(232,164,176,0.35); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--blush-dark); font-weight:400; }
+
+  .fact-callout { background:linear-gradient(135deg,#FDF0F2 0%,#F5E6EA 100%); border-left:3px solid var(--blush-dark); border-radius:0 16px 16px 0; padding:1.75rem 2rem; display:flex; gap:1.25rem; align-items:flex-start; margin-bottom:3rem; }
+  .fact-callout-icon { font-size:2rem; flex-shrink:0; }
+  .fact-callout-label { font-family:'Jost',sans-serif; font-size:0.65rem; font-weight:600; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin:0 0 0.5rem; }
+  .fact-callout-text { font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--text-mid); line-height:1.75; margin:0; font-weight:300; }
+
+  .faq-list { display:flex; flex-direction:column; gap:1rem; }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; padding:1.25rem 1.5rem; }
+  .faq-q { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-weight:600; color:var(--mauve); margin:0 0 0.5rem; }
+  .faq-a { font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text-mid); margin:0; font-weight:300; line-height:1.7; }
+
+  .section-divider { height:1px; background:linear-gradient(to right,transparent,var(--ivory-dark),transparent); margin:2rem 0 3rem; }
+
+  .related-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.75rem; }
+  .related-card { display:flex; align-items:center; gap:0.75rem; background:white; border:1px solid var(--ivory-dark); border-radius:12px; padding:0.9rem 1.1rem; text-decoration:none; transition:all 0.2s; }
+  .related-card:hover { border-color:var(--blush); transform:translateY(-1px); }
+  .related-emoji { font-size:1.4rem; }
+  .related-name { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600; color:var(--mauve); flex:1; }
+  .related-arrow { font-size:0.8rem; color:var(--ivory-dark); transition:all 0.2s; }
+  .related-card:hover .related-arrow { color:var(--blush-dark); transform:translateX(3px); }
+
+  .back-link-wrap { display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; align-items:center; margin-top:3rem; }
+  .back-link { display:inline-block; padding:0.7rem 1.75rem; border:1px solid var(--ivory-dark); border-radius:999px; font-family:'Jost',sans-serif; color:var(--taupe); font-size:0.82rem; font-weight:400; text-decoration:none; transition:all 0.2s; }
+  .back-link:hover { border-color:var(--blush-dark); color:var(--blush-dark); }
+  .posts-link { display:inline-block; padding:0.7rem 1.75rem; background:var(--blush-dark); border-radius:999px; font-family:'Jost',sans-serif; color:white; font-size:0.82rem; font-weight:500; text-decoration:none; letter-spacing:0.05em; transition:all 0.2s; }
+  .posts-link:hover { background:var(--mauve); }
+</style>

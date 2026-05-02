@@ -6,6 +6,7 @@ import { useTranslations } from '../i18n/utils';
 
 const lang = 'en' as const;
 const t = useTranslations(lang);
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
 
 const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -13,8 +14,18 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data
 const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
 const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/` },
+  { lang: 'vi', url: `${siteUrl}/vi/` },
+  { lang: 'x-default', url: `${siteUrl}/` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: `${siteUrl}/` },
+];
 ---
-<BaseLayout lang={lang} padTop={false}>
+<BaseLayout lang={lang} padTop={false} hreflang={hreflang} breadcrumbs={breadcrumbs}>
 
   <!-- ── HERO ── -->
   <section class="hero">

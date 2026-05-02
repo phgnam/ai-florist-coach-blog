@@ -31,66 +31,93 @@ npm run preview    # Serve dist/ locally
 ├── src/
 │   ├── consts.ts            # Site title, description, Giscus config
 │   ├── content.config.ts    # `posts` collection schema (Zod + glob loader)
-│   ├── styles/global.css    # Tailwind entry
+│   ├── data/glossary.ts     # 20 flower glossary terms for programmatic SEO
+│   ├── styles/global.css    # Tailwind entry (fonts loaded async in SEO.astro)
 │   ├── layouts/
-│   │   ├── BaseLayout.astro
+│   │   ├── BaseLayout.astro     # Accepts pubDate, updatedDate, author, tags, hreflang, breadcrumbs
 │   │   └── BlogPostLayout.astro
 │   ├── components/
-│   │   ├── Header.astro / Footer.astro
+│   │   ├── Header.astro / Footer.astro (footer links to Flower Glossary)
 │   │   ├── PostCard.astro / TagList.astro / FormattedDate.astro
 │   │   ├── FlowerGallery.astro
-│   │   ├── SEO.astro
-│   │   ├── Search.astro      # Pagefind UI (only works after build)
+│   │   ├── SEO.astro            # Full SEO: OG, Twitter, JSON-LD schema, hreflang, async fonts
+│   │   ├── Search.astro         # Pagefind UI (only works after build)
 │   │   └── Giscus.astro
 │   ├── i18n/
 │   │   ├── ui.ts            # All translation strings (EN + VI)
 │   │   └── utils.ts         # useTranslations(), localePath(), alternatePath()
 │   ├── pages/               # English (default, no prefix)
-│   │   ├── index.astro
+│   │   ├── index.astro      # hreflang en/vi/x-default
 │   │   ├── about.astro
-│   │   ├── posts/index.astro + [...slug].astro
+│   │   ├── posts/index.astro + [...slug].astro  # BlogPosting + BreadcrumbList schema
 │   │   ├── tags/index.astro + [tag].astro
+│   │   ├── learn/index.astro    # Flower Glossary hub (ItemList schema) — programmatic SEO
+│   │   ├── learn/[term].astro   # Individual glossary pages (DefinedTerm + FAQPage schema)
 │   │   ├── rss.xml.js
 │   │   └── vi/              # Vietnamese (optional, /vi/ prefix)
 │   │       ├── index.astro
 │   │       ├── about.astro
-│   │       ├── posts/index.astro + [...slug].astro
+│   │       ├── posts/index.astro + [...slug].astro  # BlogPosting + BreadcrumbList schema
 │   │       └── tags/index.astro + [tag].astro
 │   └── content/posts/*.mdx   # Blog posts (lang: 'en' | 'vi' field)
 └── public/
     ├── favicon.svg
-    └── robots.txt
+    └── robots.txt            # AI bot governance: blocks training scrapers, allows search bots
 ```
+
+## SEO Architecture
+
+### SEO.astro — applies to every page
+- `og:locale`, `og:site_name`, `theme-color`
+- Async non-render-blocking Google Fonts (preconnect + preload pattern)
+- **WebSite + Organization JSON-LD** schema on every page
+- **BlogPosting JSON-LD** schema when `type="article"` + `pubDate` provided
+- **BreadcrumbList JSON-LD** schema when `breadcrumbs` prop provided
+- **hreflang** alternate links for EN/VI multilingual pages
+
+### Programmatic SEO — Flower Glossary (`/learn/`)
+- **Hub page**: `/learn/` — 20 flower terms, `ItemList` schema
+- **Spoke pages**: `/learn/[term]/` — each has:
+  - Unique content: symbolism, 5 care tips, varieties, best-for uses, interesting fact
+  - `DefinedTerm` + `DefinedTermSet` schema
+  - `FAQPage` schema (4 Q&As per term targeting high-volume queries)
+  - `BreadcrumbList` schema
+  - Target keywords: "[flower] meaning", "[flower] care guide", "how long do [flower]s last"
+- **20 terms**: Rose, Lily, Peony, Tulip, Sunflower, Orchid, Lavender, Hydrangea, Dahlia, Carnation, Chrysanthemum, Freesia, Gardenia, Iris, Jasmine, Magnolia, Marigold, Anemone, Ranunculus, Sweet Pea
+
+### robots.txt Bot Governance
+- Blocks AI training scrapers: GPTBot, Google-Extended, CCBot, anthropic-ai, ClaudeBot
+- Explicitly allows: Googlebot, Bingbot, OAI-SearchBot (retrieval), PerplexityBot
 
 ## Design System — "Petal & Ivory" (Direction A)
 
 - **Color palette**: Blush pink (`#E8A4B0`), dusty rose (`#C47A8A`), ivory cream (`#FAF5EE`), petal mist (`#F5E6EA`), deep mauve (`#4A2D35`), warm taupe (`#9E8A80`), rose doré gold (`#C8956A`)
-- **Typography**: Cormorant Garamond (serif, headings/hero, wght 300/400/600) + Jost (body, wght 300/400/500) — Google Fonts
+- **Typography**: Cormorant Garamond (serif, headings/hero, wght 300/400/600) + Jost (body, wght 300/400/500) — loaded async via SEO.astro head tags
 - **CSS tokens**: `--blush`, `--blush-dark`, `--blush-light`, `--blush-mid`, `--ivory`, `--ivory-dark`, `--petal-mist`, `--mauve`, `--mauve-mid`, `--taupe`, `--gold`, `--gold-light`
 - **Hero**: Soft blush pink gradient (`#FDF0F2 → #F5E6EA → #EDA8B8`) — light & airy, no dark backgrounds
 - **Header**: Fully transparent over hero, ivory glassmorphism on scroll, all text in mauve tones
-- **Footer**: Deep mauve (`#4A2D35`) background replacing old forest green
+- **Footer**: Deep mauve (`#4A2D35`) background, 4-column grid including Florist Resources links
 - **Page headers**: Blush gradient on all inner pages (posts, tags, about)
-- **Post hero**: Blush gradient with mauve text overlay (replaces dark green)
+- **Post hero**: Blush gradient with mauve text overlay
 - **Cards**: White cards with rose-pink hover shadow, mauve titles, blush-dark CTA links
 - **Buttons**: Pill-shaped (`border-radius: 999px`), blush-dark primary, ghost with blush border
-- **Tag hover**: Blush-dark fill replacing old green-deep fill
 - **Animations**: `fadeUp`, `floatPetal`, `petalDrift` for decorative elements
-- **Texture**: Subtle SVG noise overlay on `body::before`, reduced opacity for lightness
 
 ## Multilingual (i18n)
 
 - **Default locale**: English at `/` — no URL prefix
 - **Secondary locale**: Vietnamese at `/vi/` — all pages under `/vi/`
 - **Language switcher**: `EN | VI` pill in the header on every page
-- **Content filtering**: posts with `lang: 'en'` appear on EN pages; `lang: 'vi'` (default) on VI pages
+- **hreflang**: en/vi/x-default tags on homepage and listing pages
+- **Content filtering**: posts with `lang: 'en'` appear on EN pages; `lang: 'vi'` on VI pages
 - **Adding EN post**: set `lang: 'en'` in MDX frontmatter
 - **Adding VI post**: omit `lang` (defaults to `'vi'`) or set `lang: 'vi'`
 
 ## Key Notes
 
-- **Astro 6 content layer**: Uses `glob` loader from `astro/loaders` in `content.config.ts` (required for Astro 6, unlike older `type: 'content'` collections).
-- **TailwindCSS v4 incompatible**: `@tailwindcss/vite` v4 conflicts with Vite 8/rolldown used by Astro 6. Using TailwindCSS v3 with PostCSS instead.
+- **Astro 6 content layer**: Uses `glob` loader from `astro/loaders` in `content.config.ts`.
+- **TailwindCSS v4 incompatible**: Using TailwindCSS v3 with PostCSS instead.
+- **Google Fonts**: Loaded asynchronously in `SEO.astro` — removed from `global.css` to fix render-blocking LCP.
 - **Pagefind search**: Only works after `npm run build` (not in dev mode).
 - **Giscus comments**: Disabled by default; configure IDs in `src/consts.ts`.
 - **Port**: Always 5000 on 0.0.0.0 for Replit preview.
@@ -101,17 +128,19 @@ Create `src/content/posts/<slug>.mdx`:
 
 ```mdx
 ---
-title: 'Tiêu đề'
-description: 'Mô tả ngắn'
+title: 'Title'
+description: 'Short description'
 pubDate: 2026-05-01
 tags: ['tag1', 'tag2']
-author: 'Tên tác giả'
+author: 'Author Name'
 draft: false
+lang: 'en'
 ---
 
-Nội dung bài viết...
+Post content...
 ```
 
 ## Deployment
 
 Static site deployment — builds with `npm run build:astro`, serves from `dist/`.
+Submit `/sitemap-index.xml` to Google Search Console after deploying.

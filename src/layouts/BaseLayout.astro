@@ -5,6 +5,16 @@ import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 import type { Lang } from '../i18n/ui';
 
+interface HreflangLink {
+  lang: string;
+  url: string;
+}
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
 interface Props {
   title?: string;
   description?: string;
@@ -12,14 +22,45 @@ interface Props {
   type?: 'website' | 'article';
   padTop?: boolean;
   lang?: Lang;
+  pubDate?: Date;
+  updatedDate?: Date;
+  author?: string;
+  tags?: string[];
+  hreflang?: HreflangLink[];
+  breadcrumbs?: BreadcrumbItem[];
 }
 
-const { title, description, image, type, padTop = true, lang = 'vi' } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  type,
+  padTop = true,
+  lang = 'en',
+  pubDate,
+  updatedDate,
+  author,
+  tags,
+  hreflang = [],
+  breadcrumbs = [],
+} = Astro.props;
 ---
 <!doctype html>
 <html lang={lang}>
   <head>
-    <SEO title={title} description={description} image={image} type={type} />
+    <SEO
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      lang={lang}
+      pubDate={pubDate}
+      updatedDate={updatedDate}
+      author={author}
+      tags={tags}
+      hreflang={hreflang}
+      breadcrumbs={breadcrumbs}
+    />
   </head>
   <body>
     <Header lang={lang} />

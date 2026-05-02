@@ -1,5 +1,16 @@
 ---
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import type { Lang } from '../i18n/ui';
+
+interface HreflangLink {
+  lang: string;
+  url: string;
+}
+
+interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
 
 interface Props {
   title?: string;
@@ -7,32 +18,171 @@ interface Props {
   image?: string;
   canonicalURL?: URL;
   type?: 'website' | 'article';
+  lang?: Lang;
+  pubDate?: Date;
+  updatedDate?: Date;
+  author?: string;
+  tags?: string[];
+  hreflang?: HreflangLink[];
+  breadcrumbs?: BreadcrumbItem[];
 }
 
 const {
   title,
   description = SITE_DESCRIPTION,
-  image = '/favicon.svg',
+  image = '',
   canonicalURL = new URL(Astro.url.pathname, Astro.site),
   type = 'website',
+  lang = 'en',
+  pubDate,
+  updatedDate,
+  author,
+  tags = [],
+  hreflang = [],
+  breadcrumbs = [],
 } = Astro.props;
 
 const fullTitle = title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
+const ogLocale = lang === 'vi' ? 'vi_VN' : 'en_US';
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const ogImage = image
+  ? (image.startsWith('http') ? image : `${siteUrl}${image}`)
+  : null;
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      "url": `${siteUrl}/`,
+      "name": "Vườn Hoa",
+      "description": "A blog about flowers and floristry, powered by AI Florist Coach.",
+      "inLanguage": ["en", "vi"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${siteUrl}/posts?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      "name": "Vườn Hoa",
+      "url": `${siteUrl}/`,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/favicon.svg`,
+        "width": 512,
+        "height": 512
+      }
+    }
+  ]
+};
+
+const articleSchema = (type === 'article' && pubDate) ? {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title ?? SITE_TITLE,
+  "description": description,
+  "author": {
+    "@type": "Organization",
+    "name": author ?? "Vườn Hoa",
+    "url": siteUrl
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Vườn Hoa",
+    "url": `${siteUrl}/`,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteUrl}/favicon.svg`
+    }
+  },
+  "datePublished": pubDate.toISOString(),
+  "dateModified": (updatedDate ?? pubDate).toISOString(),
+  "url": canonicalURL.toString(),
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL.toString()
+  },
+  ...(ogImage ? { "image": ogImage } : {}),
+  "keywords": tags.join(", "),
+  "inLanguage": lang === 'vi' ? 'vi' : 'en'
+} : null;
+
+const breadcrumbSchema = breadcrumbs.length >= 2 ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": breadcrumbs.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.name,
+    "item": item.url
+  }))
+} : null;
 ---
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#C47A8A" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="canonical" href={canonicalURL} />
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
+{tags.length > 0 && <meta name="keywords" content={tags.join(', ')} />}
 
+<!-- Async Google Fonts (non-render-blocking) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="preload"
+  as="style"
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
+/>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
+  media="print"
+  onload="this.media='all'"
+/>
+<noscript>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap"
+  />
+</noscript>
+
+<!-- Open Graph -->
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.site)} />
+<meta property="og:locale" content={ogLocale} />
+<meta property="og:site_name" content="Vườn Hoa" />
+{ogImage && <meta property="og:image" content={ogImage} />}
+{ogImage && <meta property="og:image:width" content="1200" />}
+{ogImage && <meta property="og:image:height" content="630" />}
 
+<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={new URL(image, Astro.site)} />
+{ogImage && <meta name="twitter:image" content={ogImage} />}
+
+<!-- hreflang for multilingual -->
+{hreflang.map(({ lang: l, url }) => (
+  <link rel="alternate" hreflang={l} href={url} />
+))}
+
+<!-- Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+{articleSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+)}
+{breadcrumbSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+)}
