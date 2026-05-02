@@ -4,22 +4,29 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Playfair Display', 'Georgia', 'serif'],
-        sans: ['Lato', 'system-ui', 'sans-serif'],
+        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+        sans:  ['Jost', 'system-ui', 'sans-serif'],
       },
       colors: {
-        'green-deep': '#1a3028',
-        'green-mid': '#2d5040',
-        'green-light': '#e8f2ec',
-        cream: '#fdf8f0',
-        'cream-dark': '#f5ede0',
-        rose: {
-          DEFAULT: '#c4697e',
-          light: '#f2d9df',
+        blush: {
+          DEFAULT: '#E8A4B0',
+          dark:    '#C47A8A',
+          light:   '#F5E6EA',
+          mid:     '#EDA8B8',
         },
+        ivory: {
+          DEFAULT: '#FAF5EE',
+          dark:    '#F0E0E6',
+          mist:    '#FDF0F2',
+        },
+        mauve: {
+          DEFAULT: '#4A2D35',
+          mid:     '#6B4A52',
+        },
+        taupe: '#9E8A80',
         gold: {
-          DEFAULT: '#b8935a',
-          light: '#f0e4cc',
+          DEFAULT: '#C8956A',
+          light:   '#F0E2D0',
         },
       },
     },

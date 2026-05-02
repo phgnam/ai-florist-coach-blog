@@ -54,16 +54,21 @@ npm run preview    # Serve dist/ locally
     └── robots.txt
 ```
 
-## Design System — "Botanical Luxury"
+## Design System — "Petal & Ivory" (Direction A)
 
-- **Color palette**: Deep forest green (`#1a3028`), warm cream (`#fdf8f0`), dusty rose (`#c4697e`), amber gold (`#b8935a`)
-- **Typography**: Playfair Display (serif, headings/hero) + Lato (body) loaded from Google Fonts
-- **Hero pattern**: All pages use a dark forest green gradient hero that fades into the cream content area via a CSS gradient
-- **Header**: Transparent over hero, glassmorphism dark green on scroll — JS-driven
-- **Cards**: Magazine-style with category badge overlay, smooth `translateY` hover lift
-- **Blog posts**: Full-bleed dark hero, reading progress bar (gradient rose→gold), warm cream article area
-- **Animations**: `fadeUp` keyframe with staggered delays, `floatPetal` for decorative elements
-- **Texture**: Subtle SVG noise overlay on `body::before` for depth
+- **Color palette**: Blush pink (`#E8A4B0`), dusty rose (`#C47A8A`), ivory cream (`#FAF5EE`), petal mist (`#F5E6EA`), deep mauve (`#4A2D35`), warm taupe (`#9E8A80`), rose doré gold (`#C8956A`)
+- **Typography**: Cormorant Garamond (serif, headings/hero, wght 300/400/600) + Jost (body, wght 300/400/500) — Google Fonts
+- **CSS tokens**: `--blush`, `--blush-dark`, `--blush-light`, `--blush-mid`, `--ivory`, `--ivory-dark`, `--petal-mist`, `--mauve`, `--mauve-mid`, `--taupe`, `--gold`, `--gold-light`
+- **Hero**: Soft blush pink gradient (`#FDF0F2 → #F5E6EA → #EDA8B8`) — light & airy, no dark backgrounds
+- **Header**: Fully transparent over hero, ivory glassmorphism on scroll, all text in mauve tones
+- **Footer**: Deep mauve (`#4A2D35`) background replacing old forest green
+- **Page headers**: Blush gradient on all inner pages (posts, tags, about)
+- **Post hero**: Blush gradient with mauve text overlay (replaces dark green)
+- **Cards**: White cards with rose-pink hover shadow, mauve titles, blush-dark CTA links
+- **Buttons**: Pill-shaped (`border-radius: 999px`), blush-dark primary, ghost with blush border
+- **Tag hover**: Blush-dark fill replacing old green-deep fill
+- **Animations**: `fadeUp`, `floatPetal`, `petalDrift` for decorative elements
+- **Texture**: Subtle SVG noise overlay on `body::before`, reduced opacity for lightness
 
 ## Key Notes
 

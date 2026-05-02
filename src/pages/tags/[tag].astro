@@ -22,7 +22,7 @@ const { posts } = Astro.props;
 <BaseLayout title={`#${tag}`} description={`Bài viết với chủ đề #${tag}`} padTop={false}>
 
   <div class="page-header">
-    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20 text-center">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
       <p class="page-eyebrow">Chủ đề</p>
       <h1 class="page-title">#{tag}</h1>
       <p class="page-sub">{posts.length} bài viết trong chủ đề này</p>
@@ -51,24 +51,41 @@ const { posts } = Astro.props;
 
 <style>
   .page-header {
-    background: linear-gradient(165deg, #0e2218 0%, #1a3028 60%, #2d3a20 100%);
+    background: linear-gradient(160deg, #FDF0F2 0%, #F5E6EA 50%, #EDA8B8 100%);
     position: relative;
+    overflow: hidden;
   }
   .page-header::after {
     content: '';
     position: absolute; bottom: -1px; left: 0; right: 0;
     height: 80px;
-    background: linear-gradient(to top, var(--cream), transparent);
+    background: linear-gradient(to top, var(--ivory), transparent);
   }
-  .page-eyebrow { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
-  .page-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 900; color: white; line-height: 1.1; margin: 0 0 1rem; }
-  .page-sub { color: rgba(255,255,255,0.55); font-size: 1rem; font-weight: 300; }
-  .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.75rem; }
+  .page-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
+  }
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 300; color: var(--mauve); line-height: 1.08; margin: 0 0 1rem;
+  }
+  .page-sub {
+    font-family: 'Jost', sans-serif;
+    color: var(--mauve-mid); font-size: 1rem; font-weight: 300; line-height: 1.7;
+  }
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.75rem;
+  }
   .back-link {
     display: inline-block; padding: 0.7rem 2rem;
-    border: 1px solid var(--cream-dark); border-radius: 999px;
-    color: var(--text-muted); font-size: 0.82rem; text-decoration: none;
-    transition: all 0.2s;
+    border: 1px solid var(--ivory-dark); border-radius: 999px;
+    font-family: 'Jost', sans-serif;
+    color: var(--taupe); font-size: 0.82rem; font-weight: 400;
+    text-decoration: none; transition: all 0.2s;
   }
-  .back-link:hover { border-color: var(--green-deep); color: var(--green-deep); }
+  .back-link:hover { border-color: var(--blush-dark); color: var(--blush-dark); }
 </style>

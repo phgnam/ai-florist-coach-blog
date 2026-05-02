@@ -15,27 +15,33 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
 
   <!-- ── HERO ── -->
   <section class="hero">
-    <!-- Botanical SVG decoration -->
+    <!-- Floating petal decorations -->
     <div class="hero-deco hero-deco-left" aria-hidden="true">
-      <svg viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 380 Q60 300 80 200 Q100 100 60 20" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none"/>
-        <ellipse cx="80" cy="200" rx="40" ry="22" fill="rgba(255,255,255,0.06)" transform="rotate(-25 80 200)"/>
-        <ellipse cx="70" cy="150" rx="30" ry="16" fill="rgba(255,255,255,0.05)" transform="rotate(15 70 150)"/>
-        <ellipse cx="90" cy="260" rx="35" ry="18" fill="rgba(255,255,255,0.04)" transform="rotate(-10 90 260)"/>
-        <circle cx="60" cy="20" r="6" fill="rgba(184,147,90,0.5)"/>
-        <circle cx="78" cy="100" r="4" fill="rgba(196,105,126,0.4)"/>
-        <circle cx="85" cy="320" r="5" fill="rgba(184,147,90,0.3)"/>
+      <svg viewBox="0 0 200 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="80" cy="180" rx="44" ry="24" fill="rgba(196,122,138,0.14)" transform="rotate(-20 80 180)"/>
+        <ellipse cx="65" cy="120" rx="32" ry="17" fill="rgba(232,164,176,0.1)" transform="rotate(15 65 120)"/>
+        <ellipse cx="90" cy="270" rx="38" ry="20" fill="rgba(196,122,138,0.09)" transform="rotate(-8 90 270)"/>
+        <circle cx="55" cy="60" r="7" fill="rgba(200,149,106,0.35)"/>
+        <circle cx="75" cy="330" r="5" fill="rgba(232,164,176,0.4)"/>
+        <circle cx="95" cy="400" r="4" fill="rgba(196,122,138,0.3)"/>
+        <path d="M90 440 Q55 340 75 220 Q95 100 55 20" stroke="rgba(196,122,138,0.15)" stroke-width="1.5" fill="none"/>
       </svg>
     </div>
     <div class="hero-deco hero-deco-right" aria-hidden="true">
-      <svg viewBox="0 0 200 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 380 Q140 300 120 200 Q100 100 140 20" stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none"/>
-        <ellipse cx="120" cy="190" rx="40" ry="22" fill="rgba(255,255,255,0.06)" transform="rotate(25 120 190)"/>
-        <ellipse cx="130" cy="140" rx="30" ry="16" fill="rgba(255,255,255,0.05)" transform="rotate(-15 130 140)"/>
-        <circle cx="140" cy="20" r="6" fill="rgba(196,105,126,0.5)"/>
-        <circle cx="122" cy="110" r="4" fill="rgba(184,147,90,0.4)"/>
+      <svg viewBox="0 0 200 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="120" cy="170" rx="44" ry="24" fill="rgba(196,122,138,0.14)" transform="rotate(20 120 170)"/>
+        <ellipse cx="135" cy="120" rx="32" ry="17" fill="rgba(232,164,176,0.1)" transform="rotate(-15 135 120)"/>
+        <ellipse cx="110" cy="280" rx="36" ry="19" fill="rgba(196,122,138,0.09)" transform="rotate(8 110 280)"/>
+        <circle cx="145" cy="55" r="7" fill="rgba(200,149,106,0.35)"/>
+        <circle cx="125" cy="340" r="5" fill="rgba(232,164,176,0.4)"/>
+        <path d="M110 440 Q145 340 125 220 Q105 100 145 20" stroke="rgba(196,122,138,0.15)" stroke-width="1.5" fill="none"/>
       </svg>
     </div>
+
+    <!-- Floating petal emojis -->
+    <span class="petal-float petal-1" aria-hidden="true">🌸</span>
+    <span class="petal-float petal-2" aria-hidden="true">🌷</span>
+    <span class="petal-float petal-3" aria-hidden="true">🌺</span>
 
     <div class="hero-content max-w-4xl mx-auto px-6 text-center">
       <p class="hero-eyebrow fade-up fade-up-1">AI Florist Coach · Blog</p>
@@ -50,7 +56,6 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
       </div>
     </div>
 
-    <!-- Scroll indicator -->
     <div class="scroll-indicator" aria-hidden="true">
       <div class="scroll-line"></div>
     </div>
@@ -109,9 +114,9 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     <section class="section-tags">
       <div class="tags-inner max-w-7xl mx-auto px-6 lg:px-10">
         <div class="section-label">
-          <span class="label-line"></span>
-          <span class="label-text">Khám phá theo chủ đề</span>
-          <span class="label-line"></span>
+          <span class="label-line label-line--light"></span>
+          <span class="label-text label-text--light">Khám phá theo chủ đề</span>
+          <span class="label-line label-line--light"></span>
         </div>
         <div class="tag-cloud">
           {allTags.map((tag) => (
@@ -142,7 +147,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
   /* ── HERO ── */
   .hero {
     min-height: 100svh;
-    background: linear-gradient(165deg, #0e2218 0%, #1a3028 40%, #2d3a20 100%);
+    background: linear-gradient(160deg, #FDF0F2 0%, #F5E6EA 45%, #EDA8B8 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -154,10 +159,11 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
   .hero::before {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse 60% 50% at 50% 70%, rgba(196,105,126,0.12) 0%, transparent 70%),
-                radial-gradient(ellipse 40% 40% at 20% 30%, rgba(184,147,90,0.08) 0%, transparent 60%);
+    background: radial-gradient(ellipse 70% 55% at 50% 60%, rgba(255,255,255,0.45) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 35% at 15% 25%, rgba(200,149,106,0.06) 0%, transparent 60%);
     pointer-events: none;
   }
+
   .hero-deco-left, .hero-deco-right {
     position: absolute;
     top: 0; bottom: 0;
@@ -166,39 +172,50 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
   }
   .hero-deco-left { left: 0; }
   .hero-deco-right { right: 0; }
-  .hero-deco-left svg, .hero-deco-right svg {
-    width: 100%; height: 100%;
+  .hero-deco-left svg, .hero-deco-right svg { width: 100%; height: 100%; }
+
+  .petal-float {
+    position: absolute;
+    pointer-events: none;
+    font-size: 1.5rem;
+    opacity: 0.35;
   }
+  .petal-1 { top: 20%; left: 12%; animation: petalDrift 6s ease-in-out infinite; }
+  .petal-2 { top: 35%; right: 10%; animation: petalDrift 8s ease-in-out infinite 1.5s; }
+  .petal-3 { bottom: 25%; left: 18%; animation: petalDrift 7s ease-in-out infinite 3s; }
 
   .hero-content { position: relative; z-index: 2; }
   .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: 0.3em;
     text-transform: uppercase;
     color: var(--gold);
     margin-bottom: 1.5rem;
   }
   .hero-title {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: clamp(3rem, 9vw, 7rem);
-    font-weight: 900;
-    color: white;
-    line-height: 1.05;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(3.5rem, 10vw, 7.5rem);
+    font-weight: 300;
+    color: var(--mauve);
+    line-height: 1.02;
     margin: 0 0 1.5rem;
+    letter-spacing: -0.01em;
   }
   .hero-title em {
     font-style: italic;
-    color: var(--rose);
-    font-weight: 400;
+    color: var(--blush-dark);
+    font-weight: 300;
   }
   .hero-sub {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    color: rgba(255,255,255,0.6);
-    max-width: 520px;
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: var(--mauve-mid);
+    max-width: 500px;
     margin: 0 auto 2.5rem;
     font-weight: 300;
-    line-height: 1.7;
+    line-height: 1.75;
   }
   .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
 
@@ -208,8 +225,8 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     display: flex; flex-direction: column; align-items: center; gap: 8px;
   }
   .scroll-line {
-    width: 1px; height: 60px;
-    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.4));
+    width: 1px; height: 52px;
+    background: linear-gradient(to bottom, transparent, rgba(196,122,138,0.5));
     animation: floatPetal 2.5s ease-in-out infinite;
   }
 
@@ -217,81 +234,87 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
   .btn-primary {
     display: inline-block;
     padding: 0.85rem 2rem;
-    background: var(--rose);
+    background: var(--blush-dark);
     color: white;
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     text-decoration: none;
     border-radius: 999px;
     transition: background 0.25s, transform 0.25s;
   }
-  .btn-primary:hover { background: #b8566b; transform: translateY(-2px); }
+  .btn-primary:hover { background: var(--mauve); transform: translateY(-2px); }
 
   .btn-ghost {
     display: inline-block;
     padding: 0.85rem 2rem;
-    color: rgba(255,255,255,0.75);
-    font-size: 0.85rem;
+    color: var(--mauve-mid);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
     font-weight: 400;
     letter-spacing: 0.06em;
     text-decoration: none;
     border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(196,122,138,0.4);
     transition: all 0.25s;
   }
-  .btn-ghost:hover { color: white; border-color: rgba(255,255,255,0.5); }
+  .btn-ghost:hover { color: var(--mauve); border-color: var(--blush-dark); }
 
   .btn-outline {
     display: inline-block;
     padding: 0.8rem 2.5rem;
-    border: 2px solid var(--green-deep);
-    color: var(--green-deep);
-    font-size: 0.82rem;
-    font-weight: 700;
+    border: 1.5px solid var(--blush-dark);
+    color: var(--blush-dark);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     text-decoration: none;
     border-radius: 999px;
     transition: all 0.25s;
   }
-  .btn-outline:hover { background: var(--green-deep); color: white; }
+  .btn-outline:hover { background: var(--blush-dark); color: white; }
 
   .btn-gold {
     display: inline-block;
     padding: 0.8rem 2rem;
     background: var(--gold);
-    color: var(--green-deep);
-    font-size: 0.82rem;
-    font-weight: 700;
+    color: white;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
     letter-spacing: 0.06em;
     text-decoration: none;
     border-radius: 999px;
     transition: all 0.25s;
   }
-  .btn-gold:hover { background: #a8823a; }
+  .btn-gold:hover { background: #b07c52; }
 
   /* ── Sections ── */
   .section-featured { padding: 6rem 0 3rem; }
-  .section-recent { padding: 3rem 0 5rem; }
+  .section-recent   { padding: 3rem 0 5rem; }
 
   .section-label {
     display: flex;
     align-items: center;
     gap: 1.5rem;
     margin-bottom: 3rem;
-    text-align: center;
   }
-  .label-line { flex: 1; height: 1px; background: var(--cream-dark); }
+  .label-line { flex: 1; height: 1px; background: var(--ivory-dark); }
+  .label-line--light { background: rgba(232,164,176,0.4); }
   .label-text {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.2em;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--taupe);
     white-space: nowrap;
   }
+  .label-text--light { color: rgba(250,245,238,0.7); }
 
   .posts-grid {
     display: grid;
@@ -301,10 +324,9 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
 
   /* ── Tags cloud ── */
   .section-tags {
-    background: var(--cream-dark);
+    background: linear-gradient(160deg, var(--blush-dark) 0%, var(--mauve) 100%);
     padding: 5rem 0;
   }
-  .tags-inner { }
   .tag-cloud {
     display: flex;
     flex-wrap: wrap;
@@ -313,31 +335,31 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
   }
   .tag-cloud-item {
     display: inline-block;
-    padding: 0.5rem 1.25rem;
-    background: white;
-    border: 1px solid rgba(0,0,0,0.08);
+    padding: 0.5rem 1.2rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
     border-radius: 999px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--green-deep);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: rgba(255,255,255,0.85);
     text-decoration: none;
     transition: all 0.25s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    backdrop-filter: blur(4px);
   }
   .tag-cloud-item:hover {
-    background: var(--green-deep);
+    background: rgba(255,255,255,0.25);
     color: white;
-    border-color: var(--green-deep);
+    border-color: rgba(255,255,255,0.4);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(26,48,40,0.2);
   }
-  .tag-hash { color: var(--rose); margin-right: 2px; }
+  .tag-hash { color: rgba(255,255,255,0.5); margin-right: 2px; }
 
   /* ── Newsletter ── */
   .section-newsletter { padding: 5rem 0 6rem; }
   .newsletter-card {
-    background: linear-gradient(135deg, var(--green-deep) 0%, #2d5040 100%);
-    border-radius: 24px;
+    background: linear-gradient(135deg, #FDF0F2 0%, var(--blush-light) 50%, #EDA8B8 100%);
+    border-radius: 28px;
     padding: 4rem;
     display: flex;
     align-items: center;
@@ -347,30 +369,35 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
     gap: 1.5rem;
     position: relative;
     overflow: hidden;
+    border: 1px solid rgba(232,164,176,0.3);
   }
   .newsletter-card::before {
     content: '';
     position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(184,147,90,0.08) 0%, transparent 70%);
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,255,255,0.5) 0%, transparent 70%);
     pointer-events: none;
   }
   .newsletter-deco {
-    font-size: 3.5rem;
-    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.3));
+    font-size: 3rem;
+    filter: drop-shadow(0 4px 12px rgba(196,122,138,0.3));
     animation: floatPetal 4s ease-in-out infinite;
     position: relative; z-index: 1;
   }
   .newsletter-content { position: relative; z-index: 1; }
   .newsletter-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    color: white;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--mauve);
     margin: 0 0 0.75rem;
   }
   .newsletter-sub {
-    color: rgba(255,255,255,0.65);
-    max-width: 420px;
-    font-size: 0.95rem;
+    font-family: 'Jost', sans-serif;
+    color: var(--mauve-mid);
+    max-width: 400px;
+    font-size: 0.92rem;
+    font-weight: 300;
     margin: 0 auto 1.5rem;
+    line-height: 1.7;
   }
 </style>

@@ -10,7 +10,7 @@ const year = new Date().getFullYear();
       <div class="col-span-1 md:col-span-1">
         <a href="/" class="footer-logo flex items-center gap-3 mb-4 no-underline">
           <span class="text-2xl">🌸</span>
-          <span class="font-serif font-bold text-xl text-white">Vườn Hoa</span>
+          <span class="font-serif font-semibold text-xl footer-brand-name">Vườn Hoa</span>
         </a>
         <p class="footer-desc text-sm leading-relaxed">{SITE_DESCRIPTION}</p>
         <div class="flex gap-3 mt-6">
@@ -32,7 +32,7 @@ const year = new Date().getFullYear();
       <!-- Tagline -->
       <div>
         <h4 class="footer-heading">Vườn Hoa</h4>
-        <p class="footer-desc text-sm leading-relaxed italic">
+        <p class="footer-desc text-sm leading-relaxed italic footer-quote">
           "Hoa không chỉ là vẻ đẹp — đó là ngôn ngữ của tình cảm, của nghề thủ công, và của nghệ thuật sống."
         </p>
         <p class="footer-desc text-xs mt-4 opacity-60">Companion to AI Florist Coach App</p>
@@ -41,60 +41,74 @@ const year = new Date().getFullYear();
 
     <div class="footer-divider mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
       <p class="footer-desc text-xs">© {year} {SITE_TITLE}. Tất cả quyền được bảo lưu.</p>
-      <p class="footer-desc text-xs opacity-50">Built with Astro · TailwindCSS · ❤️</p>
+      <p class="footer-desc text-xs opacity-50">Built with Astro · TailwindCSS · 🌸</p>
     </div>
   </div>
 
   <!-- Decorative bottom bar -->
-  <div class="h-1 bg-gradient-to-r from-rose-400 via-amber-400 to-emerald-400"></div>
+  <div class="h-1 bg-gradient-to-r from-blush-light via-blush to-gold-light"></div>
 </footer>
 
 <style>
   .footer-wrap {
-    background: var(--green-deep);
+    background: var(--mauve);
     position: relative;
     overflow: hidden;
   }
   .footer-wrap::before {
     content: '';
     position: absolute;
-    top: -120px; right: -120px;
-    width: 300px; height: 300px;
-    background: radial-gradient(circle, rgba(196,105,126,0.08) 0%, transparent 70%);
+    top: -80px; right: -80px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(232,164,176,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .footer-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(200,149,106,0.07) 0%, transparent 70%);
     pointer-events: none;
   }
   .footer-logo { text-decoration: none; }
+  .footer-brand-name { color: rgba(255,255,255,0.95); }
   .footer-heading {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: var(--gold);
+    color: var(--blush);
     margin-bottom: 1rem;
+    font-weight: 500;
   }
-  .footer-desc { color: rgba(255,255,255,0.5); }
+  .footer-desc { color: rgba(255,255,255,0.45); }
+  .footer-quote { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: rgba(255,255,255,0.55); }
   .footer-links { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.5rem; }
   .footer-links a {
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.6);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
     transition: color 0.2s;
   }
-  .footer-links a:hover { color: var(--gold); }
+  .footer-links a:hover { color: var(--blush); }
   .footer-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    border: 1px solid rgba(255,255,255,0.15);
+    border: 1px solid rgba(232,164,176,0.25);
     border-radius: 999px;
-    color: rgba(255,255,255,0.5);
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.45);
+    font-size: 0.72rem;
+    font-family: 'Jost', sans-serif;
+    letter-spacing: 0.06em;
     text-decoration: none;
     transition: all 0.2s;
   }
   .footer-badge:hover {
-    border-color: var(--gold);
-    color: var(--gold);
+    border-color: var(--blush);
+    color: var(--blush);
   }
-  .footer-divider { border-top: 1px solid rgba(255,255,255,0.06); }
+  .footer-divider { border-top: 1px solid rgba(232,164,176,0.1); }
 </style>

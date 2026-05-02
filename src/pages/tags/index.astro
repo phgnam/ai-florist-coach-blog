@@ -13,7 +13,19 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 <BaseLayout title="Chủ đề" description="Tất cả chủ đề trên Vườn Hoa" padTop={false}>
 
   <div class="page-header">
-    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-20 text-center">
+    <div class="header-deco" aria-hidden="true">
+      <svg viewBox="0 0 300 280" fill="none">
+        <circle cx="60" cy="80" r="50" stroke="rgba(196,122,138,0.12)" stroke-width="1" fill="none"/>
+        <circle cx="60" cy="80" r="30" stroke="rgba(196,122,138,0.08)" stroke-width="1" fill="none"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)" transform="rotate(72 60 80)"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)" transform="rotate(144 60 80)"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)" transform="rotate(216 60 80)"/>
+        <ellipse cx="60" cy="38" rx="12" ry="26" fill="rgba(196,122,138,0.15)" transform="rotate(288 60 80)"/>
+        <circle cx="60" cy="80" r="9" fill="rgba(232,164,176,0.5)"/>
+      </svg>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
       <p class="page-eyebrow">Danh mục</p>
       <h1 class="page-title">Chủ đề</h1>
       <p class="page-sub">Tìm kiếm bài viết theo chủ đề bạn quan tâm.</p>
@@ -35,25 +47,38 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
 
 <style>
   .page-header {
-    background: linear-gradient(165deg, #0e2218 0%, #1a3028 60%, #2d3a20 100%);
+    background: linear-gradient(160deg, #FDF0F2 0%, #F5E6EA 50%, #EDA8B8 100%);
     position: relative;
+    overflow: hidden;
   }
   .page-header::after {
     content: '';
     position: absolute; bottom: -1px; left: 0; right: 0;
     height: 80px;
-    background: linear-gradient(to top, var(--cream), transparent);
+    background: linear-gradient(to top, var(--ivory), transparent);
   }
+  .header-deco {
+    position: absolute;
+    left: 5%; top: 50%; transform: translateY(-50%);
+    width: 180px; height: 180px;
+    pointer-events: none;
+  }
+  .header-deco svg { width: 100%; height: 100%; }
+
   .page-eyebrow {
-    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.25em;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem; font-weight: 500; letter-spacing: 0.3em;
     text-transform: uppercase; color: var(--gold); margin-bottom: 1rem;
   }
   .page-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 900; color: white; line-height: 1.1; margin: 0 0 1.2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 300; color: var(--mauve); line-height: 1.08; margin: 0 0 1.2rem;
   }
-  .page-sub { color: rgba(255,255,255,0.55); font-size: 1rem; font-weight: 300; }
+  .page-sub {
+    font-family: 'Jost', sans-serif;
+    color: var(--mauve-mid); font-size: 1rem; font-weight: 300; line-height: 1.7;
+  }
 
   .tags-grid {
     display: grid;
@@ -67,31 +92,33 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
     gap: 0.5rem;
     padding: 2rem 1rem;
     background: white;
-    border-radius: 16px;
+    border-radius: 18px;
     text-decoration: none;
-    border: 1px solid var(--cream-dark);
+    border: 1px solid var(--ivory-dark);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 10px rgba(196,122,138,0.06);
     text-align: center;
   }
   .tag-block:hover {
-    background: var(--green-deep);
-    border-color: var(--green-deep);
+    background: var(--blush-dark);
+    border-color: var(--blush-dark);
     transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(26,48,40,0.2);
+    box-shadow: 0 12px 32px rgba(196,122,138,0.22);
   }
   .tag-block:hover .tag-name,
   .tag-block:hover .tag-count { color: white; }
   .tag-icon { font-size: 1.5rem; }
   .tag-name {
-    font-weight: 700;
-    color: var(--green-deep);
-    font-size: 0.9rem;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    color: var(--mauve);
+    font-size: 0.88rem;
     transition: color 0.25s;
   }
   .tag-count {
+    font-family: 'Jost', sans-serif;
     font-size: 0.72rem;
-    color: var(--text-muted);
+    color: var(--taupe);
     letter-spacing: 0.03em;
     transition: color 0.25s;
   }
