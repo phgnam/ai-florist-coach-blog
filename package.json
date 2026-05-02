@@ -1,0 +1,21 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "Static blog about flowers built with [Astro](https://astro.build), MDX, TailwindCSS v4, and [Pagefind](https://pagefind.app) for client-side search. Companion site to the AI Florist Coach app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@astrojs/mdx": "^5.0.1",
+    "@astrojs/rss": "^4.0.18",
+    "@astrojs/sitemap": "^3.7.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.2.4",
+    "astro": "^6.0.5",
+    "tailwindcss": "^4.2.4"
+  }
+}
