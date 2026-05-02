@@ -1,0 +1,550 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/budget-planner/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/budget-planner/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/budget-planner/` },
+];
+
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Công cụ', url: `${siteUrl}/vi/tools/` },
+  { name: 'Máy tính ngân sách hoa', url: `${siteUrl}/vi/tools/budget-planner/` },
+];
+
+const ARRANGEMENTS = [
+  { id: 'bridal',           label: 'Bó hoa cô dâu',          stems: 35, icon: '💐', note: 'Kiểu tròn/thác' },
+  { id: 'bridesmaid',       label: 'Bó hoa phù dâu',         stems: 18, icon: '💐', note: 'Tròn nhỏ gọn' },
+  { id: 'centrepiece-tall', label: 'Bình hoa bàn cao',       stems: 30, icon: '🏺', note: 'Mỗi bàn' },
+  { id: 'centrepiece-low',  label: 'Bình hoa bàn thấp',      stems: 20, icon: '🌸', note: 'Mỗi bàn' },
+  { id: 'corsage',          label: 'Hoa đeo tay',             stems: 4,  icon: '🌺', note: 'Đeo tay hoặc cài áo' },
+  { id: 'boutonniere',      label: 'Hoa cài áo chú rể',      stems: 2,  icon: '🌷', note: 'Mỗi người' },
+  { id: 'crown',            label: 'Vương miện hoa',         stems: 25, icon: '👑', note: 'Mỗi chiếc' },
+  { id: 'basket',           label: 'Giỏ hoa bé gái',         stems: 12, icon: '🧺', note: 'Mỗi giỏ' },
+  { id: 'arch',             label: 'Khung cổng hoa (mỗi m)', stems: 20, icon: '🌿', note: 'Mỗi mét dài' },
+];
+
+const FLOWERS = [
+  { id: 'rose',         name: 'Hoa Hồng',        emoji: '🌹', price: 2.50, slug: 'rose' },
+  { id: 'peony',        name: 'Hoa Mẫu Đơn',    emoji: '🌸', price: 4.50, slug: 'peony' },
+  { id: 'ranunculus',   name: 'Hoa Mao Lương',   emoji: '🌸', price: 2.50, slug: 'ranunculus' },
+  { id: 'tulip',        name: 'Hoa Tulip',       emoji: '🌷', price: 1.20, slug: 'tulip' },
+  { id: 'lily',         name: 'Hoa Ly',          emoji: '🌷', price: 1.80, slug: 'lily' },
+  { id: 'sunflower',    name: 'Hoa Hướng Dương', emoji: '🌻', price: 1.50, slug: 'sunflower' },
+  { id: 'orchid',       name: 'Hoa Lan',         emoji: '🌺', price: 3.50, slug: 'orchid' },
+  { id: 'hydrangea',    name: 'Hoa Cẩm Tú Cầu', emoji: '💐', price: 3.00, slug: 'hydrangea' },
+  { id: 'dahlia',       name: 'Hoa Thược Dược',  emoji: '🌸', price: 4.00, slug: 'dahlia' },
+  { id: 'anemone',      name: 'Hoa Hải Quỳ',    emoji: '🌸', price: 2.00, slug: 'anemone' },
+  { id: 'sweet-pea',    name: 'Hoa Đậu Thơm',   emoji: '🌸', price: 1.50, slug: 'sweet-pea' },
+  { id: 'freesia',      name: 'Hoa Freesia',     emoji: '🌸', price: 1.20, slug: 'freesia' },
+  { id: 'iris',         name: 'Hoa Diên Vĩ',    emoji: '💜', price: 1.00, slug: 'iris' },
+  { id: 'carnation',    name: 'Hoa Cẩm Chướng', emoji: '🌺', price: 0.75, slug: 'carnation' },
+  { id: 'chrysanthemum',name: 'Hoa Cúc',        emoji: '🌼', price: 0.80, slug: 'chrysanthemum' },
+  { id: 'lavender',     name: 'Hoa Oải Hương',  emoji: '💜', price: 0.80, slug: 'lavender' },
+  { id: 'marigold',     name: 'Hoa Vạn Thọ',   emoji: '🌼', price: 0.60, slug: 'marigold' },
+  { id: 'magnolia',     name: 'Hoa Mộc Lan',    emoji: '🌸', price: 3.50, slug: 'magnolia' },
+  { id: 'gardenia',     name: 'Hoa Dạ Lý Hương',emoji: '🤍', price: 3.00, slug: 'gardenia' },
+  { id: 'jasmine',      name: 'Hoa Nhài',        emoji: '🌼', price: 2.00, slug: 'jasmine' },
+];
+
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Máy tính ngân sách hoa cưới",
+  "description": "Công cụ tính hoa cưới miễn phí: ước tính số cành hoa cần thiết cho từng loại sắp xếp và tổng chi phí theo giá bán buôn và bán lẻ.",
+  "applicationCategory": "LifestyleApplication",
+  "operatingSystem": "Web",
+  "url": `${siteUrl}/vi/tools/budget-planner/`,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "inLanguage": "vi",
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Bó hoa cô dâu cần bao nhiêu cành hoa?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Bó hoa cô dâu tròn tiêu chuẩn cần 30–45 cành hoa trọng tâm (hoa hồng, hoa mẫu đơn, hoa mao lương), cộng với hoa phụ và cây xanh. Bó hoa phong cách vườn có thể lên đến 60–80 cành tổng cộng." }
+    },
+    {
+      "@type": "Question",
+      "name": "Bó hoa đám cưới giá bao nhiêu?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Theo giá bán buôn, bó hoa cô dâu dùng hoa hồng tốn khoảng $60–120 tiền hoa. Giá bán lẻ từ florist (bao gồm công lao động, chi phí chung và lợi nhuận) thường từ $150–400." }
+    },
+    {
+      "@type": "Question",
+      "name": "Bình hoa bàn tiệc cưới cần bao nhiêu cành?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Bình hoa thấp cần 15–25 cành; bình hoa cao cần 25–40 cành. Nhân với số bàn. Luôn đặt thêm 10–15% để dự phòng hư hỏng." }
+    },
+    {
+      "@type": "Question",
+      "name": "Loài hoa nào rẻ nhất cho đám cưới?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Hoa cẩm chướng ($0.60–1.00/cành bán buôn), hoa cúc ($0.70–1.20/cành) và hoa vạn thọ là những loài hoa đám cưới tiết kiệm nhất. Kết hợp 30% hoa cao cấp với 70% hoa bình dân sẽ giảm đáng kể tổng chi phí." }
+    },
+    {
+      "@type": "Question",
+      "name": "Làm thế nào tính số hoa cần cho đám cưới?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Liệt kê tất cả các loại sắp xếp cần (bó hoa cô dâu, bó phù dâu, bình bàn, hoa đeo tay, hoa cài áo). Nhân từng loại với số cành tương ứng, cộng tổng, rồi thêm 10% dự phòng. Máy tính này tự động làm tất cả điều đó." }
+    },
+    {
+      "@type": "Question",
+      "name": "Có nên mua hoa sỉ cho đám cưới không?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Hoa sỉ có thể tiết kiệm 40–60% so với giá bán lẻ, nhưng cần lên kế hoạch: số lượng đặt tối thiểu, thời gian giao hàng (thường 3–5 ngày trước sự kiện) và thời gian dưỡng hoa. Với đám cưới lớn (100+ khách), mua sỉ hầu như luôn tiết kiệm đáng kể." }
+    },
+  ]
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Máy Tính Ngân Sách Hoa — Cần Bao Nhiêu Cành Hoa?"
+  description="Công cụ miễn phí: tính số cành hoa cần cho mọi loại sắp xếp và ước tính chi phí theo giá sỉ và lẻ. Lên kế hoạch hoa đám cưới hoặc sự kiện dễ dàng. Từ Vườn Hoa."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} slot="head" />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/vi/">Trang chủ</a></li><li aria-hidden="true">›</li>
+        <li><a href="/vi/tools/">Công cụ</a></li><li aria-hidden="true">›</li>
+        <li aria-current="page">Máy tính ngân sách hoa</li>
+      </ol>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="max-w-5xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Công cụ miễn phí</p>
+      <h1 class="page-title">Máy Tính Ngân Sách Hoa</h1>
+      <p class="page-sub">Cần bao nhiêu cành hoa và chi phí bao nhiêu? Lập danh sách sắp xếp, chọn hoa, và nhận ngay số lượng cành và ngân sách đầy đủ.</p>
+      <a href="/tools/budget-planner/" class="lang-switch-link">🇬🇧 View in English</a>
+    </div>
+  </div>
+
+  <div class="planner-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-12">
+
+      <!-- BƯỚC 1: Sắp xếp -->
+      <div class="step-card" id="step1">
+        <div class="step-header">
+          <span class="step-num">1</span>
+          <div>
+            <h2 class="step-title">Bạn cần gì?</h2>
+            <p class="step-sub">Thêm tất cả các loại sắp xếp hoa bạn cần. Có thể kết hợp nhiều loại.</p>
+          </div>
+        </div>
+        <div class="arrangement-list" id="arrangementList">
+          <div class="arrangement-row" data-row="0">
+            <select class="arr-select" data-field="type">
+              <option value="">— Chọn loại sắp xếp —</option>
+              {ARRANGEMENTS.map(a => (
+                <option value={a.id} data-stems={a.stems}>{a.icon} {a.label} ({a.stems} cành)</option>
+              ))}
+            </select>
+            <div class="qty-wrap">
+              <button class="qty-btn" data-action="dec">−</button>
+              <input type="number" class="qty-input" value="1" min="1" max="999" data-field="qty"/>
+              <button class="qty-btn" data-action="inc">+</button>
+            </div>
+            <span class="row-stems-display">— cành</span>
+            <button class="row-remove" aria-label="Xóa hàng" style="display:none">✕</button>
+          </div>
+        </div>
+        <button class="add-row-btn" id="addRowBtn">+ Thêm loại sắp xếp khác</button>
+        <div class="step-total" id="step1Total">Tổng số cành cần: <strong>0</strong></div>
+      </div>
+
+      <!-- BƯỚC 2: Chọn hoa -->
+      <div class="step-card" id="step2">
+        <div class="step-header">
+          <span class="step-num">2</span>
+          <div>
+            <h2 class="step-title">Chọn loài hoa</h2>
+            <p class="step-sub">Chọn tối đa 5 loài hoa trọng tâm. Số cành chia đều — bạn có thể điều chỉnh tỷ lệ bên dưới.</p>
+          </div>
+        </div>
+        <div class="flower-picker" id="flowerPicker">
+          {FLOWERS.map(f => (
+            <button class="flower-pick-btn" data-id={f.id} data-price={f.price} data-slug={f.slug}>
+              <span class="fp-emoji">{f.emoji}</span>
+              <span class="fp-name">{f.name}</span>
+              <span class="fp-price">${f.price.toFixed(2)}/cành</span>
+            </button>
+          ))}
+        </div>
+        <div class="selected-flowers" id="selectedFlowers" hidden>
+          <h3 class="selected-heading">Hoa đã chọn &amp; tỷ lệ</h3>
+          <div class="selected-list" id="selectedList"></div>
+        </div>
+      </div>
+
+      <!-- BƯỚC 3: Giá -->
+      <div class="step-card" id="step3">
+        <div class="step-header">
+          <span class="step-num">3</span>
+          <div>
+            <h2 class="step-title">Cơ sở tính giá</h2>
+            <p class="step-sub">Giá sỉ = giá nhà vườn/chợ hoa. Giá lẻ = mua từ florist hoặc cửa hàng.</p>
+          </div>
+        </div>
+        <div class="price-toggle" role="group">
+          <button class="pt-btn active" data-mode="wholesale">Giá sỉ (×1)</button>
+          <button class="pt-btn" data-mode="retail">Giá lẻ (×3.5)</button>
+        </div>
+        <p class="waste-note">Đã bao gồm 10% cành dự phòng hư hỏng.</p>
+      </div>
+
+      <!-- KẾT QUẢ -->
+      <div class="results-card" id="resultsCard" hidden>
+        <div class="results-header">
+          <h2 class="results-title">Ngân Sách Hoa Của Bạn</h2>
+          <button class="recalc-btn" id="recalcBtn">← Sửa kế hoạch</button>
+        </div>
+        <div class="results-grid" id="resultsGrid"></div>
+        <div class="results-total-row">
+          <span class="rt-label">Tổng ước tính</span>
+          <span class="rt-value" id="totalCostDisplay">$0</span>
+        </div>
+        <div class="results-meta" id="resultsMeta"></div>
+        <div class="budget-tips">
+          <h3 class="tips-heading">💡 Mẹo tiết kiệm ngân sách</h3>
+          <ul class="tips-list" id="tipsList"></ul>
+        </div>
+      </div>
+
+      <div class="calc-actions" id="calcActions">
+        <button class="calc-btn" id="calculateBtn">Tính ngân sách →</button>
+      </div>
+
+      <!-- FAQ -->
+      <div class="faq-outer">
+        <h2 class="faq-title">Câu Hỏi Thường Gặp</h2>
+        <div class="faq-list">
+          {faqSchema.mainEntity.map(item => (
+            <div class="faq-item">
+              <button class="faq-q"><span>{item.name}</span><span class="faq-icon">+</span></button>
+              <div class="faq-a" hidden><p>{item.acceptedAnswer.text}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:560px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+  .planner-wrap { background:var(--ivory); }
+  .step-card { background:white; border:1px solid var(--ivory-dark); border-radius:20px; padding:2rem; margin-bottom:1.25rem; }
+  .step-header { display:flex; align-items:flex-start; gap:1rem; margin-bottom:1.5rem; }
+  .step-num { width:36px; height:36px; border-radius:50%; background:var(--blush-dark); color:white; font-family:'Jost',sans-serif; font-size:0.9rem; font-weight:600; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .step-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:600; color:var(--mauve); margin:0 0 0.2rem; }
+  .step-sub { font-family:'Jost',sans-serif; font-size:0.84rem; color:var(--taupe); font-weight:300; margin:0; }
+  .arrangement-list { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1rem; }
+  .arrangement-row { display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; }
+  .arr-select { flex:1; min-width:200px; padding:0.65rem 0.9rem; border:1.5px solid var(--ivory-dark); border-radius:10px; font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--mauve); background:var(--ivory); cursor:pointer; outline:none; transition:border-color 0.2s; }
+  .arr-select:focus { border-color:var(--blush); }
+  .qty-wrap { display:flex; align-items:center; border:1.5px solid var(--ivory-dark); border-radius:10px; overflow:hidden; }
+  .qty-btn { width:36px; height:38px; border:none; background:var(--ivory); color:var(--mauve); font-size:1.1rem; cursor:pointer; transition:background 0.15s; }
+  .qty-btn:hover { background:var(--blush-light); }
+  .qty-input { width:52px; height:38px; border:none; border-left:1px solid var(--ivory-dark); border-right:1px solid var(--ivory-dark); text-align:center; font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--mauve); background:white; outline:none; }
+  .qty-input::-webkit-inner-spin-button { -webkit-appearance:none; }
+  .row-stems-display { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); min-width:70px; }
+  .row-remove { background:none; border:none; cursor:pointer; color:var(--taupe); font-size:1rem; padding:0.3rem; border-radius:6px; transition:color 0.15s; }
+  .row-remove:hover { color:var(--blush-dark); }
+  .add-row-btn { background:none; border:1.5px dashed var(--blush); color:var(--blush-dark); font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; padding:0.5rem 1.25rem; border-radius:10px; cursor:pointer; transition:all 0.2s; }
+  .add-row-btn:hover { background:rgba(232,164,176,0.1); }
+  .step-total { margin-top:1rem; font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--taupe); }
+  .step-total strong { color:var(--blush-dark); font-size:1rem; }
+  .flower-picker { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; }
+  .flower-pick-btn { display:flex; flex-direction:column; align-items:center; gap:0.2rem; padding:0.65rem 0.8rem; border:1.5px solid var(--ivory-dark); border-radius:12px; background:var(--ivory); cursor:pointer; transition:all 0.18s; min-width:90px; }
+  .flower-pick-btn:hover { border-color:var(--blush); background:rgba(232,164,176,0.08); }
+  .flower-pick-btn.selected { border-color:var(--blush-dark); background:rgba(196,122,138,0.1); }
+  .flower-pick-btn.maxed:not(.selected) { opacity:0.4; cursor:not-allowed; }
+  .fp-emoji { font-size:1.5rem; }
+  .fp-name { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:500; color:var(--mauve); text-align:center; }
+  .fp-price { font-family:'Jost',sans-serif; font-size:0.65rem; color:var(--taupe); font-weight:300; }
+  .selected-heading { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--taupe); margin:0 0 0.75rem; }
+  .selected-list { display:flex; flex-direction:column; gap:0.5rem; }
+  .sel-item { display:flex; align-items:center; gap:0.75rem; background:rgba(232,164,176,0.08); border:1px solid rgba(196,122,138,0.2); border-radius:10px; padding:0.6rem 0.9rem; }
+  .sel-emoji { font-size:1.2rem; flex-shrink:0; }
+  .sel-name { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--mauve); font-weight:500; flex:1; }
+  .sel-pct-wrap { display:flex; align-items:center; gap:0.4rem; }
+  .sel-pct-label { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--taupe); }
+  .sel-pct-input { width:52px; padding:0.25rem 0.4rem; border:1px solid var(--ivory-dark); border-radius:6px; font-family:'Jost',sans-serif; font-size:0.82rem; text-align:center; color:var(--mauve); }
+  .sel-price-input { width:70px; padding:0.25rem 0.4rem; border:1px solid var(--ivory-dark); border-radius:6px; font-family:'Jost',sans-serif; font-size:0.82rem; text-align:right; color:var(--mauve); }
+  .sel-remove { background:none; border:none; cursor:pointer; color:var(--taupe); font-size:0.9rem; padding:0.2rem; }
+  .sel-remove:hover { color:var(--blush-dark); }
+  .price-toggle { display:flex; background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:10px; padding:3px; gap:2px; width:fit-content; margin-bottom:0.75rem; }
+  .pt-btn { padding:0.5rem 1.5rem; border:none; background:none; border-radius:7px; font-family:'Jost',sans-serif; font-size:0.84rem; color:var(--taupe); cursor:pointer; transition:all 0.2s; }
+  .pt-btn.active { background:var(--blush-dark); color:white; font-weight:500; }
+  .waste-note { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--taupe); font-weight:300; margin:0; }
+  .calc-actions { text-align:center; margin:1.5rem 0 2rem; }
+  .calc-btn { padding:1rem 3rem; background:var(--blush-dark); color:white; border:none; border-radius:14px; font-family:'Jost',sans-serif; font-size:0.92rem; font-weight:500; letter-spacing:0.08em; cursor:pointer; transition:all 0.2s; }
+  .calc-btn:hover { background:var(--mauve); transform:translateY(-2px); box-shadow:0 8px 20px rgba(196,122,138,0.25); }
+  .results-card { background:white; border:1.5px solid var(--blush); border-radius:20px; padding:2rem; margin-bottom:1.25rem; }
+  .results-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
+  .results-title { font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:600; color:var(--mauve); margin:0; }
+  .recalc-btn { background:none; border:1.5px solid var(--ivory-dark); border-radius:10px; padding:0.55rem 1.25rem; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); cursor:pointer; transition:all 0.2s; }
+  .recalc-btn:hover { border-color:var(--blush); color:var(--blush-dark); }
+  .results-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.75rem; margin-bottom:1.25rem; }
+  .result-flower-card { background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:14px; padding:1rem 1.25rem; }
+  .rfc-name { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; }
+  .rfc-emoji { font-size:1.3rem; }
+  .rfc-label { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:600; color:var(--mauve); }
+  .rfc-link { font-size:0.7rem; color:var(--blush-dark); text-decoration:none; margin-left:auto; }
+  .rfc-stems { font-family:'Jost',sans-serif; font-size:1.5rem; font-weight:300; color:var(--blush-dark); }
+  .rfc-stems-label { font-family:'Jost',sans-serif; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--taupe); margin-bottom:0.4rem; }
+  .rfc-cost { font-family:'Jost',sans-serif; font-size:0.88rem; color:var(--text-mid); font-weight:300; }
+  .results-total-row { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; background:linear-gradient(135deg,rgba(196,122,138,0.12) 0%,rgba(253,240,242,0.6) 100%); border-radius:12px; margin-bottom:1rem; }
+  .rt-label { font-family:'Jost',sans-serif; font-size:0.78rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--taupe); }
+  .rt-value { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; color:var(--blush-dark); }
+  .results-meta { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); margin-bottom:1.25rem; font-weight:300; }
+  .budget-tips { background:var(--ivory); border-radius:14px; padding:1.25rem 1.5rem; }
+  .tips-heading { font-family:'Jost',sans-serif; font-size:0.72rem; font-weight:600; letter-spacing:0.15em; text-transform:uppercase; color:var(--taupe); margin:0 0 0.75rem; }
+  .tips-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.5rem; }
+  .tips-list li { display:flex; align-items:flex-start; gap:0.6rem; font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text-mid); line-height:1.65; font-weight:300; }
+  .tips-list li::before { content:'✓'; color:var(--blush-dark); font-weight:600; flex-shrink:0; }
+  .faq-outer { margin-top:3rem; }
+  .faq-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.5rem,3vw,2.2rem); font-weight:300; color:var(--mauve); margin:0 0 1.5rem; }
+  .faq-list { display:flex; flex-direction:column; gap:0.6rem; }
+  @media (min-width:900px) { .faq-list { columns:2; column-gap:1.25rem; } .faq-item { break-inside:avoid; } }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-item.open { border-color:var(--blush); }
+  .faq-q { width:100%; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.9rem 1.2rem; background:none; border:none; cursor:pointer; font-family:'Jost',sans-serif; font-size:0.88rem; font-weight:500; color:var(--mauve); text-align:left; }
+  .faq-icon { font-size:1.1rem; color:var(--blush-dark); flex-shrink:0; transition:transform 0.2s; }
+  .faq-item.open .faq-icon { transform:rotate(45deg); }
+  .faq-a { padding:0 1.2rem 0.9rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--text-mid); line-height:1.85; margin:0; font-weight:300; }
+</style>
+
+<script define:vars={{ ARRANGEMENTS, FLOWERS }}>
+  const arrMap = {};
+  ARRANGEMENTS.forEach(a => { arrMap[a.id] = a; });
+  const flowerMap = {};
+  FLOWERS.forEach(f => { flowerMap[f.id] = f; });
+
+  let selectedFlowers = [];
+  let priceMode = 'wholesale';
+
+  function updateRowDisplay(row) {
+    const sel = row.querySelector('.arr-select');
+    const qty = parseInt(row.querySelector('.qty-input').value || 1);
+    const opt = arrMap[sel.value];
+    const stems = opt ? opt.stems * qty : 0;
+    row.querySelector('.row-stems-display').textContent = stems > 0 ? `${stems} cành` : '— cành';
+    updateStep1Total();
+  }
+
+  function updateStep1Total() {
+    let total = 0;
+    document.querySelectorAll('.arrangement-row').forEach(row => {
+      const sel = row.querySelector('.arr-select');
+      const qty = parseInt(row.querySelector('.qty-input').value || 1);
+      const opt = arrMap[sel.value];
+      if (opt) total += opt.stems * qty;
+    });
+    document.querySelector('#step1Total strong').textContent = total.toLocaleString();
+  }
+
+  function bindRowEvents(row) {
+    row.querySelector('.arr-select').addEventListener('change', () => updateRowDisplay(row));
+    row.querySelector('.qty-input').addEventListener('input', () => updateRowDisplay(row));
+    row.querySelector('[data-action="inc"]').addEventListener('click', () => {
+      const inp = row.querySelector('.qty-input');
+      inp.value = Math.min(999, parseInt(inp.value || 1) + 1);
+      updateRowDisplay(row);
+    });
+    row.querySelector('[data-action="dec"]').addEventListener('click', () => {
+      const inp = row.querySelector('.qty-input');
+      inp.value = Math.max(1, parseInt(inp.value || 1) - 1);
+      updateRowDisplay(row);
+    });
+    row.querySelector('.row-remove').addEventListener('click', () => {
+      row.remove();
+      document.querySelectorAll('.arrangement-row').forEach((r, i) => {
+        r.querySelector('.row-remove').style.display = i > 0 ? 'block' : 'none';
+      });
+      updateStep1Total();
+    });
+  }
+
+  bindRowEvents(document.querySelector('.arrangement-row'));
+
+  document.getElementById('addRowBtn').addEventListener('click', () => {
+    const template = document.querySelector('.arrangement-row').cloneNode(true);
+    template.querySelector('.arr-select').value = '';
+    template.querySelector('.qty-input').value = '1';
+    template.querySelector('.row-stems-display').textContent = '— cành';
+    template.querySelector('.row-remove').style.display = 'block';
+    document.getElementById('arrangementList').appendChild(template);
+    bindRowEvents(template);
+    document.querySelectorAll('.arrangement-row .row-remove').forEach((btn, i) => {
+      btn.style.display = i > 0 ? 'block' : 'none';
+    });
+  });
+
+  function evenSplit(count) {
+    const base = Math.floor(100 / count);
+    const rem = 100 - base * count;
+    return Array.from({ length: count }, (_, i) => base + (i < rem ? 1 : 0));
+  }
+
+  function refreshPickerState() {
+    document.querySelectorAll('.flower-pick-btn').forEach(btn => {
+      const id = btn.dataset.id;
+      if (selectedFlowers.find(f => f.id === id)) { btn.classList.add('selected'); btn.classList.remove('maxed'); }
+      else if (selectedFlowers.length >= 5) { btn.classList.add('maxed'); btn.classList.remove('selected'); }
+      else { btn.classList.remove('selected', 'maxed'); }
+    });
+    renderSelectedList();
+  }
+
+  function renderSelectedList() {
+    const container = document.getElementById('selectedFlowers');
+    const list = document.getElementById('selectedList');
+    if (selectedFlowers.length === 0) { container.hidden = true; return; }
+    container.hidden = false;
+    const splits = evenSplit(selectedFlowers.length);
+    list.innerHTML = selectedFlowers.map((f, i) => `
+      <div class="sel-item" data-id="${f.id}">
+        <span class="sel-emoji">${f.emoji}</span>
+        <span class="sel-name">${f.name}</span>
+        <div class="sel-pct-wrap">
+          <span class="sel-pct-label">%</span>
+          <input type="number" class="sel-pct-input" value="${splits[i]}" min="1" max="100" data-field="pct"/>
+        </div>
+        <span class="sel-pct-label" style="margin:0 0.35rem">$</span>
+        <input type="number" class="sel-price-input" value="${f.price.toFixed(2)}" min="0.01" step="0.01" data-field="price"/>
+        <span style="font-family:'Jost',sans-serif;font-size:0.7rem;color:var(--taupe);margin-left:0.2rem">/cành</span>
+        <button class="sel-remove" data-remove="${f.id}">✕</button>
+      </div>
+    `).join('');
+    list.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedFlowers = selectedFlowers.filter(f => f.id !== btn.dataset.remove);
+        refreshPickerState();
+      });
+    });
+  }
+
+  document.querySelectorAll('.flower-pick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      if (selectedFlowers.find(f => f.id === id)) {
+        selectedFlowers = selectedFlowers.filter(f => f.id !== id);
+      } else if (selectedFlowers.length < 5) {
+        selectedFlowers.push({ id, emoji: flowerMap[id].emoji, name: flowerMap[id].name, price: parseFloat(btn.dataset.price), slug: btn.dataset.slug });
+      }
+      refreshPickerState();
+    });
+  });
+
+  document.querySelectorAll('.pt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      priceMode = btn.dataset.mode;
+      document.querySelectorAll('.pt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  document.getElementById('calculateBtn').addEventListener('click', () => {
+    if (selectedFlowers.length === 0) { alert('Vui lòng chọn ít nhất một loài hoa.'); return; }
+    let totalBaseStems = 0;
+    document.querySelectorAll('.arrangement-row').forEach(row => {
+      const sel = row.querySelector('.arr-select');
+      const qty = parseInt(row.querySelector('.qty-input').value || 1);
+      const opt = arrMap[sel.value];
+      if (opt) totalBaseStems += opt.stems * qty;
+    });
+    if (totalBaseStems === 0) { alert('Vui lòng chọn ít nhất một loại sắp xếp hoa.'); return; }
+
+    const withWaste = Math.ceil(totalBaseStems * 1.1);
+    const markup = priceMode === 'retail' ? 3.5 : 1.0;
+    const selItems = document.querySelectorAll('.sel-item');
+    const flowers = Array.from(selItems).map(item => {
+      const id = item.dataset.id;
+      const pct = Math.max(1, parseInt(item.querySelector('[data-field="pct"]').value || 20));
+      const price = parseFloat(item.querySelector('[data-field="price"]').value || 0);
+      const f = selectedFlowers.find(f => f.id === id);
+      return { id, emoji: f.emoji, name: f.name, pct, price, slug: f.slug };
+    });
+    const totalPct = flowers.reduce((s, f) => s + f.pct, 0);
+    let totalCost = 0;
+    const cards = flowers.map(f => {
+      const stems = Math.ceil((f.pct / totalPct) * withWaste);
+      const cost = stems * f.price * markup;
+      totalCost += cost;
+      return { ...f, stems, cost };
+    });
+
+    const grid = document.getElementById('resultsGrid');
+    grid.innerHTML = cards.map(c => `
+      <div class="result-flower-card">
+        <div class="rfc-name">
+          <span class="rfc-emoji">${c.emoji}</span>
+          <span class="rfc-label">${c.name}</span>
+          <a href="/vi/learn/${c.slug}/" class="rfc-link">Hướng dẫn →</a>
+        </div>
+        <div class="rfc-stems">${c.stems}</div>
+        <div class="rfc-stems-label">cành cần thiết</div>
+        <div class="rfc-cost">Chi phí ước tính: <strong>$${c.cost.toFixed(2)}</strong></div>
+      </div>
+    `).join('');
+
+    document.getElementById('totalCostDisplay').textContent = `$${totalCost.toFixed(2)}`;
+    const modeLabel = priceMode === 'retail' ? 'giá lẻ (×3.5)' : 'giá sỉ';
+    document.getElementById('resultsMeta').textContent = `${withWaste} cành tổng (gồm 10% dự phòng) · ${modeLabel} · ${cards.reduce((s,c)=>s+c.stems,0)} cành trọng tâm trong ${cards.length} loài hoa`;
+
+    const tips = [];
+    cards.forEach(c => {
+      if (c.price >= 3.5) tips.push(`Thay ${c.name} bằng loại ít tốn kém hơn có thể tiết kiệm $${((c.stems * c.price * markup) * 0.4).toFixed(0)}+ cho loài hoa này.`);
+    });
+    tips.push('Đặt thêm 10–15% cành để dự phòng hư hỏng và thay đổi phút chót.');
+    tips.push('Kết hợp 70% hoa bình dân (cẩm chướng, cúc, tulip) với 30% hoa cao cấp để giảm chi phí mà không mất sức hút.');
+    if (priceMode === 'wholesale') tips.push('Nếu thuê florist: cộng thêm công lao động, giao hàng và chi phí chung — thường gấp 2.5–3.5 lần giá hoa sỉ.');
+    document.getElementById('tipsList').innerHTML = tips.slice(0,4).map(t => `<li>${t}</li>`).join('');
+
+    document.getElementById('step1').hidden = true;
+    document.getElementById('step2').hidden = true;
+    document.getElementById('step3').hidden = true;
+    document.getElementById('calcActions').hidden = true;
+    document.getElementById('resultsCard').hidden = false;
+  });
+
+  document.getElementById('recalcBtn').addEventListener('click', () => {
+    document.getElementById('step1').hidden = false;
+    document.getElementById('step2').hidden = false;
+    document.getElementById('step3').hidden = false;
+    document.getElementById('calcActions').hidden = false;
+    document.getElementById('resultsCard').hidden = true;
+  });
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-q');
+    const ans = item.querySelector('.faq-a');
+    btn.addEventListener('click', () => {
+      const open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(el => { el.classList.remove('open'); el.querySelector('.faq-a').hidden = true; });
+      if (!open) { item.classList.add('open'); ans.hidden = false; }
+    });
+  });
+</script>
