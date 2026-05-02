@@ -1,5 +1,15 @@
 ---
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { useTranslations, localePath } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'vi' } = Astro.props;
+const t = useTranslations(lang);
+const p = (path: string) => localePath(lang, path);
 const year = new Date().getFullYear();
 ---
 <footer class="footer-wrap mt-24">
@@ -8,11 +18,11 @@ const year = new Date().getFullYear();
 
       <!-- Brand -->
       <div class="col-span-1 md:col-span-1">
-        <a href="/" class="footer-logo flex items-center gap-3 mb-4 no-underline">
+        <a href={p('/')} class="footer-logo flex items-center gap-3 mb-4 no-underline">
           <span class="text-2xl">🌸</span>
           <span class="font-serif font-semibold text-xl footer-brand-name">Vườn Hoa</span>
         </a>
-        <p class="footer-desc text-sm leading-relaxed">{SITE_DESCRIPTION}</p>
+        <p class="footer-desc text-sm leading-relaxed">{t('site.description')}</p>
         <div class="flex gap-3 mt-6">
           <a href="/rss.xml" class="footer-badge">RSS</a>
           <a href="/sitemap-index.xml" class="footer-badge">Sitemap</a>
@@ -21,31 +31,28 @@ const year = new Date().getFullYear();
 
       <!-- Links -->
       <div>
-        <h4 class="footer-heading">Khám phá</h4>
+        <h4 class="footer-heading">{t('footer.explore')}</h4>
         <ul class="footer-links">
-          <li><a href="/posts">Tất cả bài viết</a></li>
-          <li><a href="/tags">Chủ đề</a></li>
-          <li><a href="/about">Giới thiệu</a></li>
+          <li><a href={p('/posts')}>{t('footer.allPosts')}</a></li>
+          <li><a href={p('/tags')}>{t('footer.topics')}</a></li>
+          <li><a href={p('/about')}>{t('footer.about')}</a></li>
         </ul>
       </div>
 
       <!-- Tagline -->
       <div>
         <h4 class="footer-heading">Vườn Hoa</h4>
-        <p class="footer-desc text-sm leading-relaxed italic footer-quote">
-          "Hoa không chỉ là vẻ đẹp — đó là ngôn ngữ của tình cảm, của nghề thủ công, và của nghệ thuật sống."
-        </p>
-        <p class="footer-desc text-xs mt-4 opacity-60">Companion to AI Florist Coach App</p>
+        <p class="footer-desc text-sm leading-relaxed italic footer-quote">{t('footer.quote')}</p>
+        <p class="footer-desc text-xs mt-4 opacity-60">{t('footer.companion')}</p>
       </div>
     </div>
 
     <div class="footer-divider mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <p class="footer-desc text-xs">© {year} {SITE_TITLE}. Tất cả quyền được bảo lưu.</p>
+      <p class="footer-desc text-xs">© {year} {SITE_TITLE}. {t('footer.rights')}</p>
       <p class="footer-desc text-xs opacity-50">Built with Astro · TailwindCSS · 🌸</p>
     </div>
   </div>
 
-  <!-- Decorative bottom bar -->
   <div class="h-1 bg-gradient-to-r from-blush-light via-blush to-gold-light"></div>
 </footer>
 
@@ -106,9 +113,6 @@ const year = new Date().getFullYear();
     text-decoration: none;
     transition: all 0.2s;
   }
-  .footer-badge:hover {
-    border-color: var(--blush);
-    color: var(--blush);
-  }
+  .footer-badge:hover { border-color: var(--blush); color: var(--blush); }
   .footer-divider { border-top: 1px solid rgba(232,164,176,0.1); }
 </style>

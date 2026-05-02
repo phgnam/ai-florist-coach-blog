@@ -1,20 +1,40 @@
 ---
 import { SITE_TITLE } from '../consts';
+import { useTranslations, localePath, alternatePath } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'vi' } = Astro.props;
+const t = useTranslations(lang);
+const p = (path: string) => localePath(lang, path);
+const alternateLang = lang === 'vi' ? 'en' : 'vi';
+const alternateUrl = alternatePath(Astro.url.pathname, lang);
 ---
 <header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-400">
   <div class="header-inner px-6 lg:px-10 py-4 flex items-center justify-between max-w-7xl mx-auto">
     <!-- Logo -->
-    <a href="/" class="logo-link flex items-center gap-3 group no-underline">
+    <a href={p('/')} class="logo-link flex items-center gap-3 group no-underline">
       <span class="logo-icon text-2xl transition-transform duration-500 group-hover:rotate-12 inline-block">🌸</span>
       <span class="logo-text font-serif font-semibold text-xl tracking-wide">Vườn Hoa</span>
     </a>
 
     <!-- Nav -->
-    <nav class="hidden md:flex items-center gap-8">
-      <a href="/" class="nav-link">Trang chủ</a>
-      <a href="/posts" class="nav-link">Bài viết</a>
-      <a href="/tags" class="nav-link">Chủ đề</a>
-      <a href="/about" class="nav-link">Giới thiệu</a>
+    <nav class="hidden md:flex items-center gap-7">
+      <a href={p('/')}      class="nav-link">{t('nav.home')}</a>
+      <a href={p('/posts')} class="nav-link">{t('nav.posts')}</a>
+      <a href={p('/tags')}  class="nav-link">{t('nav.tags')}</a>
+      <a href={p('/about')} class="nav-link">{t('nav.about')}</a>
+
+      <!-- Language switcher -->
+      <div class="lang-switch">
+        <span class="lang-current">{lang.toUpperCase()}</span>
+        <span class="lang-divider">|</span>
+        <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
+      </div>
+
       <a href="/rss.xml" class="nav-rss" title="RSS Feed">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
@@ -22,20 +42,27 @@ import { SITE_TITLE } from '../consts';
       </a>
     </nav>
 
-    <!-- Mobile menu button -->
-    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg mobile-btn" aria-label="Menu">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-      </svg>
-    </button>
+    <!-- Mobile right: lang switch + hamburger -->
+    <div class="md:hidden flex items-center gap-3">
+      <div class="lang-switch">
+        <span class="lang-current">{lang.toUpperCase()}</span>
+        <span class="lang-divider">|</span>
+        <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
+      </div>
+      <button id="mobile-menu-btn" class="p-2 rounded-lg mobile-btn" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="mobile-menu hidden md:hidden px-6 pb-4">
-    <a href="/" class="mobile-nav-link">Trang chủ</a>
-    <a href="/posts" class="mobile-nav-link">Bài viết</a>
-    <a href="/tags" class="mobile-nav-link">Chủ đề</a>
-    <a href="/about" class="mobile-nav-link">Giới thiệu</a>
+    <a href={p('/')}      class="mobile-nav-link">{t('nav.home')}</a>
+    <a href={p('/posts')} class="mobile-nav-link">{t('nav.posts')}</a>
+    <a href={p('/tags')}  class="mobile-nav-link">{t('nav.tags')}</a>
+    <a href={p('/about')} class="mobile-nav-link">{t('nav.about')}</a>
   </div>
 </header>
 
@@ -49,7 +76,6 @@ import { SITE_TITLE } from '../consts';
     box-shadow: 0 1px 0 rgba(232, 164, 176, 0.2), 0 4px 24px rgba(196, 122, 138, 0.06);
   }
 
-  /* Default: transparent over hero — mauve text for readability on blush bg */
   .logo-text { color: var(--mauve); }
   .nav-link {
     color: var(--mauve-mid);
@@ -72,6 +98,35 @@ import { SITE_TITLE } from '../consts';
   }
   .nav-link:hover { color: var(--mauve); }
   .nav-link:hover::after { right: 0; }
+
+  /* Language switcher */
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    background: rgba(232, 164, 176, 0.15);
+    border: 1px solid rgba(196, 122, 138, 0.25);
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+  }
+  .lang-current {
+    color: var(--blush-dark);
+    font-weight: 600;
+  }
+  .lang-divider {
+    color: rgba(158, 138, 128, 0.4);
+    font-weight: 300;
+  }
+  .lang-alt {
+    color: var(--taupe);
+    font-weight: 400;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .lang-alt:hover { color: var(--mauve); }
 
   .nav-rss {
     color: var(--taupe);

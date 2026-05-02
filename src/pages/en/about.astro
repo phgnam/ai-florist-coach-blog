@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n/utils';
+
+const lang = 'en' as const;
+const t = useTranslations(lang);
+---
+<BaseLayout lang={lang} title="About" description="About the Vườn Hoa blog — AI Florist Coach" padTop={false}>
+
+  <div class="about-hero">
+    <div class="about-hero-deco" aria-hidden="true">
+      <svg viewBox="0 0 200 200" fill="none">
+        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.18)"/>
+        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.18)" transform="rotate(72 100 100)"/>
+        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.18)" transform="rotate(144 100 100)"/>
+        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.18)" transform="rotate(216 100 100)"/>
+        <ellipse cx="100" cy="44" rx="16" ry="34" fill="rgba(196,122,138,0.18)" transform="rotate(288 100 100)"/>
+        <circle cx="100" cy="100" r="14" fill="rgba(232,164,176,0.4)"/>
+      </svg>
+    </div>
+    <div class="max-w-4xl mx-auto px-6 py-28 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">{t('about.eyebrow')}</p>
+      <h1 class="about-title">{t('about.title')} <em>{t('about.title.em')}</em></h1>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto px-6 py-16">
+    <div class="about-grid">
+      <div class="about-card accent-blush">
+        <span class="card-icon">🌸</span>
+        <h3>{t('about.card1.title')}</h3>
+        <p><strong>Vườn Hoa</strong> {t('about.card1.body')}</p>
+      </div>
+      <div class="about-card accent-rose">
+        <span class="card-icon">🌹</span>
+        <h3>{t('about.card2.title')}</h3>
+        <ul>
+          <li>{t('about.card2.li1')}</li>
+          <li>{t('about.card2.li2')}</li>
+          <li>{t('about.card2.li3')}</li>
+          <li>{t('about.card2.li4')}</li>
+        </ul>
+      </div>
+      <div class="about-card accent-gold">
+        <span class="card-icon">🤖</span>
+        <h3>{t('about.card3.title')}</h3>
+        <p>{t('about.card3.body')}</p>
+      </div>
+    </div>
+
+    <div class="about-quote">
+      <div class="quote-petal" aria-hidden="true">🌷</div>
+      <blockquote>
+        <p>{t('about.quote')}</p>
+        <cite>{t('about.quote.cite')}</cite>
+      </blockquote>
+    </div>
+
+    <div class="about-cta text-center mt-12">
+      <a href="/en/posts" class="btn-primary">{t('about.cta')}</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-hero { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .about-hero::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .about-hero-deco { position:absolute; right:8%; top:50%; transform:translateY(-50%); width:160px; height:160px; pointer-events:none; animation:floatPetal 7s ease-in-out infinite; }
+  .about-hero-deco svg { width:100%; height:100%; }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .about-title { font-family:'Cormorant Garamond',serif; font-size:clamp(3rem,8vw,5.5rem); color:var(--mauve); font-weight:300; margin:0; line-height:1.08; }
+  .about-title em { color:var(--blush-dark); font-style:italic; font-weight:300; }
+  .about-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1.25rem; margin-bottom:3rem; }
+  .about-card { padding:2rem; border-radius:18px; border:1px solid transparent; }
+  .about-card h3 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; margin:0.75rem 0 0.5rem; color:var(--mauve); }
+  .about-card p, .about-card ul { font-family:'Jost',sans-serif; font-size:0.9rem; color:var(--text-mid); line-height:1.75; font-weight:300; margin:0; }
+  .about-card strong { color:var(--mauve); font-weight:600; }
+  .about-card ul { padding-left:1.2rem; }
+  .about-card ul li { margin-bottom:0.4rem; }
+  .card-icon { font-size:1.8rem; }
+  .accent-blush { background:var(--blush-light); border-color:rgba(232,164,176,0.3); }
+  .accent-rose  { background:var(--ivory-dark); border-color:rgba(232,164,176,0.2); }
+  .accent-gold  { background:var(--gold-light); border-color:rgba(200,149,106,0.15); }
+  .about-quote { background:linear-gradient(135deg,#F5E6EA 0%,#EDA8B8 100%); border-radius:20px; padding:2.5rem 3rem; text-align:center; position:relative; overflow:hidden; }
+  .about-quote::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(255,255,255,0.5) 0%,transparent 70%); pointer-events:none; }
+  .quote-petal { font-size:2rem; margin-bottom:1rem; display:block; animation:floatPetal 5s ease-in-out infinite; position:relative; z-index:1; }
+  .about-quote blockquote { margin:0; position:relative; z-index:1; }
+  .about-quote p { font-family:'Cormorant Garamond',serif; font-size:1.35rem; font-style:italic; font-weight:400; color:var(--mauve); line-height:1.65; margin:0 0 1rem; }
+  .about-quote cite { font-family:'Jost',sans-serif; font-size:0.75rem; color:var(--blush-dark); letter-spacing:0.12em; text-transform:uppercase; font-weight:500; }
+  .btn-primary { display:inline-block; padding:0.9rem 2.5rem; background:var(--blush-dark); color:white; font-family:'Jost',sans-serif; font-size:0.82rem; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; border-radius:999px; transition:all 0.25s; }
+  .btn-primary:hover { background:var(--mauve); transform:translateY(-2px); }
+</style>

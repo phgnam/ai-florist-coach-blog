@@ -14,6 +14,7 @@ const posts = defineCollection({
       tags: z.array(z.string()).default([]),
       author: z.string().default('Vườn Hoa'),
       draft: z.boolean().default(false),
+      lang: z.enum(['vi', 'en']).default('vi'),
     }),
 });
 

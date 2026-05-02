@@ -1,0 +1,65 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { useTranslations } from '../../../i18n/utils';
+
+const lang = 'en' as const;
+const t = useTranslations(lang);
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en');
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+  return tags.map((tag) => ({
+    params: { tag },
+    props: {
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+<BaseLayout lang={lang} title={`#${tag}`} description={`Articles with topic #${tag}`} padTop={false}>
+
+  <div class="page-header">
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">{t('tags.topic')}</p>
+      <h1 class="page-title">#{tag}</h1>
+      <p class="page-sub">{posts.length} {t('tags.posts')}</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14">
+    <div class="posts-grid">
+      {posts.map((post: any) => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          pubDate={post.data.pubDate}
+          slug={`/en/posts/${post.id}`}
+          tags={post.data.tags}
+          heroImage={post.data.heroImage}
+          heroAlt={post.data.heroAlt}
+        />
+      ))}
+    </div>
+    <div class="text-center mt-12">
+      <a href="/en/tags" class="back-link">{t('tags.back')}</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:300; color:var(--mauve); line-height:1.08; margin:0 0 1rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; line-height:1.7; }
+  .posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.75rem; }
+  .back-link { display:inline-block; padding:0.7rem 2rem; border:1px solid var(--ivory-dark); border-radius:999px; font-family:'Jost',sans-serif; color:var(--taupe); font-size:0.82rem; font-weight:400; text-decoration:none; transition:all 0.2s; }
+  .back-link:hover { border-color:var(--blush-dark); color:var(--blush-dark); }
+</style>

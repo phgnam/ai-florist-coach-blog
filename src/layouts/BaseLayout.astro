@@ -3,6 +3,7 @@ import SEO from '../components/SEO.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import type { Lang } from '../i18n/ui';
 
 interface Props {
   title?: string;
@@ -10,20 +11,21 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   padTop?: boolean;
+  lang?: Lang;
 }
 
-const { title, description, image, type, padTop = true } = Astro.props;
+const { title, description, image, type, padTop = true, lang = 'vi' } = Astro.props;
 ---
 <!doctype html>
-<html lang="vi">
+<html lang={lang}>
   <head>
     <SEO title={title} description={description} image={image} type={type} />
   </head>
   <body>
-    <Header />
+    <Header lang={lang} />
     <main class:list={['relative z-10', padTop && 'pt-16']}>
       <slot />
     </main>
-    <Footer />
+    <Footer lang={lang} />
   </body>
 </html>
