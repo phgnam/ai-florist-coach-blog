@@ -9,8 +9,6 @@ const firstPreviewImage = (post) => {
   return figureImage ?? (post.data.heroImage as any);
 };
 
-const previewFallback = `<svg class="placeholder-bloom" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.13" transform="rotate(0 80 80)"></ellipse><ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(45 80 80)"></ellipse><ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(90 80 80)"></ellipse><ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(135 80 80)"></ellipse><circle cx="80" cy="80" r="12" fill="#9B5968" fill-opacity="0.28"></circle><circle cx="80" cy="80" r="5" fill="#9B5968" fill-opacity="0.55"></circle><circle cx="80" cy="44" r="4" fill="#9B5968" fill-opacity="0.18"></circle><circle cx="80" cy="116" r="4" fill="#9B5968" fill-opacity="0.18"></circle><circle cx="44" cy="80" r="4" fill="#9B5968" fill-opacity="0.18"></circle><circle cx="116" cy="80" r="4" fill="#9B5968" fill-opacity="0.18"></circle></svg>`;
-
 const lang = 'en' as const;
 const t = useTranslations(lang);
 const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
@@ -22,7 +20,7 @@ const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
 const allPostsData = allPosts.map(p => {
   const rawImg = firstPreviewImage(p);
-  const previewImage: string | null = typeof rawImg === 'string' ? rawImg : (rawImg as any)?.src ?? previewFallback;
+  const previewImage: string | null = typeof rawImg === 'string' ? rawImg : (rawImg as any)?.src ?? null;
   return {
     slug: p.id,
     title: p.data.title,

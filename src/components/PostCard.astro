@@ -29,6 +29,7 @@ const palettes = [
 ];
 const pi = Math.abs(title.charCodeAt(0) + (title.charCodeAt(1) || 0)) % 4;
 const palette = palettes[pi];
+const showPlaceholder = !heroImage && !previewImageUrl && !heroImageUrl;
 ---
 
 <article class:list={['post-card', featured && 'post-card--featured']}>
@@ -41,10 +42,7 @@ const palette = palettes[pi];
       ) : heroImageUrl ? (
         <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.closest('.card-image-wrap').querySelector('.card-placeholder');if(p)p.style.display='flex'" />
       ) : null}
-      <div
-        class="card-placeholder"
-        style={`background:${palette.bg};${(heroImage || previewImageUrl || heroImageUrl) ? 'display:none' : ''}`}
-      >
+      <div class="card-placeholder" style={`background:${palette.bg};${showPlaceholder ? '' : 'display:none'}`}>
         <svg class="placeholder-bloom" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <ellipse cx="80" cy="80" rx="30" ry="44" fill={palette.accent} fill-opacity="0.13" transform="rotate(0 80 80)"/>
           <ellipse cx="80" cy="80" rx="30" ry="44" fill={palette.accent} fill-opacity="0.11" transform="rotate(45 80 80)"/>
