@@ -13,9 +13,10 @@ interface Props {
   previewImageUrl?: string;
   heroAlt?: string;
   featured?: boolean;
+  readingTime?: number;
 }
 
-const { title, description, pubDate, slug, tags = [], heroImage, heroImageUrl, previewImageUrl, heroAlt, featured = false } = Astro.props;
+const { title, description, pubDate, slug, tags = [], heroImage, heroImageUrl, previewImageUrl, heroAlt, featured = false, readingTime } = Astro.props;
 const lang = Astro.currentLocale === 'vi' ? 'vi' : 'en';
 const t = useTranslations(lang);
 const href = slug.startsWith('/') ? slug : `/posts/${slug}`;
@@ -55,6 +56,12 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
   <div class="card-body">
     <div class="card-meta">
       <FormattedDate date={pubDate} />
+      {readingTime && (
+        <>
+          <span class="meta-dot">·</span>
+          <span>{readingTime} {t('post.readingTime')}</span>
+        </>
+      )}
     </div>
     <h2 class:list={['card-title', featured && 'card-title--featured']}>
       <a href={href} class="card-title-link">{title}</a>
@@ -161,7 +168,12 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
     letter-spacing: 0.04em;
     font-weight: 300;
     font-family: 'Jost', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
   }
+  .meta-dot { color: var(--ivory-dark); }
   .card-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 1.25rem;

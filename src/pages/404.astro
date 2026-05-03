@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout lang="en" title="404 — Page Not Found" description="The page you're looking for doesn't exist.">
+  <div class="not-found">
+    <div class="nf-deco" aria-hidden="true">
+      <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="150" cy="80" rx="30" ry="66" fill="rgba(196,122,138,0.18)" transform="rotate(0 150 150)"/>
+        <ellipse cx="150" cy="80" rx="30" ry="66" fill="rgba(196,122,138,0.18)" transform="rotate(72 150 150)"/>
+        <ellipse cx="150" cy="80" rx="30" ry="66" fill="rgba(196,122,138,0.18)" transform="rotate(144 150 150)"/>
+        <ellipse cx="150" cy="80" rx="30" ry="66" fill="rgba(196,122,138,0.18)" transform="rotate(216 150 150)"/>
+        <ellipse cx="150" cy="80" rx="30" ry="66" fill="rgba(196,122,138,0.18)" transform="rotate(288 150 150)"/>
+        <circle cx="150" cy="150" r="24" fill="rgba(232,164,176,0.5)"/>
+      </svg>
+    </div>
+
+    <div class="nf-content">
+      <p class="nf-code">404</p>
+      <h1 class="nf-title">Page Not Found</h1>
+      <p class="nf-sub">
+        The page you're looking for doesn't exist or has been moved.<br/>
+        Let's get you back to the garden.
+      </p>
+      <div class="nf-actions">
+        <a href="/" class="btn-primary">Back to Home</a>
+        <a href="/posts" class="btn-ghost">Browse Articles</a>
+      </div>
+
+      <div class="nf-suggestions">
+        <p class="nf-suggest-label">You might enjoy</p>
+        <div class="nf-links">
+          <a href="/posts" class="nf-link">🌸 All Articles</a>
+          <a href="/tags" class="nf-link">🏷️ Browse Topics</a>
+          <a href="/search" class="nf-link">🔍 Search</a>
+          <a href="/about" class="nf-link">💐 About Us</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5rem 1.5rem;
+    text-align: center;
+    position: relative;
+    background: linear-gradient(160deg, #FDF0F2 0%, #F5E6EA 50%, #EDA8B8 100%);
+    overflow: hidden;
+  }
+  .nf-deco {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    opacity: 0.5;
+    animation: spin 30s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  .nf-content {
+    position: relative;
+    z-index: 2;
+    max-width: 560px;
+  }
+  .nf-code {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(5rem, 18vw, 10rem);
+    font-weight: 300;
+    color: rgba(196, 122, 138, 0.3);
+    line-height: 1;
+    margin: 0 0 -1rem;
+    letter-spacing: -0.05em;
+  }
+  .nf-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 400;
+    color: var(--mauve);
+    margin: 0 0 1.25rem;
+    line-height: 1.15;
+  }
+  .nf-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    color: var(--mauve-mid);
+    font-weight: 300;
+    line-height: 1.75;
+    margin: 0 0 2.5rem;
+  }
+  .nf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+  .btn-primary {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    background: var(--blush-dark);
+    color: white;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 999px;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .btn-primary:hover { background: var(--mauve); transform: translateY(-2px); }
+  .btn-ghost {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    color: var(--mauve-mid);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border-radius: 999px;
+    border: 1px solid rgba(196, 122, 138, 0.4);
+    transition: all 0.25s;
+  }
+  .btn-ghost:hover { color: var(--mauve); border-color: var(--blush-dark); }
+  .nf-suggestions {
+    border-top: 1px solid rgba(196, 122, 138, 0.25);
+    padding-top: 2rem;
+  }
+  .nf-suggest-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 1.25rem;
+  }
+  .nf-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  .nf-link {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(196, 122, 138, 0.25);
+    border-radius: 999px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    color: var(--mauve-mid);
+    text-decoration: none;
+    transition: all 0.2s;
+    backdrop-filter: blur(4px);
+  }
+  .nf-link:hover {
+    background: white;
+    border-color: var(--blush-dark);
+    color: var(--blush-dark);
+    transform: translateY(-2px);
+  }
+</style>

@@ -1,0 +1,83 @@
+---
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  author: string;
+  lang: 'en' | 'vi';
+}
+
+const { author, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const bios: Record<string, { en: string; vi: string }> = {
+  'Vườn Hoa': {
+    en: 'Vườn Hoa is a companion blog to the AI Florist Coach app — sharing knowledge, inspiration, and craft for florists and flower lovers.',
+    vi: 'Vườn Hoa là blog đồng hành của ứng dụng AI Florist Coach — chia sẻ kiến thức, cảm hứng và kỹ năng cho các florist và người yêu hoa.',
+  },
+};
+
+const bio = (bios[author] ?? bios['Vườn Hoa'])[lang];
+---
+
+<div class="author-box">
+  <div class="author-avatar" aria-hidden="true">🌸</div>
+  <div class="author-info">
+    <p class="author-label">{t('post.authorAbout')}</p>
+    <p class="author-name">{author}</p>
+    <p class="author-bio">{bio}</p>
+  </div>
+</div>
+
+<style>
+  .author-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    background: white;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 18px;
+    padding: 1.75rem 2rem;
+    margin-top: 3rem;
+    box-shadow: 0 2px 12px rgba(196, 122, 138, 0.06);
+  }
+  .author-avatar {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, #F5C8D2, #EDA8B8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+  }
+  .author-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .author-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 0.3rem;
+  }
+  .author-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--mauve);
+    margin: 0 0 0.5rem;
+    line-height: 1.2;
+  }
+  .author-bio {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    color: var(--taupe);
+    line-height: 1.7;
+    margin: 0;
+    font-weight: 300;
+  }
+</style>

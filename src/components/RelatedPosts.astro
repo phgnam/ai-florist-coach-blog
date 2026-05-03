@@ -1,0 +1,102 @@
+---
+import PostCard from './PostCard.astro';
+import { useTranslations } from '../i18n/utils';
+
+interface Post {
+  id: string;
+  data: {
+    title: string;
+    description: string;
+    pubDate: Date;
+    tags: string[];
+    heroImage?: ImageMetadata;
+    heroAlt?: string;
+    draft?: boolean;
+    lang?: string;
+  };
+  body: string;
+}
+
+interface Props {
+  currentId: string;
+  currentTags: string[];
+  allPosts: Post[];
+  lang: 'en' | 'vi';
+  postBasePath: string;
+}
+
+const { currentId, currentTags, allPosts, lang, postBasePath } = Astro.props;
+const t = useTranslations(lang);
+
+const firstPreviewImage = (post: Post): string | undefined => {
+  return post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1] ?? undefined;
+};
+
+const related = allPosts
+  .filter((p) => p.id !== currentId)
+  .map((p) => ({
+    post: p,
+    score: p.data.tags.filter((tag) => currentTags.includes(tag)).length,
+  }))
+  .filter(({ score }) => score > 0)
+  .sort((a, b) => b.score - a.score || b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf())
+  .slice(0, 3)
+  .map(({ post }) => post);
+
+if (related.length === 0) return;
+---
+
+<section class="related-posts">
+  <div class="related-label">
+    <span class="label-line"></span>
+    <span class="label-text">{t('post.relatedPosts')}</span>
+    <span class="label-line"></span>
+  </div>
+  <div class="related-grid">
+    {related.map((post) => (
+      <PostCard
+        title={post.data.title}
+        description={post.data.description}
+        pubDate={post.data.pubDate}
+        slug={`${postBasePath}/${post.id}`}
+        tags={post.data.tags}
+        heroImage={post.data.heroImage}
+        previewImageUrl={firstPreviewImage(post)}
+        heroAlt={post.data.heroAlt}
+      />
+    ))}
+  </div>
+</section>
+
+<style>
+  .related-posts {
+    margin-top: 5rem;
+    padding-top: 4rem;
+    border-top: 1px solid var(--ivory-dark);
+  }
+  .related-label {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .label-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ivory-dark);
+  }
+  .label-text {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    white-space: nowrap;
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+</style>
