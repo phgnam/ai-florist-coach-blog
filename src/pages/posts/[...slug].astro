@@ -192,7 +192,7 @@ const breadcrumbs = [
     padding-bottom: 0.6rem;
     border-bottom: 1px solid var(--ivory-dark);
   }
-  #toc-nav a {
+  :global(#toc-nav a) {
     display: block;
     font-family: 'Jost', sans-serif;
     font-size: 0.78rem;
@@ -200,21 +200,21 @@ const breadcrumbs = [
     color: var(--taupe);
     text-decoration: none;
     padding: 0.3rem 0.5rem;
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.15rem;
     border-left: 2px solid transparent;
     border-radius: 0 6px 6px 0;
-    line-height: 1.4;
+    line-height: 1.45;
     transition: color 0.2s, border-color 0.2s, background 0.2s;
   }
-  #toc-nav a.toc-h3 {
+  :global(#toc-nav a.toc-h3) {
     padding-left: 1.1rem;
     font-size: 0.73rem;
   }
-  #toc-nav a:hover {
+  :global(#toc-nav a:hover) {
     color: var(--blush-dark);
     background: rgba(232,164,176,0.08);
   }
-  #toc-nav a.toc-active {
+  :global(#toc-nav a.toc-active) {
     color: var(--blush-dark);
     border-left-color: var(--blush-dark);
     font-weight: 500;
