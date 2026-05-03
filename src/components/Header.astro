@@ -15,23 +15,20 @@ const alternateLang = lang === 'vi' ? 'en' : 'vi';
 const alternateUrl = alternatePath(Astro.url.pathname, lang);
 ---
 <header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-400">
-  <div class="header-inner px-6 lg:px-10 py-4 flex items-center justify-between max-w-7xl mx-auto">
-    <!-- Logo -->
-    <a href={p('/')} class="logo-link flex items-center gap-3 group no-underline">
+  <div class="header-inner px-6 lg:px-10 py-4 flex items-center justify-between max-w-7xl mx-auto gap-4">
+    <a href={p('/')} class="logo-link flex items-center gap-3 group no-underline shrink-0">
       <span class="logo-icon text-2xl transition-transform duration-500 group-hover:rotate-12 inline-block">🌸</span>
       <span class="logo-text font-serif font-semibold text-xl tracking-wide">Vườn Hoa</span>
     </a>
 
-    <!-- Nav -->
-    <nav class="hidden md:flex items-center gap-7">
-      <a href={p('/')}      class="nav-link">{t('nav.home')}</a>
+    <nav class="hidden md:flex items-center gap-7 ml-auto">
+      <a href={p('/')} class="nav-link">{t('nav.home')}</a>
       <a href={p('/posts')} class="nav-link">{t('nav.posts')}</a>
-      <a href={p('/tags')}  class="nav-link">{t('nav.tags')}</a>
+      <a href={p('/tags')} class="nav-link">{t('nav.tags')}</a>
       <a href={p('/about')} class="nav-link">{t('nav.about')}</a>
 
       <Search lang={lang} />
 
-      <!-- Language switcher -->
       <div class="lang-switch">
         <span class="lang-current">{lang.toUpperCase()}</span>
         <span class="lang-divider">|</span>
@@ -45,8 +42,7 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
       </a>
     </nav>
 
-    <!-- Mobile right: lang switch + hamburger -->
-    <div class="md:hidden flex items-center gap-3">
+    <div class="md:hidden flex items-center gap-3 ml-auto">
       <div class="lang-switch">
         <span class="lang-current">{lang.toUpperCase()}</span>
         <span class="lang-divider">|</span>
@@ -60,101 +56,37 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
     </div>
   </div>
 
-  <!-- Mobile menu -->
+  <div id="reading-countdown" class="reading-countdown" aria-live="polite" aria-atomic="true"></div>
+
   <div id="mobile-menu" class="mobile-menu hidden md:hidden px-6 pb-4">
-    <a href={p('/')}      class="mobile-nav-link">{t('nav.home')}</a>
+    <a href={p('/')} class="mobile-nav-link">{t('nav.home')}</a>
     <a href={p('/posts')} class="mobile-nav-link">{t('nav.posts')}</a>
-    <a href={p('/tags')}  class="mobile-nav-link">{t('nav.tags')}</a>
+    <a href={p('/tags')} class="mobile-nav-link">{t('nav.tags')}</a>
     <a href={p('/about')} class="mobile-nav-link">{t('nav.about')}</a>
   </div>
 </header>
 
 <style>
-  #site-header {
-    background: rgba(250, 245, 238, 0.0);
-  }
-  #site-header.scrolled {
-    background: rgba(250, 245, 238, 0.97);
-    backdrop-filter: blur(16px);
-    box-shadow: 0 1px 0 rgba(232, 164, 176, 0.2), 0 4px 24px rgba(196, 122, 138, 0.06);
-  }
-
+  #site-header { background: rgba(250, 245, 238, 0.0); }
+  #site-header.scrolled { background: rgba(250, 245, 238, 0.97); backdrop-filter: blur(16px); box-shadow: 0 1px 0 rgba(232, 164, 176, 0.2), 0 4px 24px rgba(196, 122, 138, 0.06); }
   .logo-text { color: var(--mauve); }
-  .nav-link {
-    color: var(--mauve-mid);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 400;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: color 0.2s;
-    position: relative;
-  }
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -3px; left: 0; right: 100%;
-    height: 1px;
-    background: var(--blush-dark);
-    transition: right 0.3s ease;
-  }
+  .nav-link { color: var(--mauve-mid); font-family: 'Jost', sans-serif; font-size: 0.82rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: color 0.2s; position: relative; }
+  .nav-link::after { content: ''; position: absolute; bottom: -3px; left: 0; right: 100%; height: 1px; background: var(--blush-dark); transition: right 0.3s ease; }
   .nav-link:hover { color: var(--mauve); }
   .nav-link:hover::after { right: 0; }
-
-  /* Language switcher */
-  .lang-switch {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.12em;
-    background: rgba(232, 164, 176, 0.15);
-    border: 1px solid rgba(196, 122, 138, 0.25);
-    border-radius: 999px;
-    padding: 0.2rem 0.65rem;
-  }
-  .lang-current {
-    color: var(--blush-dark);
-    font-weight: 600;
-  }
-  .lang-divider {
-    color: rgba(158, 138, 128, 0.4);
-    font-weight: 300;
-  }
-  .lang-alt {
-    color: var(--taupe);
-    font-weight: 400;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
+  .reading-countdown { display: none; max-width: 80rem; margin: 0 auto; padding: 0 1.5rem 0.85rem; color: var(--taupe); font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .reading-countdown.visible { display: block; }
+  .reading-countdown strong { color: var(--blush-dark); font-weight: 600; }
+  .lang-switch { display: flex; align-items: center; gap: 4px; font-family: 'Jost', sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; background: rgba(232, 164, 176, 0.15); border: 1px solid rgba(196, 122, 138, 0.25); border-radius: 999px; padding: 0.2rem 0.65rem; }
+  .lang-current { color: var(--blush-dark); font-weight: 600; }
+  .lang-divider { color: rgba(158, 138, 128, 0.4); font-weight: 300; }
+  .lang-alt { color: var(--taupe); font-weight: 400; text-decoration: none; transition: color 0.2s; }
   .lang-alt:hover { color: var(--mauve); }
-
-  .nav-rss {
-    color: var(--taupe);
-    transition: color 0.2s;
-  }
+  .nav-rss { color: var(--taupe); transition: color 0.2s; }
   .nav-rss:hover { color: var(--blush-dark); }
-
   .mobile-btn { color: var(--mauve); }
-  .mobile-menu {
-    background: rgba(250, 245, 238, 0.98);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--ivory-dark);
-  }
-  .mobile-nav-link {
-    display: block;
-    padding: 0.75rem 0;
-    color: var(--mauve-mid);
-    font-family: 'Jost', sans-serif;
-    font-size: 0.82rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-bottom: 1px solid var(--ivory-dark);
-    transition: color 0.2s;
-  }
+  .mobile-menu { background: rgba(250, 245, 238, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--ivory-dark); }
+  .mobile-nav-link { display: block; padding: 0.75rem 0; color: var(--mauve-mid); font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--ivory-dark); transition: color 0.2s; }
   .mobile-nav-link:hover { color: var(--blush-dark); }
 </style>
 
@@ -162,6 +94,7 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
   const header = document.getElementById('site-header');
   const mobileBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
+  const countdown = document.getElementById('reading-countdown');
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 60) {
@@ -174,4 +107,26 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
   mobileBtn?.addEventListener('click', () => {
     mobileMenu?.classList.toggle('hidden');
   });
+
+  const postRoot = document.querySelector('.post-content-wrap');
+  if (postRoot && countdown) {
+    const updateCountdown = () => {
+      const article = document.querySelector('.prose');
+      if (!article) return;
+      const bodyText = article.textContent || '';
+      const words = bodyText.trim().split(/\s+/).filter(Boolean).length;
+      const totalMinutes = Math.max(1, Math.ceil(words / 200));
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docH > 0 ? Math.min(1, window.scrollY / docH) : 0;
+      const remaining = Math.max(0, Math.ceil(totalMinutes * (1 - progress)));
+      countdown.innerHTML = remaining > 0 ? `Reading time left: <strong>${remaining} min</strong>` : `You\'re at the end`;
+      countdown.classList.add('visible');
+    };
+
+    updateCountdown();
+    window.addEventListener('scroll', updateCountdown, { passive: true });
+    window.addEventListener('resize', updateCountdown, { passive: true });
+  } else if (countdown) {
+    countdown.remove();
+  }
 </script>
