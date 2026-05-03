@@ -18,7 +18,7 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data
 
 const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
-const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].slice(0, 12);
 
 const hreflang = [
   { lang: 'en', url: `${siteUrl}/` },
@@ -91,7 +91,7 @@ const breadcrumbs = [
         pubDate={featured.data.pubDate}
         slug={`/posts/${featured.id}`}
         tags={featured.data.tags}
-          previewImageUrl={firstPreviewImage(featured)}
+        previewImageUrl={firstPreviewImage(featured)}
         heroAlt={featured.data.heroAlt}
         featured={true}
       />

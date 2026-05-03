@@ -15,7 +15,7 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data
 
 const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
-const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].slice(0, 12);
 ---
 <BaseLayout lang={lang} padTop={false}>
 
