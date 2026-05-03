@@ -1,5 +1,6 @@
 ---
 import FormattedDate from './FormattedDate.astro';
+import { useTranslations } from '../i18n/utils';
 
 interface Props {
   title: string;
@@ -14,6 +15,8 @@ interface Props {
 }
 
 const { title, description, pubDate, slug, tags = [], heroImage, heroImageUrl, heroAlt, featured = false } = Astro.props;
+const lang = Astro.currentLocale === 'vi' ? 'vi' : 'en';
+const t = useTranslations(lang);
 const href = slug.startsWith('/') ? slug : `/posts/${slug}`;
 
 const cardGradients = [
@@ -55,7 +58,7 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
     </h2>
     <p class="card-desc">{description}</p>
     <a href={href} class="card-cta">
-      Đọc tiếp
+      {t('posts.readMore')}
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="card-arrow">
         <path d="M5 12h14M12 5l7 7-7 7"/>
       </svg>
