@@ -1,5 +1,4 @@
 ---
-import defaultPreviewImage from '@assets/image_1777790654692.png';
 import { useTranslations } from '../i18n/utils';
 import FormattedDate from './FormattedDate.astro';
 
@@ -29,7 +28,7 @@ interface Props {
 const { currentId, currentTags, allPosts, lang, postBasePath } = Astro.props;
 const t = useTranslations(lang);
 
-const previewFallback = defaultPreviewImage.src;
+const previewFallback = '/image_1777790654692.png';
 
 const extractPreviewImage = (post: Post): string | null => {
   const bodyImg = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1] ?? null;
