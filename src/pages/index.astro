@@ -370,7 +370,7 @@ const breadcrumbs = [
   .tag-cloud-item:hover { background:rgba(255,255,255,0.25); color:white; border-color:rgba(255,255,255,0.4); transform:translateY(-2px); }
   .tag-hash { color:rgba(255,255,255,0.5); margin-right:2px; }
 
-  #trending-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; border-top:1px solid var(--ivory-dark); border-bottom:1px solid var(--ivory-dark); padding:2.25rem 0; }
+  #trending-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; border-top:1px solid var(--ivory-dark); border-bottom:1px solid var(--ivory-dark); padding:2.25rem 0; }
   :global(.trending-card) { display:flex; flex-direction:column; gap:0; border-right:1px solid var(--ivory-dark); text-decoration:none; transition:transform 0.28s ease,opacity 0.28s ease; overflow:hidden; }
   :global(.trending-card:last-child) { border-right:none; }
   :global(.trending-card:hover) { opacity:0.88; transform:translateY(-3px); }
