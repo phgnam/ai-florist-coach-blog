@@ -1,6 +1,6 @@
 ---
 interface GalleryItem {
-  src: ImageMetadata;
+  src: { src: string; width: number; height: number; format: string };
   alt: string;
   caption?: string;
 }
