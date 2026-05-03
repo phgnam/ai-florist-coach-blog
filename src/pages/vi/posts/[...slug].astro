@@ -80,13 +80,13 @@ const breadcrumbs = [
       <div class="post-hero-meta fade-up fade-up-3">
         <span class="post-author">✍ {author}</span>
         <span class="post-dot">·</span>
-        <FormattedDate date={pubDate} />
+        <FormattedDate date={pubDate} lang={lang} />
         <span class="post-dot">·</span>
         <span class="post-reading-time">⏱ {mins} {t('post.readingTime')}</span>
         {updatedDate && (
           <>
             <span class="post-dot">·</span>
-            <span>{t('post.updated')} <FormattedDate date={updatedDate} /></span>
+            <span>{t('post.updated')} <FormattedDate date={updatedDate} lang={lang} /></span>
           </>
         )}
       </div>

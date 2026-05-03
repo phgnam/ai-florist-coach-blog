@@ -34,16 +34,15 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
   <a href={href} class="card-image-link" aria-hidden="true" tabindex="-1">
     <div class="card-image-wrap">
       {heroImage ? (
-        <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" />
+        <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" onerror="this.style.display='none';this.nextElementSibling&&this.nextElementSibling.classList.add('visible')" />
       ) : previewImageUrl ? (
-        <img src={previewImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" />
+        <img src={previewImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.parentElement.querySelector('.card-placeholder');if(p)p.style.display='flex'" />
       ) : heroImageUrl ? (
-        <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" />
-      ) : (
-        <div class={`card-placeholder bg-gradient-to-br ${cardGradients[colorIdx]}`}>
-          <span class="placeholder-icon">🌸</span>
-        </div>
-      )}
+        <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.parentElement.querySelector('.card-placeholder');if(p)p.style.display='flex'" />
+      ) : null}
+      <div class={`card-placeholder bg-gradient-to-br ${cardGradients[colorIdx]}`} style={(heroImage || previewImageUrl || heroImageUrl) ? 'display:none' : ''}>
+        <span class="placeholder-icon">🌸</span>
+      </div>
       <div class="card-overlay"></div>
       {tags.length > 0 && (
         <div class="card-tag-badge">
@@ -55,7 +54,7 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
 
   <div class="card-body">
     <div class="card-meta">
-      <FormattedDate date={pubDate} />
+      <FormattedDate date={pubDate} lang={lang} />
       {readingTime && (
         <>
           <span class="meta-dot">·</span>

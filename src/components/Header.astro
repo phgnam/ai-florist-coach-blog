@@ -56,7 +56,7 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
     </div>
   </div>
 
-  <div id="reading-countdown" class="reading-countdown" aria-live="polite" aria-atomic="true"></div>
+  <div id="reading-countdown" class="reading-countdown" data-lang={lang} aria-live="polite" aria-atomic="true"></div>
 
   <div id="mobile-menu" class="mobile-menu hidden md:hidden px-6 pb-4">
     <a href={p('/')} class="mobile-nav-link">{t('nav.home')}</a>
@@ -110,16 +110,29 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
 
   const postRoot = document.querySelector('.post-content-wrap');
   if (postRoot && countdown) {
+    const isVi = countdown.getAttribute('data-lang') === 'vi';
+    const labelLeft  = isVi ? 'Còn lại để đọc:' : 'Reading time left:';
+    const labelMin   = isVi ? 'phút' : 'min';
+    const labelEnd   = isVi ? 'Bạn đã đọc xong!' : "You're at the end";
+
+    const article = document.querySelector('.prose');
+    if (!article) return;
+    const bodyText = article.textContent || '';
+    const words = bodyText.trim().split(/\s+/).filter(Boolean).length;
+    const totalMinutes = Math.max(1, Math.ceil(words / 200));
+
     const updateCountdown = () => {
-      const article = document.querySelector('.prose');
-      if (!article) return;
-      const bodyText = article.textContent || '';
-      const words = bodyText.trim().split(/\s+/).filter(Boolean).length;
-      const totalMinutes = Math.max(1, Math.ceil(words / 200));
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       const progress = docH > 0 ? Math.min(1, window.scrollY / docH) : 0;
       const remaining = Math.max(0, Math.ceil(totalMinutes * (1 - progress)));
-      countdown.innerHTML = remaining > 0 ? `Reading time left: <strong>${remaining} min</strong>` : `You\'re at the end`;
+      // Only show after scrolling past the hero (roughly 300px)
+      if (window.scrollY < 300) {
+        countdown.classList.remove('visible');
+        return;
+      }
+      countdown.innerHTML = remaining > 0
+        ? `${labelLeft} <strong>${remaining} ${labelMin}</strong>`
+        : labelEnd;
       countdown.classList.add('visible');
     };
 

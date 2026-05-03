@@ -126,4 +126,34 @@ const {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
+
+  // Scroll-reveal for post cards
+  (function () {
+    const cards = Array.from(document.querySelectorAll('.post-card')) as HTMLElement[];
+    if (!('IntersectionObserver' in window) || !cards.length) return;
+
+    cards.forEach((c) => {
+      c.style.opacity = '0';
+      c.style.transform = 'translateY(22px)';
+      c.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+    });
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target as HTMLElement;
+          el.style.opacity = '1';
+          el.style.transform = '';
+          setTimeout(() => {
+            el.style.transition = '';
+          }, 650);
+          obs.unobserve(el);
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+    );
+
+    cards.forEach((c) => obs.observe(c));
+  })();
 </script>
