@@ -14,6 +14,8 @@ const t = useTranslations(lang);
 const p = (path: string) => localePath(lang, path);
 const alternateLang = lang === 'vi' ? 'en' : 'vi';
 const alternateUrl = alternatePath(Astro.url.pathname, lang);
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (path: string) => pathname === (path.replace(/\/+$/, '') || '/');
 ---
 <header
   id="site-header"
@@ -30,10 +32,10 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
 
     <!-- Desktop Nav -->
     <nav class="hidden md:flex items-center gap-5 ml-auto">
-      <a href={p('/')} class="nav-link">{t('nav.home')}</a>
-      <a href={p('/posts')} class="nav-link">{t('nav.posts')}</a>
-      <a href={p('/tags')} class="nav-link">{t('nav.tags')}</a>
-      <a href={p('/about')} class="nav-link">{t('nav.about')}</a>
+      <a href={p('/')} class:list={['nav-link', isActive(p('/')) && 'nav-link--active']}>{t('nav.home')}</a>
+      <a href={p('/posts')} class:list={['nav-link', pathname.startsWith(p('/posts')) && 'nav-link--active']}>{t('nav.posts')}</a>
+      <a href={p('/tags')} class:list={['nav-link', pathname.startsWith(p('/tags')) && 'nav-link--active']}>{t('nav.tags')}</a>
+      <a href={p('/about')} class:list={['nav-link', pathname.startsWith(p('/about')) && 'nav-link--active']}>{t('nav.about')}</a>
 
       <span class="nav-sep" aria-hidden="true"></span>
 
@@ -72,10 +74,10 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="mobile-menu hidden md:hidden px-5 pb-4">
-    <a href={p('/')} class="mobile-nav-link">{t('nav.home')}</a>
-    <a href={p('/posts')} class="mobile-nav-link">{t('nav.posts')}</a>
-    <a href={p('/tags')} class="mobile-nav-link">{t('nav.tags')}</a>
-    <a href={p('/about')} class="mobile-nav-link">{t('nav.about')}</a>
+    <a href={p('/')} class:list={['mobile-nav-link', isActive(p('/')) && 'mobile-nav-link--active']}>{t('nav.home')}</a>
+    <a href={p('/posts')} class:list={['mobile-nav-link', pathname.startsWith(p('/posts')) && 'mobile-nav-link--active']}>{t('nav.posts')}</a>
+    <a href={p('/tags')} class:list={['mobile-nav-link', pathname.startsWith(p('/tags')) && 'mobile-nav-link--active']}>{t('nav.tags')}</a>
+    <a href={p('/about')} class:list={['mobile-nav-link', pathname.startsWith(p('/about')) && 'mobile-nav-link--active']}>{t('nav.about')}</a>
   </div>
 </header>
 
@@ -130,6 +132,12 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
     color: var(--mauve);
   }
   .nav-link:hover::after {
+    right: 0;
+  }
+  .nav-link--active {
+    color: var(--mauve);
+  }
+  .nav-link--active::after {
     right: 0;
   }
 
@@ -195,6 +203,9 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
   }
   .mobile-nav-link:last-child { border-bottom: none; }
   .mobile-nav-link:hover { color: var(--blush-dark); }
+  .mobile-nav-link--active {
+    color: var(--blush-dark);
+  }
 
   /* ── Reading countdown ── */
   .reading-countdown {
@@ -257,27 +268,28 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
     const labelEnd  = isVi ? 'Bạn đã đọc xong!' : "You're at the end";
 
     const article = document.querySelector('.prose');
-    if (!article) return;
-    const words = (article.textContent || '').trim().split(/\s+/).filter(Boolean).length;
-    const totalMinutes = Math.max(1, Math.ceil(words / 200));
+    if (article) {
+      const words = (article.textContent || '').trim().split(/\s+/).filter(Boolean).length;
+      const totalMinutes = Math.max(1, Math.ceil(words / 200));
 
-    const updateCountdown = () => {
-      if (window.scrollY < 300) {
-        countdown.classList.remove('visible');
-        return;
-      }
-      const docH = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docH > 0 ? Math.min(1, window.scrollY / docH) : 0;
-      const remaining = Math.max(0, Math.ceil(totalMinutes * (1 - progress)));
-      countdown.innerHTML = remaining > 0
-        ? `${labelLeft} <strong>${remaining} ${labelMin}</strong>`
-        : labelEnd;
-      countdown.classList.add('visible');
-    };
+      const updateCountdown = () => {
+        if (window.scrollY < 300) {
+          countdown.classList.remove('visible');
+          return;
+        }
+        const docH = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docH > 0 ? Math.min(1, window.scrollY / docH) : 0;
+        const remaining = Math.max(0, Math.ceil(totalMinutes * (1 - progress)));
+        countdown.innerHTML = remaining > 0
+          ? `${labelLeft} <strong>${remaining} ${labelMin}</strong>`
+          : labelEnd;
+        countdown.classList.add('visible');
+      };
 
-    updateCountdown();
-    window.addEventListener('scroll', updateCountdown, { passive: true });
-    window.addEventListener('resize', updateCountdown, { passive: true });
+      updateCountdown();
+      window.addEventListener('scroll', updateCountdown, { passive: true });
+      window.addEventListener('resize', updateCountdown, { passive: true });
+    }
   } else if (countdown) {
     countdown.remove();
   }
