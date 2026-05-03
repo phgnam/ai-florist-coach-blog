@@ -41,6 +41,14 @@ const allTags = [...tagCounts.entries()]
   .slice(0, 12)
   .map(([tag]) => tag);
 
+const trendingPosts = allPosts.slice(0, 3);
+const trendingPalettes = [
+  { bg: 'linear-gradient(150deg,#FDF0F2 0%,#F5C8D2 55%,#EDA8B8 100%)', accent: '#C47A8A' },
+  { bg: 'linear-gradient(150deg,#F5E6EA 0%,#EDA8B8 55%,#C47A8A 100%)', accent: '#9B5968' },
+  { bg: 'linear-gradient(150deg,#FDF5F0 0%,#F0E2D0 55%,#E8C8A0 100%)', accent: '#C8956A' },
+  { bg: 'linear-gradient(150deg,#F5EEF8 0%,#E8D5F0 55%,#C8A4D0 100%)', accent: '#A07AB0' },
+];
+
 const hreflang = [
   { lang: 'en', url: `${siteUrl}/` },
   { lang: 'vi', url: `${siteUrl}/vi/` },
@@ -146,15 +154,55 @@ const breadcrumbs = [
     </section>
   )}
 
-  <!-- ── TRENDING (populated client-side from localStorage views) ── -->
+  <!-- ── TRENDING ── -->
+  {trendingPosts.length >= 3 && (
   <section class="section-trending max-w-7xl mx-auto px-6 lg:px-10" id="trending-section">
     <div class="section-label">
       <span class="label-line"></span>
       <span class="label-text" id="trending-label">{t('section.trending')}</span>
       <span class="label-line"></span>
     </div>
-    <div id="trending-grid" class="posts-grid"></div>
+    <div id="trending-grid">
+      {trendingPosts.map((post) => {
+        const rawImg = firstPreviewImage(post);
+        const previewImage: string | null = typeof rawImg === 'string' ? rawImg : (rawImg as any)?.src ?? null;
+        const pi = Math.abs(post.data.title.charCodeAt(0) + (post.data.title.charCodeAt(1) || 0)) % 4;
+        const pal = trendingPalettes[pi];
+        const hasImage = !!previewImage;
+        return (
+          <a href={`/posts/${post.id}`} class="trending-card">
+            <div class="trending-img-wrap" style={`background:${pal.bg};position:relative`}>
+              {hasImage && (
+                <img class="trending-img" src={previewImage} alt={post.data.heroAlt ?? post.data.title} loading="lazy"
+                  onerror="this.style.display='none';var ph=this.parentElement.querySelector('.trending-placeholder');if(ph)ph.style.display='flex'" />
+              )}
+              <div class="trending-placeholder" style={`position:absolute;inset:0;display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center`}>
+                <svg width="56" height="56" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <ellipse cx="80" cy="80" rx="30" ry="44" fill={pal.accent} fill-opacity="0.13" transform="rotate(0 80 80)"/>
+                  <ellipse cx="80" cy="80" rx="30" ry="44" fill={pal.accent} fill-opacity="0.11" transform="rotate(45 80 80)"/>
+                  <ellipse cx="80" cy="80" rx="30" ry="44" fill={pal.accent} fill-opacity="0.11" transform="rotate(90 80 80)"/>
+                  <ellipse cx="80" cy="80" rx="30" ry="44" fill={pal.accent} fill-opacity="0.11" transform="rotate(135 80 80)"/>
+                  <circle cx="80" cy="80" r="12" fill={pal.accent} fill-opacity="0.28"/>
+                  <circle cx="80" cy="80" r="5" fill={pal.accent} fill-opacity="0.55"/>
+                  <circle cx="80" cy="44" r="4" fill={pal.accent} fill-opacity="0.18"/>
+                  <circle cx="80" cy="116" r="4" fill={pal.accent} fill-opacity="0.18"/>
+                  <circle cx="44" cy="80" r="4" fill={pal.accent} fill-opacity="0.18"/>
+                  <circle cx="116" cy="80" r="4" fill={pal.accent} fill-opacity="0.18"/>
+                </svg>
+              </div>
+            </div>
+            <div class="trending-body">
+              <span class="trending-tag">{post.data.tags[0] || ''}</span>
+              <h3 class="trending-title">{post.data.title}</h3>
+              <p class="trending-desc">{post.data.description}</p>
+              <span class="trending-cta">Read more →</span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
   </section>
+  )}
 
   <!-- ── TAG CLOUD ── -->
   {allTags.length > 0 && (
@@ -223,9 +271,8 @@ const breadcrumbs = [
       .sort((a, b) => (views[b.slug] || 0) - (views[a.slug] || 0))
       .slice(0, 3);
     if (sorted.length >= 2) {
-      const section = document.getElementById('trending-section');
       const grid = document.getElementById('trending-grid');
-      if (section && grid) {
+      if (grid) {
         grid.innerHTML = sorted.map(p => {
           const palettes = [
             { bg: 'linear-gradient(150deg,#FDF0F2 0%,#F5C8D2 55%,#EDA8B8 100%)', accent: '#C47A8A' },
@@ -267,6 +314,7 @@ const breadcrumbs = [
     }
   } catch (_) {}
 </script>
+
 
 <style>
   .hero {
