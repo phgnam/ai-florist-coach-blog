@@ -12,6 +12,61 @@ const tagCounts = posts.flatMap((p) => p.data.tags).reduce((acc, tag) => {
   return acc;
 }, {} as Record<string, number>);
 const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+
+const tagEmoji: Record<string, string> = {
+  guide: '📖',
+  culture: '🌍',
+  symbolism: '💫',
+  gardening: '🌱',
+  history: '📜',
+  'how-to': '✂️',
+  care: '🌿',
+  art: '🎨',
+  wedding: '💐',
+  'edible flowers': '🍃',
+  edible: '🍃',
+  arrangement: '🌺',
+  photography: '📷',
+  wellness: '💆',
+  'feng shui': '☯️',
+  bees: '🐝',
+  cooking: '🍽️',
+  food: '🍽️',
+  culinary: '🥗',
+  ikebana: '🎋',
+  language: '📝',
+  lily: '🌷',
+  orchid: '🌸',
+  rose: '🌹',
+  roses: '🌹',
+  peony: '🌸',
+  peonies: '🌸',
+  flower: '🌼',
+  flowers: '🌼',
+  tradition: '🏛️',
+  seasonal: '🍂',
+  tips: '💡',
+  design: '🎭',
+  interior: '🏡',
+  'feng-shui': '☯️',
+  drying: '🌾',
+  dried: '🌾',
+  herbs: '🌿',
+  bridal: '💍',
+  bouquet: '💐',
+  nature: '🍀',
+  color: '🎨',
+  colour: '🎨',
+};
+
+function getEmoji(tag: string): string {
+  const lower = tag.toLowerCase();
+  if (tagEmoji[lower]) return tagEmoji[lower];
+  for (const [key, emoji] of Object.entries(tagEmoji)) {
+    if (lower.includes(key) || key.includes(lower)) return emoji;
+  }
+  return '🌸';
+}
 ---
 <BaseLayout lang={lang} title={t('tags.title')} description={t('tags.sub')} padTop={false}>
 
@@ -37,7 +92,7 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
     <div class="tags-grid">
       {tags.map(([tag, count]) => (
         <a href={`/tags/${tag}`} class="tag-block">
-          <span class="tag-icon">🌸</span>
+          <span class="tag-icon">{getEmoji(tag)}</span>
           <span class="tag-name">#{tag}</span>
           <span class="tag-count">{count} {t('tags.count')}</span>
         </a>
@@ -54,11 +109,46 @@ const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
   .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
   .page-title { font-family:'Cormorant Garamond',serif; font-size:clamp(2.8rem,7vw,5rem); font-weight:300; color:var(--mauve); line-height:1.08; margin:0 0 1.2rem; }
   .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; line-height:1.7; }
-  .tags-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; }
-  .tag-block { display:flex; flex-direction:column; align-items:center; gap:0.5rem; padding:2rem 1rem; background:white; border-radius:18px; text-decoration:none; border:1px solid var(--ivory-dark); transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow:0 2px 10px rgba(196,122,138,0.06); text-align:center; }
-  .tag-block:hover { background:var(--blush-dark); border-color:var(--blush-dark); transform:translateY(-4px); box-shadow:0 12px 32px rgba(196,122,138,0.22); }
-  .tag-block:hover .tag-name, .tag-block:hover .tag-count { color:white; }
-  .tag-icon { font-size:1.5rem; }
-  .tag-name { font-family:'Jost',sans-serif; font-weight:500; color:var(--mauve); font-size:0.88rem; transition:color 0.25s; }
-  .tag-count { font-family:'Jost',sans-serif; font-size:0.72rem; color:var(--taupe); letter-spacing:0.03em; transition:color 0.25s; }
+
+  .tags-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 0.85rem;
+  }
+  .tag-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 1.75rem 1rem 1.5rem;
+    background: white;
+    border-radius: 20px;
+    text-decoration: none;
+    border: 1px solid var(--ivory-dark);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 10px rgba(196,122,138,0.06);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .tag-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(232,164,176,0.08) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .tag-block:hover {
+    background: var(--blush-dark);
+    border-color: var(--blush-dark);
+    transform: translateY(-5px);
+    box-shadow: 0 14px 34px rgba(196,122,138,0.22);
+  }
+  .tag-block:hover::before { opacity: 0; }
+  .tag-block:hover .tag-name,
+  .tag-block:hover .tag-count { color: white; }
+  .tag-icon { font-size: 1.6rem; line-height: 1; }
+  .tag-name { font-family:'Jost',sans-serif; font-weight:500; color:var(--mauve); font-size:0.85rem; transition:color 0.25s; letter-spacing:0.02em; }
+  .tag-count { font-family:'Jost',sans-serif; font-size:0.68rem; color:var(--taupe); letter-spacing:0.06em; transition:color 0.25s; font-weight:400; }
 </style>

@@ -99,7 +99,10 @@ npm run preview    # Serve dist/ locally
 - **Footer**: Deep mauve (`#4A2D35`) background, 4-column grid including Florist Resources links
 - **Page headers**: Blush gradient on all inner pages (posts, tags, about)
 - **Post hero**: Blush gradient with mauve text overlay
-- **Cards**: White cards with rose-pink hover shadow, mauve titles, blush-dark CTA links
+- **Cards**: Frosted-glass white cards (backdrop-filter blur, rgba bg), subtle pink border, lift + deepen on hover, mauve titles, blush-dark CTA links
+- **Trending section**: Flat editorial 3-column layout (no card boxes), horizontal rule borders top/bottom, vertical dividers between columns, matches reference magazine layout; dynamically rendered via JS — all `.trending-*` CSS must use `:global()` to bypass Astro scoping
+- **Related posts**: Flat editorial 3-column layout (same style as trending) using `<a>` elements directly instead of PostCard components, with vertical right-border dividers
+- **Tags pages**: Unique emoji per tag topic (📖 guide, 🌍 culture, 🌱 gardening, 📜 history, etc.) on both EN (/tags) and VI (/vi/tags)
 - **Buttons**: Pill-shaped (`border-radius: 999px`), blush-dark primary, ghost with blush border
 - **Animations**: `fadeUp`, `floatPetal`, `petalDrift` for decorative elements
 

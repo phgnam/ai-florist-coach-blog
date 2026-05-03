@@ -1,6 +1,6 @@
 ---
-import PostCard from './PostCard.astro';
 import { useTranslations } from '../i18n/utils';
+import FormattedDate from './FormattedDate.astro';
 
 interface Post {
   id: string;
@@ -28,10 +28,6 @@ interface Props {
 const { currentId, currentTags, allPosts, lang, postBasePath } = Astro.props;
 const t = useTranslations(lang);
 
-const firstPreviewImage = (post: Post): string | undefined => {
-  return post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1] ?? undefined;
-};
-
 const related = allPosts
   .filter((p) => p.id !== currentId)
   .map((p) => ({
@@ -53,17 +49,13 @@ if (related.length === 0) return;
     <span class="label-line"></span>
   </div>
   <div class="related-grid">
-    {related.map((post) => (
-      <PostCard
-        title={post.data.title}
-        description={post.data.description}
-        pubDate={post.data.pubDate}
-        slug={`${postBasePath}/${post.id}`}
-        tags={post.data.tags}
-        heroImage={post.data.heroImage}
-        previewImageUrl={firstPreviewImage(post)}
-        heroAlt={post.data.heroAlt}
-      />
+    {related.map((post, i) => (
+      <a href={`${postBasePath}/${post.id}`} class="related-card">
+        <span class="related-tag">{post.data.tags[0] ?? ''}</span>
+        <h3 class="related-title">{post.data.title}</h3>
+        <p class="related-desc">{post.data.description}</p>
+        <span class="related-cta">{t('posts.readMore')} →</span>
+      </a>
     ))}
   </div>
 </section>
@@ -71,13 +63,13 @@ if (related.length === 0) return;
 <style>
   .related-posts {
     margin-top: 5rem;
-    padding-top: 4rem;
+    padding-top: 2.5rem;
     border-top: 1px solid var(--ivory-dark);
   }
   .related-label {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
     margin-bottom: 2.5rem;
   }
   .label-line {
@@ -88,15 +80,91 @@ if (related.length === 0) return;
   .label-text {
     font-family: 'Jost', sans-serif;
     font-size: 0.68rem;
-    font-weight: 500;
-    letter-spacing: 0.22em;
+    font-weight: 600;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--taupe);
     white-space: nowrap;
   }
+
   .related-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--ivory-dark);
+    border-bottom: 1px solid var(--ivory-dark);
+    padding: 2.25rem 0;
+  }
+
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0 2rem;
+    border-right: 1px solid var(--ivory-dark);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  .related-card:last-child {
+    border-right: none;
+  }
+  .related-card:first-child {
+    padding-left: 0;
+  }
+  .related-card:hover {
+    opacity: 0.72;
+  }
+
+  .related-tag {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--taupe);
+  }
+  .related-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--mauve);
+    line-height: 1.25;
+    margin: 0;
+  }
+  .related-desc {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.84rem;
+    color: var(--taupe);
+    font-weight: 300;
+    line-height: 1.65;
+    margin: 0;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .related-cta {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--blush-dark);
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+  }
+
+  @media (max-width: 768px) {
+    .related-grid {
+      grid-template-columns: 1fr;
+      padding: 0;
+    }
+    .related-card {
+      padding: 1.5rem 0;
+      border-right: none;
+      border-bottom: 1px solid var(--ivory-dark);
+    }
+    .related-card:last-child {
+      border-bottom: none;
+    }
   }
 </style>
