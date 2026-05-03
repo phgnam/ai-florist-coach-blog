@@ -57,16 +57,11 @@ AI engines read schema to decide who to cite. No schema = no citation.
 
 ### Visual requirements (MANDATORY for every article)
 
-- **Every article MUST ship with at least one impressive, on-topic image.** Text-only articles are rejected.
-- The image MUST be set as `heroImage` in the MDX frontmatter (not just inline `<figure>`) so it powers:
-  - the in-page hero,
-  - the Open Graph (`og:image`) share card,
-  - the Twitter card,
-  - the `image` field of the `BlogPosting` JSON-LD.
-- `heroAlt` is required alongside `heroImage` — descriptive alt text, not a filename.
-- "Impressive" means: editorial-quality, well-lit, on-topic, free-to-use or properly licensed, **and** distinct from the hero of every other article in `src/content/posts/`. No stock-photo clichés, no AI-slop close-ups, no recycled bouquets.
-- Inline body images are encouraged but do NOT satisfy this rule on their own.
-- Performance: hero images must be ≤ 250 KB delivered (WebP/AVIF), sized for a 1600px-wide hero, and importable through Astro's `image()` schema so the build pipeline can optimise them.
+- **Every article MUST contain at least one impressive, on-topic image somewhere in its body.** Text-only articles are rejected.
+- An inline `<figure>` (or markdown image) with descriptive `alt` text satisfies this rule. The image does not have to be the hero.
+- `heroImage` in the MDX frontmatter is **recommended but optional**. Setting it powers the in-page hero, Open Graph (`og:image`) share card, Twitter card, and `BlogPosting.image` field, so prefer it whenever a strong cover image is available. When you do set `heroImage`, you must also set a descriptive `heroAlt`.
+- "Impressive" means: editorial-quality, well-lit, on-topic, free-to-use or properly licensed. Avoid stock-photo clichés, AI-slop close-ups, and images already used as another article's hero.
+- Performance: any image you commit through Astro's `image()` schema must be ≤ 250 KB delivered (WebP/AVIF) and sized for a 1600px-wide render. Inline `<figure>` images sourced from a CDN (e.g. Unsplash with `?w=800&q=75&auto=format`) should hit the same effective ceiling at the rendered width.
 
 ## 5. Weekly Growth Loop (Mandatory Cadence)
 
@@ -90,8 +85,8 @@ This loop is the highest-ROI activity. Other channels (Product Hunt, directories
 ---
 title: "<exact long-tail question>"
 description: "<150-160 chars, includes target query>"
-heroImage: "../../assets/<descriptive-name>.webp"   # MANDATORY — see §4 Visual requirements
-heroAlt: "<descriptive alt text, not a filename>"   # MANDATORY when heroImage is set
+heroImage: "../../assets/<descriptive-name>.webp"   # OPTIONAL but recommended — powers OG / Twitter / BlogPosting.image
+heroAlt: "<descriptive alt text, not a filename>"   # REQUIRED when heroImage is set
 schema: Article + FAQPage
 ---
 
@@ -100,6 +95,12 @@ schema: Article + FAQPage
 
 ## <Question phrased as H2>
 ...
+
+<figure>
+  <img src="..." alt="<descriptive alt>" loading="lazy" />
+  <figcaption>...</figcaption>
+</figure>
+<!-- At least one body image somewhere in the article is MANDATORY (§4 Visual requirements) -->
 
 ## <Question phrased as H2>
 ...
@@ -116,7 +117,7 @@ schema: Article + FAQPage
 - ❌ Skip schema "to add later".
 - ❌ Pick topics by intuition instead of GSC data.
 - ❌ Rely on Product Hunt / directories as primary growth channels.
-- ❌ Publish a text-only article, or one that reuses another article's hero. Every article needs its own impressive `heroImage` (see §4).
+- ❌ Publish a text-only article. Every article needs at least one impressive, on-topic image in its body (see §4).
 
 ## 8. Success Metrics
 
