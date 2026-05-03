@@ -198,7 +198,7 @@ const allTags = [...tagCounts.entries()]
         section.style.display = 'block';
         grid.innerHTML = sorted.map(p => `
           <a href="${postBase}/${p.slug}" class="trending-card">
-            ${p.previewImage ? `<div class="trending-img-wrap"><img class="trending-img" src="${p.previewImage}" alt="${p.title.replace(/"/g,'&quot;')}" loading="lazy"></div>` : ''}
+            ${p.previewImage ? `<div class="trending-img-wrap"><img class="trending-img" src="${p.previewImage}" alt="${p.title.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.display='none';this.parentElement.style.display='none'"></div>` : ''}
             <div class="trending-body">
               <span class="trending-tag">${p.tags[0] || ''}</span>
               <h3 class="trending-title">${p.title}</h3>
