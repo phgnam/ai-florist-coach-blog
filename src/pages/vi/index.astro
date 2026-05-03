@@ -15,13 +15,18 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data
 
 const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
-const allPostsData = allPosts.map(p => ({
-  slug: p.id,
-  title: p.data.title,
-  description: p.data.description,
-  tags: p.data.tags,
-  pubDate: p.data.pubDate.toISOString(),
-}));
+const allPostsData = allPosts.map(p => {
+  const rawImg = firstPreviewImage(p);
+  const previewImage: string | null = typeof rawImg === 'string' ? rawImg : (rawImg as any)?.src ?? null;
+  return {
+    slug: p.id,
+    title: p.data.title,
+    description: p.data.description,
+    tags: p.data.tags,
+    pubDate: p.data.pubDate.toISOString(),
+    previewImage,
+  };
+});
 const tagCounts = new Map<string, number>();
 for (const post of allPosts) {
   for (const tag of post.data.tags) {
@@ -193,10 +198,13 @@ const allTags = [...tagCounts.entries()]
         section.style.display = 'block';
         grid.innerHTML = sorted.map(p => `
           <a href="${postBase}/${p.slug}" class="trending-card">
-            <span class="trending-tag">${p.tags[0] || ''}</span>
-            <h3 class="trending-title">${p.title}</h3>
-            <p class="trending-desc">${p.description}</p>
-            <span class="trending-cta">Đọc tiếp →</span>
+            ${p.previewImage ? `<div class="trending-img-wrap"><img class="trending-img" src="${p.previewImage}" alt="${p.title.replace(/"/g,'&quot;')}" loading="lazy"></div>` : ''}
+            <div class="trending-body">
+              <span class="trending-tag">${p.tags[0] || ''}</span>
+              <h3 class="trending-title">${p.title}</h3>
+              <p class="trending-desc">${p.description}</p>
+              <span class="trending-cta">Đọc tiếp →</span>
+            </div>
           </a>
         `).join('');
       }
@@ -258,11 +266,15 @@ const allTags = [...tagCounts.entries()]
   .tag-cloud-item:hover { background:rgba(255,255,255,0.25); color:white; border-color:rgba(255,255,255,0.4); transform:translateY(-2px); }
   .tag-hash { color:rgba(255,255,255,0.5); margin-right:2px; }
 
-  #trending-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-top:1px solid var(--ivory-dark); border-bottom:1px solid var(--ivory-dark); padding:2.25rem 0; }
-  :global(.trending-card) { display:flex; flex-direction:column; gap:0.6rem; padding:0 2rem; border-right:1px solid var(--ivory-dark); text-decoration:none; transition:opacity 0.2s ease; }
-  :global(.trending-card:first-child) { padding-left:0; }
+  #trending-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; border-top:1px solid var(--ivory-dark); border-bottom:1px solid var(--ivory-dark); padding:2.25rem 0; }
+  :global(.trending-card) { display:flex; flex-direction:column; gap:0; border-right:1px solid var(--ivory-dark); text-decoration:none; transition:transform 0.28s ease,opacity 0.28s ease; overflow:hidden; }
   :global(.trending-card:last-child) { border-right:none; }
-  :global(.trending-card:hover) { opacity:0.7; }
+  :global(.trending-card:hover) { opacity:0.88; transform:translateY(-3px); }
+  :global(.trending-card:hover .trending-img) { transform:scale(1.04); }
+  :global(.trending-img-wrap) { width:100%; aspect-ratio:16/9; overflow:hidden; border-radius:10px; margin-bottom:1rem; background:var(--petal-mist); }
+  :global(.trending-img) { width:100%; height:100%; object-fit:cover; transition:transform 0.45s ease; display:block; }
+  :global(.trending-body) { display:flex; flex-direction:column; gap:0.6rem; padding:0 1.4rem 0 0; flex:1; }
+  :global(.trending-card:last-child .trending-body) { padding-right:0; }
   :global(.trending-tag) { font-family:'Jost',sans-serif; font-size:0.62rem; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--taupe); }
   :global(.trending-title) { font-family:'Cormorant Garamond',serif; font-size:1.25rem; font-weight:600; color:var(--mauve); margin:0; line-height:1.25; }
   :global(.trending-desc) { font-family:'Jost',sans-serif; font-size:0.84rem; color:var(--taupe); font-weight:300; line-height:1.65; margin:0; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; flex:1; }

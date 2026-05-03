@@ -28,6 +28,14 @@ interface Props {
 const { currentId, currentTags, allPosts, lang, postBasePath } = Astro.props;
 const t = useTranslations(lang);
 
+const extractPreviewImage = (post: Post): string | null => {
+  const bodyImg = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1] ?? null;
+  if (bodyImg) return bodyImg;
+  const hero = post.data.heroImage as any;
+  if (!hero) return null;
+  return typeof hero === 'string' ? hero : hero?.src ?? null;
+};
+
 const related = allPosts
   .filter((p) => p.id !== currentId)
   .map((p) => ({
@@ -49,14 +57,24 @@ if (related.length === 0) return;
     <span class="label-line"></span>
   </div>
   <div class="related-grid">
-    {related.map((post, i) => (
-      <a href={`${postBasePath}/${post.id}`} class="related-card">
-        <span class="related-tag">{post.data.tags[0] ?? ''}</span>
-        <h3 class="related-title">{post.data.title}</h3>
-        <p class="related-desc">{post.data.description}</p>
-        <span class="related-cta">{t('posts.readMore')} →</span>
-      </a>
-    ))}
+    {related.map((post) => {
+      const img = extractPreviewImage(post);
+      return (
+        <a href={`${postBasePath}/${post.id}`} class="related-card">
+          {img && (
+            <div class="related-img-wrap">
+              <img class="related-img" src={img} alt={post.data.title} loading="lazy" />
+            </div>
+          )}
+          <div class="related-body">
+            <span class="related-tag">{post.data.tags[0] ?? ''}</span>
+            <h3 class="related-title">{post.data.title}</h3>
+            <p class="related-desc">{post.data.description}</p>
+            <span class="related-cta">{t('posts.readMore')} →</span>
+          </div>
+        </a>
+      );
+    })}
   </div>
 </section>
 
@@ -90,6 +108,7 @@ if (related.length === 0) return;
   .related-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
     border-top: 1px solid rgba(232, 164, 176, 0.22);
     border-bottom: 1px solid rgba(232, 164, 176, 0.22);
     padding: 2rem 0;
@@ -98,22 +117,40 @@ if (related.length === 0) return;
   .related-card {
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
-    padding: 0 1.8rem;
+    gap: 0;
     border-right: 1px solid rgba(232, 164, 176, 0.22);
     text-decoration: none;
-    transition: transform 0.25s ease, opacity 0.25s ease;
+    transition: transform 0.28s ease, opacity 0.28s ease;
+    overflow: hidden;
   }
-  .related-card:last-child {
-    border-right: none;
+  .related-card:last-child { border-right: none; }
+  .related-card:hover { opacity: 0.88; transform: translateY(-3px); }
+  .related-card:hover .related-img { transform: scale(1.04); }
+
+  .related-img-wrap {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    background: var(--petal-mist);
   }
-  .related-card:first-child {
-    padding-left: 0;
+  .related-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.45s ease;
+    display: block;
   }
-  .related-card:hover {
-    opacity: 0.82;
-    transform: translateY(-2px);
+
+  .related-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0 1.4rem 0 0;
+    flex: 1;
   }
+  .related-card:last-child .related-body { padding-right: 0; }
 
   .related-tag {
     font-family: 'Jost', sans-serif;
@@ -128,7 +165,7 @@ if (related.length === 0) return;
     font-size: 1.18rem;
     font-weight: 600;
     color: var(--mauve);
-    line-height: 1.18;
+    line-height: 1.2;
     margin: 0;
   }
   .related-desc {
@@ -140,7 +177,7 @@ if (related.length === 0) return;
     margin: 0;
     flex: 1;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -157,15 +194,16 @@ if (related.length === 0) return;
   @media (max-width: 768px) {
     .related-grid {
       grid-template-columns: 1fr;
+      gap: 0;
       padding: 0;
     }
     .related-card {
-      padding: 1.5rem 0;
       border-right: none;
       border-bottom: 1px solid var(--ivory-dark);
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
     }
-    .related-card:last-child {
-      border-bottom: none;
-    }
+    .related-card:last-child { border-bottom: none; margin-bottom: 0; }
+    .related-body { padding-right: 0; }
   }
 </style>
