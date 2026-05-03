@@ -27,7 +27,6 @@ const allPostsData = allPosts.map(p => {
     previewImage,
   };
 });
-const viewCountKey = (slug: string) => `vh_views_${slug}`;
 const tagCounts = new Map<string, number>();
 for (const post of allPosts) {
   for (const tag of post.data.tags) {
@@ -235,18 +234,6 @@ const allTags = [...tagCounts.entries()]
           </a>`;
         }).join('');
       }
-    }
-  } catch (_) {}
-</script>
-
-<script define:vars={{ allPostsData }}>
-  try {
-    const path = window.location.pathname.replace(/\/$/, '');
-    const post = allPostsData.find((p) => path === `/vi/posts/${p.slug}` || path === `/vi/posts/${p.slug}/`);
-    if (post) {
-      const key = `vh_views_${post.slug}`;
-      const current = parseInt(localStorage.getItem(key) || '0', 10);
-      localStorage.setItem(key, String(current + 1));
     }
   } catch (_) {}
 </script>
