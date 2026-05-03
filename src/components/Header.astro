@@ -39,6 +39,7 @@ const isActive = (path: string) => {
       <a href={p('/')} class:list={['nav-link', isActive(p('/')) && 'nav-link--active']}>{t('nav.home')}</a>
       <a href={p('/posts')} class:list={['nav-link', pathname.startsWith(p('/posts')) && 'nav-link--active']}>{t('nav.posts')}</a>
       <a href={p('/tags')} class:list={['nav-link', pathname.startsWith(p('/tags')) && 'nav-link--active']}>{t('nav.tags')}</a>
+      <a href={p('/tools')} class:list={['nav-link', pathname.startsWith(p('/tools')) && 'nav-link--active']}>{t('nav.tools')}</a>
       <a href={p('/about')} class:list={['nav-link', pathname.startsWith(p('/about')) && 'nav-link--active']}>{t('nav.about')}</a>
 
       <span class="nav-sep" aria-hidden="true"></span>
@@ -81,6 +82,7 @@ const isActive = (path: string) => {
     <a href={p('/')} class:list={['mobile-nav-link', isActive(p('/')) && 'mobile-nav-link--active']}>{t('nav.home')}</a>
     <a href={p('/posts')} class:list={['mobile-nav-link', pathname.startsWith(p('/posts')) && 'mobile-nav-link--active']}>{t('nav.posts')}</a>
     <a href={p('/tags')} class:list={['mobile-nav-link', pathname.startsWith(p('/tags')) && 'mobile-nav-link--active']}>{t('nav.tags')}</a>
+    <a href={p('/tools')} class:list={['mobile-nav-link', pathname.startsWith(p('/tools')) && 'mobile-nav-link--active']}>{t('nav.tools')}</a>
     <a href={p('/about')} class:list={['mobile-nav-link', pathname.startsWith(p('/about')) && 'mobile-nav-link--active']}>{t('nav.about')}</a>
   </div>
 </header>
