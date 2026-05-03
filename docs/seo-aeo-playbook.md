@@ -55,6 +55,19 @@ AI engines read schema to decide who to cite. No schema = no citation.
 - Images: never serve a 100KB+ image rendered at <200px — resize and use WebP/AVIF
 - Audit before merging any UI/perf-sensitive change
 
+### Visual requirements (MANDATORY for every article)
+
+- **Every article MUST ship with at least one impressive, on-topic image.** Text-only articles are rejected.
+- The image MUST be set as `heroImage` in the MDX frontmatter (not just inline `<figure>`) so it powers:
+  - the in-page hero,
+  - the Open Graph (`og:image`) share card,
+  - the Twitter card,
+  - the `image` field of the `BlogPosting` JSON-LD.
+- `heroAlt` is required alongside `heroImage` — descriptive alt text, not a filename.
+- "Impressive" means: editorial-quality, well-lit, on-topic, free-to-use or properly licensed, **and** distinct from the hero of every other article in `src/content/posts/`. No stock-photo clichés, no AI-slop close-ups, no recycled bouquets.
+- Inline body images are encouraged but do NOT satisfy this rule on their own.
+- Performance: hero images must be ≤ 250 KB delivered (WebP/AVIF), sized for a 1600px-wide hero, and importable through Astro's `image()` schema so the build pipeline can optimise them.
+
 ## 5. Weekly Growth Loop (Mandatory Cadence)
 
 Every Monday (~2–3 hours):
@@ -77,6 +90,8 @@ This loop is the highest-ROI activity. Other channels (Product Hunt, directories
 ---
 title: "<exact long-tail question>"
 description: "<150-160 chars, includes target query>"
+heroImage: "../../assets/<descriptive-name>.webp"   # MANDATORY — see §4 Visual requirements
+heroAlt: "<descriptive alt text, not a filename>"   # MANDATORY when heroImage is set
 schema: Article + FAQPage
 ---
 
@@ -101,6 +116,7 @@ schema: Article + FAQPage
 - ❌ Skip schema "to add later".
 - ❌ Pick topics by intuition instead of GSC data.
 - ❌ Rely on Product Hunt / directories as primary growth channels.
+- ❌ Publish a text-only article, or one that reuses another article's hero. Every article needs its own impressive `heroImage` (see §4).
 
 ## 8. Success Metrics
 
