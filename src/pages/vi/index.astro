@@ -1,4 +1,5 @@
 ---
+import defaultPreviewImage from '@assets/image_1777790654692.png';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PostCard from '../../components/PostCard.astro';
@@ -10,6 +11,8 @@ const firstPreviewImage = (post: any) => {
   return figureImage ?? post.data.heroImage;
 };
 
+const previewFallback = defaultPreviewImage.src;
+
 const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
@@ -17,7 +20,7 @@ const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
 const allPostsData = allPosts.map(p => {
   const rawImg = firstPreviewImage(p);
-  const previewImage: string | null = typeof rawImg === 'string' ? rawImg : (rawImg as any)?.src ?? null;
+  const previewImage: string | null = typeof rawImg === 'string' ? rawImg : (rawImg as any)?.src ?? previewFallback;
   return {
     slug: p.id,
     title: p.data.title,
