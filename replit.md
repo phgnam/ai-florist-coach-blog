@@ -99,12 +99,17 @@ npm run preview    # Serve dist/ locally
 - **Footer**: Deep mauve (`#4A2D35`) background, 4-column grid including Florist Resources links
 - **Page headers**: Blush gradient on all inner pages (posts, tags, about)
 - **Post hero**: Blush gradient with mauve text overlay
-- **Cards**: Frosted-glass white cards (backdrop-filter blur, rgba bg), subtle pink border, lift + deepen on hover, mauve titles, blush-dark CTA links
+- **Cards**: Clean white cards, subtle pink border, spring lift + shadow deepen on hover, mauve titles, blush-dark CTA with animated arrow. Placeholder cards use botanical SVG bloom motif on soft per-palette gradient (4 palettes: blush, rose, gold, violet) — no emoji placeholders. Staggered entrance animation on listing pages.
 - **Trending section**: Flat editorial 3-column layout (no card boxes), horizontal rule borders top/bottom, vertical dividers between columns, matches reference magazine layout; dynamically rendered via JS — all `.trending-*` CSS must use `:global()` to bypass Astro scoping
-- **Related posts**: Flat editorial 3-column layout (same style as trending) using `<a>` elements directly instead of PostCard components, with vertical right-border dividers
+- **Related posts**: Flat editorial 3-column layout (same style as trending) using `<a>` elements directly instead of PostCard components, with vertical right-border dividers, subtle `transform: translateY(-2px)` on hover
 - **Tags pages**: Unique emoji per tag topic (📖 guide, 🌍 culture, 🌱 gardening, 📜 history, etc.) on both EN (/tags) and VI (/vi/tags)
 - **Buttons**: Pill-shaped (`border-radius: 999px`), blush-dark primary, ghost with blush border
-- **Animations**: `fadeUp`, `floatPetal`, `petalDrift` for decorative elements
+- **Animations**: `fadeUp`, `floatPetal`, `petalDrift` for decorative elements; `cardEntrance` for staggered card reveals on listing pages
+- **Prose**: Drop cap on first paragraph (`::first-letter` — Cormorant Garamond, blush-dark). Gradient HR, blockquote with large decorative `"` mark, improved h2/h3 borders, better link underline colors.
+- **Post hero**: Deeper overlay gradient (0.72 opacity), taller (560px), frosted-glass category badge, better shadow on title
+- **AuthorBox**: Gradient background, left bleed accent bar, shadow on avatar
+- **Section labels**: Gradient-fade rule lines (transparent → ivory → transparent) instead of solid
+- **Active nav**: `nav-link--active` class set server-side via `isActive()` on `Astro.url.pathname`; works for nested routes without over-highlighting HOME
 
 ## Multilingual (i18n)
 

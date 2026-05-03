@@ -84,11 +84,21 @@ body::before {
 /* ── Prose for blog posts ── */
 .prose {
   font-family: 'Jost', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.08rem;
   font-weight: 300;
   color: var(--text-mid);
   max-width: 72ch;
-  line-height: 1.85;
+  line-height: 1.88;
+}
+.prose > p:first-of-type::first-letter {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 4.2rem;
+  font-weight: 600;
+  line-height: 0.82;
+  float: left;
+  margin: 0.06em 0.1em 0 0;
+  color: var(--blush-dark);
+  padding-right: 2px;
 }
 .prose h1, .prose h2, .prose h3, .prose h4 {
   font-family: 'Cormorant Garamond', Georgia, serif;
@@ -96,30 +106,70 @@ body::before {
   font-weight: 600;
 }
 .prose h2 {
-  font-size: 1.8rem;
-  margin-top: 2.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--ivory-dark);
+  font-size: 1.85rem;
+  margin-top: 3rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid rgba(232,164,176,0.28);
 }
+.prose h3 {
+  font-size: 1.35rem;
+  margin-top: 2rem;
+  color: var(--mauve-mid);
+}
+.prose p { margin-bottom: 1.4em; }
 .prose strong { color: var(--mauve); font-weight: 600; }
 .prose a {
   color: var(--blush-dark);
   text-decoration: underline;
+  text-decoration-color: rgba(196,122,138,0.38);
   text-underline-offset: 3px;
+  transition: color 0.18s, text-decoration-color 0.18s;
 }
-.prose a:hover { color: var(--gold); }
+.prose a:hover { color: var(--gold); text-decoration-color: var(--gold); }
 .prose blockquote {
-  border-left: 3px solid var(--blush);
-  background: var(--blush-light);
-  padding: 1rem 1.5rem;
-  border-radius: 0 10px 10px 0;
+  border-left: 2px solid var(--blush-dark);
+  background: linear-gradient(100deg, var(--blush-light), rgba(253,240,242,0.6));
+  padding: 1.2rem 1.8rem;
+  border-radius: 0 16px 16px 0;
   font-style: italic;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
+  line-height: 1.55;
   color: var(--mauve);
+  margin: 2rem 0;
+  position: relative;
 }
+.prose blockquote::before {
+  content: '\201C';
+  position: absolute;
+  top: -0.3rem;
+  left: 1rem;
+  font-size: 3rem;
+  color: var(--blush-dark);
+  opacity: 0.25;
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 1;
+}
+.prose ul { padding-left: 1.4rem; }
+.prose ul li { margin-bottom: 0.45em; }
 .prose ul li::marker { color: var(--blush-dark); }
-.prose hr { border-color: var(--ivory-dark); }
+.prose ol li { margin-bottom: 0.45em; }
+.prose ol li::marker { color: var(--blush-dark); font-weight: 600; }
+.prose hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(232,164,176,0.45), transparent);
+  margin: 3rem 0;
+}
+.prose code {
+  font-size: 0.9em;
+  background: rgba(232,164,176,0.12);
+  color: var(--blush-dark);
+  padding: 0.15em 0.45em;
+  border-radius: 5px;
+  font-family: 'Courier New', monospace;
+}
 
 /* ── Reading progress bar ── */
 #reading-progress {

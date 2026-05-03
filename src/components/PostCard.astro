@@ -21,27 +21,42 @@ const lang = Astro.currentLocale === 'vi' ? 'vi' : 'en';
 const t = useTranslations(lang);
 const href = slug.startsWith('/') ? slug : `/posts/${slug}`;
 
-const cardGradients = [
-  'from-[#F5C8D2] to-[#EDA8B8]',
-  'from-[#EDA8B8] to-[#C47A8A]',
-  'from-[#F0E2D0] to-[#E8A4B0]',
-  'from-[#F5E6EA] to-[#C47A8A]',
+const palettes = [
+  { bg: 'linear-gradient(150deg,#FDF0F2 0%,#F5C8D2 55%,#EDA8B8 100%)', accent: '#C47A8A' },
+  { bg: 'linear-gradient(150deg,#F5E6EA 0%,#EDA8B8 55%,#C47A8A 100%)', accent: '#9B5968' },
+  { bg: 'linear-gradient(150deg,#FDF5F0 0%,#F0E2D0 55%,#E8C8A0 100%)', accent: '#C8956A' },
+  { bg: 'linear-gradient(150deg,#F5EEF8 0%,#E8D5F0 55%,#C8A4D0 100%)', accent: '#A07AB0' },
 ];
-const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
+const pi = Math.abs(title.charCodeAt(0) + (title.charCodeAt(1) || 0)) % 4;
+const palette = palettes[pi];
 ---
 
 <article class:list={['post-card', featured && 'post-card--featured']}>
   <a href={href} class="card-image-link" aria-hidden="true" tabindex="-1">
     <div class="card-image-wrap">
       {heroImage ? (
-        <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" onerror="this.style.display='none';this.nextElementSibling&&this.nextElementSibling.classList.add('visible')" />
+        <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" />
       ) : previewImageUrl ? (
-        <img src={previewImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.parentElement.querySelector('.card-placeholder');if(p)p.style.display='flex'" />
+        <img src={previewImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.closest('.card-image-wrap').querySelector('.card-placeholder');if(p)p.style.display='flex'" />
       ) : heroImageUrl ? (
-        <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.parentElement.querySelector('.card-placeholder');if(p)p.style.display='flex'" />
+        <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.closest('.card-image-wrap').querySelector('.card-placeholder');if(p)p.style.display='flex'" />
       ) : null}
-      <div class={`card-placeholder bg-gradient-to-br ${cardGradients[colorIdx]}`} style={(heroImage || previewImageUrl || heroImageUrl) ? 'display:none' : ''}>
-        <span class="placeholder-icon">🌸</span>
+      <div
+        class="card-placeholder"
+        style={`background:${palette.bg};${(heroImage || previewImageUrl || heroImageUrl) ? 'display:none' : ''}`}
+      >
+        <svg class="placeholder-bloom" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <ellipse cx="80" cy="80" rx="30" ry="44" fill={palette.accent} fill-opacity="0.13" transform="rotate(0 80 80)"/>
+          <ellipse cx="80" cy="80" rx="30" ry="44" fill={palette.accent} fill-opacity="0.11" transform="rotate(45 80 80)"/>
+          <ellipse cx="80" cy="80" rx="30" ry="44" fill={palette.accent} fill-opacity="0.11" transform="rotate(90 80 80)"/>
+          <ellipse cx="80" cy="80" rx="30" ry="44" fill={palette.accent} fill-opacity="0.11" transform="rotate(135 80 80)"/>
+          <circle cx="80" cy="80" r="12" fill={palette.accent} fill-opacity="0.28"/>
+          <circle cx="80" cy="80" r="5" fill={palette.accent} fill-opacity="0.55"/>
+          <circle cx="80" cy="44" r="4" fill={palette.accent} fill-opacity="0.18"/>
+          <circle cx="80" cy="116" r="4" fill={palette.accent} fill-opacity="0.18"/>
+          <circle cx="44" cy="80" r="4" fill={palette.accent} fill-opacity="0.18"/>
+          <circle cx="116" cy="80" r="4" fill={palette.accent} fill-opacity="0.18"/>
+        </svg>
       </div>
       <div class="card-overlay"></div>
       {tags.length > 0 && (
@@ -68,7 +83,7 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
     <p class="card-desc">{description}</p>
     <a href={href} class="card-cta">
       {t('posts.readMore')}
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="card-arrow">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="card-arrow">
         <path d="M5 12h14M12 5l7 7-7 7"/>
       </svg>
     </a>
@@ -77,108 +92,128 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
 
 <style>
   .post-card {
-    background: rgba(255, 255, 255, 0.86);
-    border-radius: 22px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 20px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 8px 24px rgba(196,122,138,0.09);
-    border: 1px solid rgba(232,164,176,0.24);
-    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.25s ease, background 0.25s ease;
+    border: 1px solid rgba(232,164,176,0.2);
+    transition: transform 0.38s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.32s ease, border-color 0.24s ease;
     position: relative;
-    backdrop-filter: blur(8px);
   }
   .post-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 18px 42px rgba(196,122,138,0.16);
-    border-color: rgba(196,122,138,0.34);
-    background: rgba(255, 255, 255, 0.94);
+    transform: translateY(-7px);
+    box-shadow: 0 20px 48px rgba(196,122,138,0.14), 0 4px 12px rgba(196,122,138,0.06);
+    border-color: rgba(196,122,138,0.32);
   }
   .post-card--featured {
     flex-direction: row;
-    min-height: 280px;
+    min-height: 300px;
   }
-  .post-card--featured .card-image-link {
-    flex: 0 0 45%;
-  }
+  .post-card--featured .card-image-link { flex: 0 0 46%; }
   .post-card--featured .card-body {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 2rem 2.5rem;
+    padding: 2.25rem 2.75rem;
   }
   .post-card--featured .card-title--featured {
-    font-size: 1.75rem;
-    line-height: 1.2;
+    font-size: 1.85rem;
+    line-height: 1.15;
+  }
+  .post-card--featured .card-desc { -webkit-line-clamp: 4; }
+  @media (max-width: 700px) {
+    .post-card--featured { flex-direction: column; }
+    .post-card--featured .card-image-link { flex: 0 0 auto; }
   }
 
   .card-image-link { display: block; text-decoration: none; }
   .card-image-wrap {
     position: relative;
-    height: 210px;
+    height: 215px;
     overflow: hidden;
+    background: var(--blush-light);
   }
-  .post-card--featured .card-image-wrap {
-    height: 100%;
-    min-height: 280px;
-  }
+  .post-card--featured .card-image-wrap { height: 100%; min-height: 300px; }
+
   .card-image {
     width: 100%; height: 100%;
     object-fit: cover;
-    transition: transform 0.6s ease, filter 0.35s ease;
+    transition: transform 0.55s ease, filter 0.32s ease;
+    display: block;
   }
-  .post-card:hover .card-image { transform: scale(1.07); filter: saturate(1.03) contrast(1.02); }
+  .post-card:hover .card-image { transform: scale(1.06); filter: saturate(1.04); }
+
   .card-placeholder {
     position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
   }
-  .placeholder-icon { filter: drop-shadow(0 3px 8px rgba(196,122,138,0.3)); }
+  .placeholder-bloom {
+    width: 90px;
+    height: 90px;
+    opacity: 0.85;
+    transition: transform 0.55s ease;
+  }
+  .post-card:hover .placeholder-bloom { transform: rotate(18deg) scale(1.08); }
+  .placeholder-tag {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
 
   .card-overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(74,45,53,0.12) 0%, transparent 50%);
+    background: linear-gradient(to top, rgba(74,45,53,0.1) 0%, transparent 55%);
     pointer-events: none;
   }
   .card-tag-badge {
     position: absolute;
     top: 12px; left: 12px;
-    background: rgba(250,245,238,0.92);
+    background: rgba(250,245,238,0.93);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     color: var(--blush-dark);
-    font-size: 0.65rem;
+    font-size: 0.63rem;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
-    padding: 0.28rem 0.75rem;
+    padding: 0.28rem 0.78rem;
     border-radius: 999px;
-    border: 1px solid rgba(232,164,176,0.4);
+    border: 1px solid rgba(232,164,176,0.35);
     font-family: 'Jost', sans-serif;
   }
 
   .card-body {
-    padding: 1.35rem 1.45rem 1.5rem;
+    padding: 1.4rem 1.55rem 1.6rem;
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: 0.6rem;
     flex: 1;
   }
   .card-meta {
-    font-size: 0.72rem;
+    font-size: 0.71rem;
     color: var(--taupe);
-    letter-spacing: 0.07em;
-    font-weight: 300;
+    letter-spacing: 0.05em;
+    font-weight: 400;
     font-family: 'Jost', sans-serif;
     display: flex;
     align-items: center;
     gap: 0.4rem;
     flex-wrap: wrap;
   }
-  .meta-dot { color: var(--ivory-dark); }
+  .meta-dot { color: rgba(158,138,128,0.4); }
+
   .card-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.18rem;
+    font-size: 1.22rem;
     font-weight: 600;
     line-height: 1.2;
     color: var(--mauve);
@@ -192,12 +227,12 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
   .card-title-link:hover { color: var(--blush-dark); }
 
   .card-desc {
-    font-size: 0.9rem;
+    font-size: 0.89rem;
     color: var(--taupe);
-    line-height: 1.7;
+    line-height: 1.72;
     flex: 1;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin: 0;
@@ -209,17 +244,17 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.76rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
+    font-size: 0.73rem;
+    font-weight: 500;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
     color: var(--blush-dark);
     text-decoration: none;
-    margin-top: 0.35rem;
+    margin-top: 0.3rem;
     font-family: 'Jost', sans-serif;
-    transition: gap 0.2s ease, color 0.2s;
+    transition: gap 0.22s ease, color 0.2s;
   }
-  .card-cta:hover { color: var(--gold); gap: 9px; }
-  .card-arrow { transition: transform 0.2s; }
+  .card-cta:hover { color: var(--mauve); gap: 9px; }
+  .card-arrow { transition: transform 0.22s; flex-shrink: 0; }
   .card-cta:hover .card-arrow { transform: translateX(3px); }
 </style>
