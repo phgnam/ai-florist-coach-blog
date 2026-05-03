@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { lang = 'en', hasHero = false } = Astro.props;
+const showLangSwitch = (import.meta as any).env.SHOW_LANG_SWITCH === 'true';
 const t = useTranslations(lang);
 const p = (path: string) => localePath(lang, path);
 const alternateLang = lang === 'vi' ? 'en' : 'vi';
@@ -46,11 +47,13 @@ const isActive = (path: string) => {
 
       <Search lang={lang} />
 
-      <div class="lang-switch">
-        <span class="lang-current">{lang.toUpperCase()}</span>
-        <span class="lang-divider">|</span>
-        <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
-      </div>
+      {showLangSwitch && (
+        <div class="lang-switch">
+          <span class="lang-current">{lang.toUpperCase()}</span>
+          <span class="lang-divider">|</span>
+          <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
+        </div>
+      )}
 
       <a href="/rss.xml" class="nav-rss" title="RSS Feed" aria-label="RSS Feed">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -61,11 +64,13 @@ const isActive = (path: string) => {
 
     <!-- Mobile controls -->
     <div class="md:hidden flex items-center gap-3 ml-auto">
-      <div class="lang-switch">
-        <span class="lang-current">{lang.toUpperCase()}</span>
-        <span class="lang-divider">|</span>
-        <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
-      </div>
+      {showLangSwitch && (
+        <div class="lang-switch">
+          <span class="lang-current">{lang.toUpperCase()}</span>
+          <span class="lang-divider">|</span>
+          <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
+        </div>
+      )}
       <button id="mobile-menu-btn" class="mobile-btn p-1.5 rounded-lg" aria-label="Open menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
