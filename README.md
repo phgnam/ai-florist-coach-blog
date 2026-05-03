@@ -71,7 +71,7 @@ blog/
 > - First section is a **Quick Answer** block (40–60 words) directly answering the title question.
 > - All H2 headings are phrased as questions.
 > - Article emits `Article` + `FAQPage` JSON-LD; FAQ section mirrors the schema.
-> - **At least one impressive, on-topic image somewhere in the article body** (an inline `<figure>` is fine). `heroImage` in frontmatter is recommended but optional — when set, it also powers the hero, OG share card, and Twitter card. See the playbook's "Visual requirements" section.
+> - **At least one impressive, on-topic image *inside the article body*** — `<figure>`, `<img>`, `<Image>`, or markdown `![alt](url)`. **`heroImage` in the frontmatter alone does NOT satisfy this rule** — the hero is rendered above the body, separately. The body image is *in addition to* `heroImage`, not instead of it. `heroImage` itself is recommended but optional; when set, it also powers OG share card, Twitter card, and `BlogPosting.image`. Enforced by `npm run check:body-images` (runs as `prebuild`). See the playbook's "Visual requirements" section.
 > - After publish: ping IndexNow and request indexing in GSC.
 >
 > Skipping any of the above is a defect — see the playbook's "What NOT to Do" section.

@@ -4,9 +4,11 @@
   "description": "Static blog about flowers built with Astro, MDX, TailwindCSS v4, and Pagefind.",
   "scripts": {
     "dev": "astro dev --host 0.0.0.0 --port 5000",
+    "prebuild": "node scripts/check-body-images.mjs",
     "build": "astro build && pagefind --site dist",
     "build:astro": "astro build",
     "build:search": "pagefind --site dist",
+    "check:body-images": "node scripts/check-body-images.mjs",
     "preview": "astro preview --host 0.0.0.0 --port 5000"
   },
   "dependencies": {
