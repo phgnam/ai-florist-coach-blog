@@ -8,7 +8,7 @@ interface Props {
   pubDate: Date;
   slug: string;
   tags?: string[];
-  heroImage?: ImageMetadata;
+  heroImage?: { src: string; width: number; height: number; format: string };
   heroImageUrl?: string;
   previewImageUrl?: string;
   heroAlt?: string;

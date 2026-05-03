@@ -9,7 +9,7 @@ interface Post {
     description: string;
     pubDate: Date;
     tags: string[];
-    heroImage?: ImageMetadata;
+    heroImage?: { src: string; width: number; height: number; format: string };
     heroAlt?: string;
     draft?: boolean;
     lang?: string;
@@ -39,15 +39,15 @@ const extractPreviewImage = (post: Post): string | null => {
 };
 
 const related = allPosts
-  .filter((p) => p.id !== currentId)
-  .map((p) => ({
+  .filter((p: Post) => p.id !== currentId)
+  .map((p: Post) => ({
     post: p,
-    score: p.data.tags.filter((tag) => currentTags.includes(tag)).length,
+    score: p.data.tags.filter((tag: string) => currentTags.includes(tag)).length,
   }))
-  .filter(({ score }) => score > 0)
-  .sort((a, b) => b.score - a.score || b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf())
+  .filter(({ score }: { score: number }) => score > 0)
+  .sort((a: { score: number; post: Post }, b: { score: number; post: Post }) => b.score - a.score || b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf())
   .slice(0, 3)
-  .map(({ post }) => post);
+  .map(({ post }: { post: Post }) => post);
 
 if (related.length === 0) return;
 ---

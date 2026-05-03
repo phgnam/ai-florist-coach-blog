@@ -1,6 +1,15 @@
 {
-  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    "strictNullChecks": true
-  }
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "types": ["astro/client"]
+  },
+  "include": ["src/**/*", ".astro/types.d.ts"]
 }

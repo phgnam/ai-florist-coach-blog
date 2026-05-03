@@ -4,7 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { useTranslations } from '../i18n/utils';
 
-const firstPreviewImage = (post) => {
+const firstPreviewImage = (post: any) => {
   const figureImage = post.body.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
   return figureImage ?? (post.data.heroImage as any);
 };
