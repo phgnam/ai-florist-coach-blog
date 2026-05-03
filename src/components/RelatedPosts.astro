@@ -1,5 +1,4 @@
 ---
-import defaultPreviewImage from '@assets/image_1777790654692.png';
 import { useTranslations } from '../i18n/utils';
 import FormattedDate from './FormattedDate.astro';
 
@@ -37,8 +36,6 @@ const extractPreviewImage = (post: Post): string | null => {
   return typeof hero === 'string' ? hero : hero?.src ?? null;
 };
 
-const previewFallback = defaultPreviewImage.src;
-
 const related = allPosts
   .filter((p) => p.id !== currentId)
   .map((p) => ({
@@ -61,7 +58,7 @@ if (related.length === 0) return;
   </div>
   <div class="related-grid">
     {related.map((post) => {
-      const img = extractPreviewImage(post) ?? previewFallback;
+      const img = extractPreviewImage(post);
       return (
         <a href={`${postBasePath}/${post.id}`} class="related-card">
           {img && (

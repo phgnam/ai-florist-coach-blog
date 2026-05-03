@@ -1,5 +1,4 @@
 ---
-import defaultPreviewImage from '@assets/image_1777790654692.png';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
@@ -9,8 +8,6 @@ const firstPreviewImage = (post) => {
   const figureImage = post.body.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
   return figureImage ?? (post.data.heroImage as any);
 };
-
-const previewFallback = defaultPreviewImage.src;
 
 const lang = 'en' as const;
 const t = useTranslations(lang);
@@ -23,7 +20,7 @@ const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
 const allPostsData = allPosts.map(p => {
   const rawImg = firstPreviewImage(p);
-  const previewImage: string | null = typeof rawImg === 'string' ? rawImg : (rawImg as any)?.src ?? previewFallback;
+  const previewImage: string | null = typeof rawImg === 'string' ? rawImg : (rawImg as any)?.src ?? null;
   return {
     slug: p.id,
     title: p.data.title,
