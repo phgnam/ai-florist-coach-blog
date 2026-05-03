@@ -10,11 +10,12 @@ interface Props {
   tags?: string[];
   heroImage?: ImageMetadata;
   heroImageUrl?: string;
+  previewImageUrl?: string;
   heroAlt?: string;
   featured?: boolean;
 }
 
-const { title, description, pubDate, slug, tags = [], heroImage, heroImageUrl, heroAlt, featured = false } = Astro.props;
+const { title, description, pubDate, slug, tags = [], heroImage, heroImageUrl, previewImageUrl, heroAlt, featured = false } = Astro.props;
 const lang = Astro.currentLocale === 'vi' ? 'vi' : 'en';
 const t = useTranslations(lang);
 const href = slug.startsWith('/') ? slug : `/posts/${slug}`;
@@ -33,6 +34,8 @@ const colorIdx = Math.abs(title.charCodeAt(0) + title.charCodeAt(1)) % 4;
     <div class="card-image-wrap">
       {heroImage ? (
         <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" />
+      ) : previewImageUrl ? (
+        <img src={previewImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" />
       ) : heroImageUrl ? (
         <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" />
       ) : (
