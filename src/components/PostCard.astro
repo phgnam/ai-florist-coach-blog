@@ -88,6 +88,21 @@ const showPlaceholder = !heroImage && !previewImageUrl && !heroImageUrl;
   </div>
 </article>
 
+<script>
+  document.querySelectorAll('.card-image').forEach((img) => {
+    const el = img as HTMLImageElement;
+    function showPlaceholder() {
+      el.style.display = 'none';
+      const ph = el.closest('.card-image-wrap')?.querySelector('.card-placeholder') as HTMLElement | null;
+      if (ph) ph.style.display = 'flex';
+    }
+    el.addEventListener('error', showPlaceholder);
+    if (el.complete && el.naturalWidth === 0 && el.src) {
+      showPlaceholder();
+    }
+  });
+</script>
+
 <style>
   .post-card {
     background: rgba(255,255,255,0.9);
