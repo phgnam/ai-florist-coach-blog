@@ -64,22 +64,21 @@ if (related.length === 0) return;
       return (
         <a href={`${postBasePath}/${post.id}`} class="related-card">
           <div class="related-img-wrap">
-            {img ? <img class="related-img" src={img} alt={post.data.title} loading="lazy" /> : (
-              <div class="related-placeholder">
-                <svg class="placeholder-bloom" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.13" transform="rotate(0 80 80)"></ellipse>
-                  <ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(45 80 80)"></ellipse>
-                  <ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(90 80 80)"></ellipse>
-                  <ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(135 80 80)"></ellipse>
-                  <circle cx="80" cy="80" r="12" fill="#9B5968" fill-opacity="0.28"></circle>
-                  <circle cx="80" cy="80" r="5" fill="#9B5968" fill-opacity="0.55"></circle>
-                  <circle cx="80" cy="44" r="4" fill="#9B5968" fill-opacity="0.18"></circle>
-                  <circle cx="80" cy="116" r="4" fill="#9B5968" fill-opacity="0.18"></circle>
-                  <circle cx="44" cy="80" r="4" fill="#9B5968" fill-opacity="0.18"></circle>
-                  <circle cx="116" cy="80" r="4" fill="#9B5968" fill-opacity="0.18"></circle>
-                </svg>
-              </div>
-            )}
+            {img && <img class="related-img" src={img} alt={post.data.title} loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />}
+            <div class="related-placeholder" style={img ? 'display:none' : 'display:flex'}>
+              <svg class="placeholder-bloom" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.13" transform="rotate(0 80 80)"></ellipse>
+                <ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(45 80 80)"></ellipse>
+                <ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(90 80 80)"></ellipse>
+                <ellipse cx="80" cy="80" rx="30" ry="44" fill="#9B5968" fill-opacity="0.11" transform="rotate(135 80 80)"></ellipse>
+                <circle cx="80" cy="80" r="12" fill="#9B5968" fill-opacity="0.28"></circle>
+                <circle cx="80" cy="80" r="5" fill="#9B5968" fill-opacity="0.55"></circle>
+                <circle cx="80" cy="44" r="4" fill="#9B5968" fill-opacity="0.18"></circle>
+                <circle cx="80" cy="116" r="4" fill="#9B5968" fill-opacity="0.18"></circle>
+                <circle cx="44" cy="80" r="4" fill="#9B5968" fill-opacity="0.18"></circle>
+                <circle cx="116" cy="80" r="4" fill="#9B5968" fill-opacity="0.18"></circle>
+              </svg>
+            </div>
           </div>
           <div class="related-body">
             <span class="related-tag">{post.data.tags[0] ?? ''}</span>
@@ -122,23 +121,22 @@ if (related.length === 0) return;
 
   .related-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1.5rem;
     border-top: 1px solid rgba(232, 164, 176, 0.22);
     border-bottom: 1px solid rgba(232, 164, 176, 0.22);
     padding: 2rem 0;
+    row-gap: 2rem;
   }
 
   .related-card {
     display: flex;
     flex-direction: column;
     gap: 0;
-    border-right: 1px solid rgba(232, 164, 176, 0.22);
     text-decoration: none;
     transition: transform 0.28s ease, opacity 0.28s ease;
     overflow: hidden;
   }
-  .related-card:last-child { border-right: none; }
   .related-card:hover { opacity: 0.88; transform: translateY(-3px); }
   .related-card:hover .related-img { transform: scale(1.04); }
 
@@ -169,10 +167,8 @@ if (related.length === 0) return;
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    padding: 0 1.4rem 0 0;
     flex: 1;
   }
-  .related-card:last-child .related-body { padding-right: 0; }
 
   .related-tag {
     font-family: 'Jost', sans-serif;
