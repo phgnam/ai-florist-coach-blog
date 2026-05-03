@@ -65,7 +65,7 @@ const {
     />
   </head>
   <body>
-    <Header lang={lang} />
+    <Header lang={lang} hasHero={!padTop} />
     <main class:list={['relative z-10', padTop && 'pt-16']}>
       <slot />
     </main>

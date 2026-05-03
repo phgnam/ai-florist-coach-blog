@@ -6,26 +6,36 @@ import Search from './Search.astro';
 
 interface Props {
   lang?: Lang;
+  hasHero?: boolean;
 }
 
-const { lang = 'en' } = Astro.props;
+const { lang = 'en', hasHero = false } = Astro.props;
 const t = useTranslations(lang);
 const p = (path: string) => localePath(lang, path);
 const alternateLang = lang === 'vi' ? 'en' : 'vi';
 const alternateUrl = alternatePath(Astro.url.pathname, lang);
 ---
-<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-400">
-  <div class="header-inner px-6 lg:px-10 py-4 flex items-center justify-between max-w-7xl mx-auto gap-4">
-    <a href={p('/')} class="logo-link flex items-center gap-3 group no-underline shrink-0">
-      <span class="logo-icon text-2xl transition-transform duration-500 group-hover:rotate-12 inline-block">🌸</span>
-      <span class="logo-text font-serif font-semibold text-xl tracking-wide">Vườn Hoa</span>
+<header
+  id="site-header"
+  class:list={['fixed top-0 left-0 right-0 z-50 transition-all duration-300', !hasHero && 'scrolled']}
+  data-has-hero={hasHero ? 'true' : 'false'}
+>
+  <div class="header-inner px-5 lg:px-10 py-3.5 flex items-center max-w-7xl mx-auto gap-6">
+
+    <!-- Logo -->
+    <a href={p('/')} class="logo-link flex items-center gap-2.5 group no-underline shrink-0">
+      <span class="logo-icon text-xl transition-transform duration-500 group-hover:rotate-12 inline-block leading-none">🌸</span>
+      <span class="logo-text">Vườn Hoa</span>
     </a>
 
-    <nav class="hidden md:flex items-center gap-7 ml-auto">
+    <!-- Desktop Nav -->
+    <nav class="hidden md:flex items-center gap-5 ml-auto">
       <a href={p('/')} class="nav-link">{t('nav.home')}</a>
       <a href={p('/posts')} class="nav-link">{t('nav.posts')}</a>
       <a href={p('/tags')} class="nav-link">{t('nav.tags')}</a>
       <a href={p('/about')} class="nav-link">{t('nav.about')}</a>
+
+      <span class="nav-sep" aria-hidden="true"></span>
 
       <Search lang={lang} />
 
@@ -35,30 +45,33 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
         <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
       </div>
 
-      <a href="/rss.xml" class="nav-rss" title="RSS Feed">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <a href="/rss.xml" class="nav-rss" title="RSS Feed" aria-label="RSS Feed">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
           <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
         </svg>
       </a>
     </nav>
 
+    <!-- Mobile controls -->
     <div class="md:hidden flex items-center gap-3 ml-auto">
       <div class="lang-switch">
         <span class="lang-current">{lang.toUpperCase()}</span>
         <span class="lang-divider">|</span>
         <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
       </div>
-      <button id="mobile-menu-btn" class="p-2 rounded-lg mobile-btn" aria-label="Menu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button id="mobile-menu-btn" class="mobile-btn p-1.5 rounded-lg" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
       </button>
     </div>
   </div>
 
+  <!-- Reading countdown (only on post pages) -->
   <div id="reading-countdown" class="reading-countdown" data-lang={lang} aria-live="polite" aria-atomic="true"></div>
 
-  <div id="mobile-menu" class="mobile-menu hidden md:hidden px-6 pb-4">
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu hidden md:hidden px-5 pb-4">
     <a href={p('/')} class="mobile-nav-link">{t('nav.home')}</a>
     <a href={p('/posts')} class="mobile-nav-link">{t('nav.posts')}</a>
     <a href={p('/tags')} class="mobile-nav-link">{t('nav.tags')}</a>
@@ -67,69 +80,195 @@ const alternateUrl = alternatePath(Astro.url.pathname, lang);
 </header>
 
 <style>
-  #site-header { background: rgba(250, 245, 238, 0.0); }
-  #site-header.scrolled { background: rgba(250, 245, 238, 0.97); backdrop-filter: blur(16px); box-shadow: 0 1px 0 rgba(232, 164, 176, 0.2), 0 4px 24px rgba(196, 122, 138, 0.06); }
-  .logo-text { color: var(--mauve); }
-  .nav-link { color: var(--mauve-mid); font-family: 'Jost', sans-serif; font-size: 0.82rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: color 0.2s; position: relative; }
-  .nav-link::after { content: ''; position: absolute; bottom: -3px; left: 0; right: 100%; height: 1px; background: var(--blush-dark); transition: right 0.3s ease; }
-  .nav-link:hover { color: var(--mauve); }
-  .nav-link:hover::after { right: 0; }
-  .reading-countdown { display: none; max-width: 80rem; margin: 0 auto; padding: 0 1.5rem 0.85rem; color: var(--taupe); font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  /* ── Base state ── */
+  #site-header {
+    background: transparent;
+  }
+
+  /* ── Scrolled / always-opaque state ── */
+  #site-header.scrolled {
+    background: rgba(250, 245, 238, 0.96);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 1px 0 rgba(232, 164, 176, 0.18), 0 2px 20px rgba(196, 122, 138, 0.07);
+  }
+
+  /* ── Logo ── */
+  .logo-text {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--mauve);
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  /* ── Nav links ── */
+  .nav-link {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--mauve-mid);
+    position: relative;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 100%;
+    height: 1px;
+    background: var(--blush-dark);
+    transition: right 0.3s ease;
+  }
+  .nav-link:hover {
+    color: var(--mauve);
+  }
+  .nav-link:hover::after {
+    right: 0;
+  }
+
+  /* ── Separator between nav links and utilities ── */
+  .nav-sep {
+    display: inline-block;
+    width: 1px;
+    height: 16px;
+    background: rgba(196, 122, 138, 0.22);
+    flex-shrink: 0;
+  }
+
+  /* ── Lang switch ── */
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    background: rgba(232, 164, 176, 0.14);
+    border: 1px solid rgba(196, 122, 138, 0.22);
+    border-radius: 999px;
+    padding: 0.22rem 0.6rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .lang-current { color: var(--blush-dark); font-weight: 600; }
+  .lang-divider { color: rgba(158, 138, 128, 0.38); }
+  .lang-alt { color: var(--taupe); text-decoration: none; transition: color 0.2s; }
+  .lang-alt:hover { color: var(--mauve); }
+
+  /* ── RSS icon ── */
+  .nav-rss {
+    color: var(--taupe);
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .nav-rss:hover { color: var(--blush-dark); }
+
+  /* ── Mobile ── */
+  .mobile-btn { color: var(--mauve); }
+  .mobile-menu {
+    background: rgba(250, 245, 238, 0.98);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--ivory-dark);
+  }
+  .mobile-nav-link {
+    display: block;
+    padding: 0.7rem 0;
+    color: var(--mauve-mid);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid var(--ivory-dark);
+    transition: color 0.2s;
+  }
+  .mobile-nav-link:last-child { border-bottom: none; }
+  .mobile-nav-link:hover { color: var(--blush-dark); }
+
+  /* ── Reading countdown ── */
+  .reading-countdown {
+    display: none;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1.5rem 0.75rem;
+    color: var(--taupe);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
   .reading-countdown.visible { display: block; }
   .reading-countdown strong { color: var(--blush-dark); font-weight: 600; }
-  .lang-switch { display: flex; align-items: center; gap: 4px; font-family: 'Jost', sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; background: rgba(232, 164, 176, 0.15); border: 1px solid rgba(196, 122, 138, 0.25); border-radius: 999px; padding: 0.2rem 0.65rem; }
-  .lang-current { color: var(--blush-dark); font-weight: 600; }
-  .lang-divider { color: rgba(158, 138, 128, 0.4); font-weight: 300; }
-  .lang-alt { color: var(--taupe); font-weight: 400; text-decoration: none; transition: color 0.2s; }
-  .lang-alt:hover { color: var(--mauve); }
-  .nav-rss { color: var(--taupe); transition: color 0.2s; }
-  .nav-rss:hover { color: var(--blush-dark); }
-  .mobile-btn { color: var(--mauve); }
-  .mobile-menu { background: rgba(250, 245, 238, 0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--ivory-dark); }
-  .mobile-nav-link { display: block; padding: 0.75rem 0; color: var(--mauve-mid); font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--ivory-dark); transition: color 0.2s; }
-  .mobile-nav-link:hover { color: var(--blush-dark); }
 </style>
 
 <script>
-  const header = document.getElementById('site-header');
+  const header = document.getElementById('site-header') as HTMLElement | null;
   const mobileBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
   const countdown = document.getElementById('reading-countdown');
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 60) {
-      header?.classList.add('scrolled');
-    } else {
-      header?.classList.remove('scrolled');
-    }
-  }, { passive: true });
+  // Only animate transparent→opaque on hero pages
+  const hasHero = header?.getAttribute('data-has-hero') === 'true';
 
+  if (hasHero && header) {
+    const updateHeader = () => {
+      if (window.scrollY > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    };
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+  }
+  // Non-hero pages: 'scrolled' class is already set via Astro class:list above
+
+  // Mobile menu toggle
   mobileBtn?.addEventListener('click', () => {
-    mobileMenu?.classList.toggle('hidden');
+    const isOpen = !mobileMenu?.classList.contains('hidden');
+    mobileMenu?.classList.toggle('hidden', isOpen);
+    mobileBtn.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
   });
 
+  // Close mobile menu on outside click
+  document.addEventListener('click', (e) => {
+    if (!header?.contains(e.target as Node)) {
+      mobileMenu?.classList.add('hidden');
+    }
+  });
+
+  // ── Reading countdown (post pages only) ──
   const postRoot = document.querySelector('.post-content-wrap');
   if (postRoot && countdown) {
     const isVi = countdown.getAttribute('data-lang') === 'vi';
-    const labelLeft  = isVi ? 'Còn lại để đọc:' : 'Reading time left:';
-    const labelMin   = isVi ? 'phút' : 'min';
-    const labelEnd   = isVi ? 'Bạn đã đọc xong!' : "You're at the end";
+    const labelLeft = isVi ? 'Còn lại để đọc:' : 'Reading time left:';
+    const labelMin  = isVi ? 'phút' : 'min';
+    const labelEnd  = isVi ? 'Bạn đã đọc xong!' : "You're at the end";
 
     const article = document.querySelector('.prose');
     if (!article) return;
-    const bodyText = article.textContent || '';
-    const words = bodyText.trim().split(/\s+/).filter(Boolean).length;
+    const words = (article.textContent || '').trim().split(/\s+/).filter(Boolean).length;
     const totalMinutes = Math.max(1, Math.ceil(words / 200));
 
     const updateCountdown = () => {
-      const docH = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docH > 0 ? Math.min(1, window.scrollY / docH) : 0;
-      const remaining = Math.max(0, Math.ceil(totalMinutes * (1 - progress)));
-      // Only show after scrolling past the hero (roughly 300px)
       if (window.scrollY < 300) {
         countdown.classList.remove('visible');
         return;
       }
+      const docH = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docH > 0 ? Math.min(1, window.scrollY / docH) : 0;
+      const remaining = Math.max(0, Math.ceil(totalMinutes * (1 - progress)));
       countdown.innerHTML = remaining > 0
         ? `${labelLeft} <strong>${remaining} ${labelMin}</strong>`
         : labelEnd;
