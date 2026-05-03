@@ -27,5 +27,10 @@ export default defineConfig({
     server: {
       allowedHosts: true,
     },
+    resolve: {
+      alias: {
+        '@assets': '/attached_assets',
+      },
+    },
   },
 });
