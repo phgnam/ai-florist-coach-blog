@@ -147,7 +147,7 @@ const breadcrumbs = [
   )}
 
   <!-- ── TRENDING (populated client-side from localStorage views) ── -->
-  <section class="section-trending max-w-7xl mx-auto px-6 lg:px-10" id="trending-section" style="display:none">
+  <section class="section-trending max-w-7xl mx-auto px-6 lg:px-10" id="trending-section">
     <div class="section-label">
       <span class="label-line"></span>
       <span class="label-text" id="trending-label">{t('section.trending')}</span>
@@ -226,7 +226,6 @@ const breadcrumbs = [
       const section = document.getElementById('trending-section');
       const grid = document.getElementById('trending-grid');
       if (section && grid) {
-        section.style.display = 'block';
         grid.innerHTML = sorted.map(p => {
           const palettes = [
             { bg: 'linear-gradient(150deg,#FDF0F2 0%,#F5C8D2 55%,#EDA8B8 100%)', accent: '#C47A8A' },
