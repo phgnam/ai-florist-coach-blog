@@ -7,5 +7,5 @@ export const GISCUS = {
   category: 'General',
   categoryId: 'DIC_kwDOSSfoY84C8OUz',
   mapping: 'pathname' as const,
-  theme: 'preferred_color_scheme' as const,
+  theme: 'light' as const,
 };
