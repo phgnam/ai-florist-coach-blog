@@ -71,6 +71,7 @@ blog/
 > - First section is a **Quick Answer** block (40–60 words) directly answering the title question.
 > - All H2 headings are phrased as questions.
 > - Article emits `Article` + `FAQPage` JSON-LD; FAQ section mirrors the schema.
+> - **At least one impressive, on-topic image** — preferably set as `heroImage` in frontmatter so it powers the hero, the OG share card, and the Twitter card. See the playbook's "Visual requirements" section.
 > - After publish: ping IndexNow and request indexing in GSC.
 >
 > Skipping any of the above is a defect — see the playbook's "What NOT to Do" section.
