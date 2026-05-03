@@ -114,6 +114,11 @@ const breadcrumbs = [
         <div class="share-tags">
           {tags.map(tag => <span class="share-tag">#{tag}</span>)}
         </div>
+        <div class="social-share" aria-label="Social sharing">
+          <a class="share-btn share-btn--x" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`${siteUrl}/posts/${post.id}`)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noreferrer">X / Twitter</a>
+          <a class="share-btn share-btn--facebook" href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`${siteUrl}/posts/${post.id}`)}`} target="_blank" rel="noreferrer">Facebook</a>
+          <button class="share-btn share-btn--copy" type="button" data-copy-url={`${siteUrl}/posts/${post.id}`}>Copy link</button>
+        </div>
       </div>
 
       <AuthorBox author={author} lang={lang} />
@@ -154,76 +159,30 @@ const breadcrumbs = [
   .post-divider { height:1px; background:linear-gradient(to right,transparent,var(--ivory-dark),transparent); }
   .share-box { background:var(--blush-light); border-left:3px solid var(--blush); padding:1.5rem 2rem; border-radius:0 14px 14px 0; }
   .share-text { font-family:'Cormorant Garamond',serif; font-size:1.1rem; font-style:italic; color:var(--mauve); margin:0 0 0.75rem; font-weight:400; }
-  .share-tags { display:flex; flex-wrap:wrap; gap:0.5rem; }
+  .share-tags { display:flex; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem; }
   .share-tag { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--blush-dark); font-weight:500; }
+  .social-share { display:flex; flex-wrap:wrap; gap:0.75rem; }
+  .share-btn { appearance:none; border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0.72rem 1rem; border-radius:999px; font-family:'Jost',sans-serif; font-size:0.78rem; font-weight:500; letter-spacing:0.04em; text-decoration:none; color:var(--mauve); background:white; border:1px solid var(--ivory-dark); transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+  .share-btn:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(196,122,138,0.12); border-color:rgba(196,122,138,0.35); color:var(--blush-dark); }
+  .share-btn--x { background:#111827; color:white; border-color:#111827; }
+  .share-btn--x:hover { color:white; border-color:#111827; }
+  .share-btn--facebook { background:#1877f2; color:white; border-color:#1877f2; }
+  .share-btn--facebook:hover { color:white; border-color:#1877f2; }
+  .share-btn--copy.copied { background:var(--blush-dark); color:white; border-color:var(--blush-dark); }
   .comments-title { font-family:'Cormorant Garamond',serif; font-size:1.8rem; font-weight:600; color:var(--mauve); margin-bottom:1.5rem; padding-bottom:0.75rem; border-bottom:1px solid var(--ivory-dark); }
 
   /* ── TOC Sidebar ── */
-  #toc-sidebar {
-    display: none;
-    position: fixed;
-    top: 50%;
-    right: max(1.5rem, calc(50vw - 32rem - 260px));
-    transform: translateY(-50%);
-    width: 220px;
-    max-height: 70vh;
-    overflow-y: auto;
-    padding: 1.25rem 1rem;
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--ivory-dark);
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(196,122,138,0.10);
-    z-index: 800;
-    scrollbar-width: none;
-  }
+  #toc-sidebar { display: none; position: fixed; top: 50%; right: max(1.5rem, calc(50vw - 32rem - 260px)); transform: translateY(-50%); width: 220px; max-height: 70vh; overflow-y: auto; padding: 1.25rem 1rem; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid var(--ivory-dark); border-radius: 16px; box-shadow: 0 4px 24px rgba(196,122,138,0.10); z-index: 800; scrollbar-width: none; }
   #toc-sidebar::-webkit-scrollbar { display: none; }
-  @media (min-width: 1400px) {
-    #toc-sidebar { display: block; }
-  }
-  .toc-title {
-    font-family: 'Jost', sans-serif;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--taupe);
-    margin: 0 0 0.9rem;
-    padding-bottom: 0.6rem;
-    border-bottom: 1px solid var(--ivory-dark);
-  }
-  :global(#toc-nav a) {
-    display: block;
-    font-family: 'Jost', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 400;
-    color: var(--taupe);
-    text-decoration: none;
-    padding: 0.3rem 0.5rem;
-    margin-bottom: 0.15rem;
-    border-left: 2px solid transparent;
-    border-radius: 0 6px 6px 0;
-    line-height: 1.45;
-    transition: color 0.2s, border-color 0.2s, background 0.2s;
-  }
-  :global(#toc-nav a.toc-h3) {
-    padding-left: 1.1rem;
-    font-size: 0.73rem;
-  }
-  :global(#toc-nav a:hover) {
-    color: var(--blush-dark);
-    background: rgba(232,164,176,0.08);
-  }
-  :global(#toc-nav a.toc-active) {
-    color: var(--blush-dark);
-    border-left-color: var(--blush-dark);
-    font-weight: 500;
-    background: rgba(232,164,176,0.12);
-  }
+  @media (min-width: 1400px) { #toc-sidebar { display: block; } }
+  .toc-title { font-family: 'Jost', sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--taupe); margin: 0 0 0.9rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--ivory-dark); }
+  :global(#toc-nav a) { display: block; font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 400; color: var(--taupe); text-decoration: none; padding: 0.3rem 0.5rem; margin-bottom: 0.15rem; border-left: 2px solid transparent; border-radius: 0 6px 6px 0; line-height: 1.45; transition: color 0.2s, border-color 0.2s, background 0.2s; }
+  :global(#toc-nav a.toc-h3) { padding-left: 1.1rem; font-size: 0.73rem; }
+  :global(#toc-nav a:hover) { color: var(--blush-dark); background: rgba(232,164,176,0.08); }
+  :global(#toc-nav a.toc-active) { color: var(--blush-dark); border-left-color: var(--blush-dark); font-weight: 500; background: rgba(232,164,176,0.12); }
 </style>
 
 <script define:vars={{ postSlug: post.id }}>
-  // Reading progress bar
   const bar = document.getElementById('reading-progress');
   if (bar) {
     window.addEventListener('scroll', () => {
@@ -232,14 +191,12 @@ const breadcrumbs = [
     }, { passive: true });
   }
 
-  // View tracking
   try {
     const key = 'vh_views_' + postSlug;
     const cur = parseInt(localStorage.getItem(key) || '0');
     localStorage.setItem(key, String(cur + 1));
   } catch (_) {}
 
-  // Table of contents
   const tocNav = document.getElementById('toc-nav');
   const tocSidebar = document.getElementById('toc-sidebar');
   if (tocNav && tocSidebar) {
@@ -250,7 +207,7 @@ const breadcrumbs = [
         if (!h.id) h.id = 'toc-' + i;
         const a = document.createElement('a');
         a.href = '#' + h.id;
-        a.textContent = h.textContent;
+        a.textContent = h.textContent ?? '';
         if (h.tagName === 'H3') a.classList.add('toc-h3');
         a.addEventListener('click', (e) => {
           e.preventDefault();
@@ -263,16 +220,12 @@ const breadcrumbs = [
       let activeId = '';
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            activeId = entry.target.id;
-          }
+          if (entry.isIntersecting) activeId = entry.target.id;
         });
         links.forEach(link => {
           const active = link.getAttribute('href') === '#' + activeId;
           link.classList.toggle('toc-active', active);
-          if (active) {
-            link.scrollIntoView({ block: 'nearest' });
-          }
+          if (active) link.scrollIntoView({ block: 'nearest' });
         });
       }, { rootMargin: '-64px 0px -60% 0px', threshold: 0 });
 
@@ -281,4 +234,23 @@ const breadcrumbs = [
       tocSidebar.style.display = 'none';
     }
   }
+
+  const copyButtons = Array.from(document.querySelectorAll('[data-copy-url]'));
+  copyButtons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const url = button.getAttribute('data-copy-url') ?? window.location.href;
+      try {
+        await navigator.clipboard.writeText(url);
+        button.classList.add('copied');
+        const original = button.textContent;
+        button.textContent = 'Copied!';
+        window.setTimeout(() => {
+          button.textContent = original;
+          button.classList.remove('copied');
+        }, 1600);
+      } catch {
+        window.prompt('Copy this link', url);
+      }
+    });
+  });
 </script>
