@@ -18,7 +18,16 @@ const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data
 
 const featured = allPosts[0];
 const recent = allPosts.slice(1, 7);
-const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].slice(0, 12);
+const tagCounts = new Map<string, number>();
+for (const post of allPosts) {
+  for (const tag of post.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const allTags = [...tagCounts.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .slice(0, 12)
+  .map(([tag]) => tag);
 
 const hreflang = [
   { lang: 'en', url: `${siteUrl}/` },
