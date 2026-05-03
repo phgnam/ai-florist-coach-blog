@@ -3,9 +3,9 @@ export const SITE_DESCRIPTION = 'Blog về hoa và nghề florist, được hỗ
 
 export const GISCUS = {
   repo: 'vuon-hoa/vuon-hoa-blog',
-  repoId: 'REPLACE_WITH_REPO_ID',
-  category: 'Blog comments',
-  categoryId: 'REPLACE_WITH_CATEGORY_ID',
+  repoId: 'R_kgDOSSfoYw',
+  category: 'General',
+  categoryId: 'DIC_kwDOSSfoY84C8OUz',
   mapping: 'pathname' as const,
-  theme: 'light' as const,
+  theme: 'preferred_color_scheme' as const,
 };
