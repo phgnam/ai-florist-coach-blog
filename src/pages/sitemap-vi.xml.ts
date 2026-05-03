@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-const SITE = 'https://vuon-hoa.replit.app';
+const SITE = import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app';
 const NOW = new Date().toISOString().split('T')[0];
 
 const VI_URLS = [
