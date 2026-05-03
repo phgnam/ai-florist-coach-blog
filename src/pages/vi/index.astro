@@ -5,6 +5,11 @@ import PostCard from '../../components/PostCard.astro';
 
 const lang = 'vi' as const;
 
+const firstPreviewImage = (post: any) => {
+  const figureImage = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
+  return figureImage ?? post.data.heroImage;
+};
+
 const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
@@ -74,7 +79,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
         pubDate={featured.data.pubDate}
         slug={`/vi/posts/${featured.id}`}
         tags={featured.data.tags}
-        heroImage={featured.data.heroImage as any}
+        previewImageUrl={firstPreviewImage(featured)}
         heroAlt={featured.data.heroAlt}
         featured={true}
       />
@@ -97,7 +102,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
             pubDate={post.data.pubDate}
             slug={`/vi/posts/${post.id}`}
             tags={post.data.tags}
-            heroImage={post.data.heroImage as any}
+            previewImageUrl={firstPreviewImage(post)}
             heroAlt={post.data.heroAlt}
           />
         ))}
