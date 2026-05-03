@@ -5,6 +5,7 @@ import PostCard from '../../components/PostCard.astro';
 import { getPostViewCounts } from '../../lib/postViews';
 
 const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
 
 const firstPreviewImage = (post: any) => {
   const figureImage = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
@@ -52,8 +53,18 @@ const trendingPalettes = [
   { bg: 'linear-gradient(150deg,#FDF5F0 0%,#F0E2D0 55%,#E8C8A0 100%)', accent: '#C8956A' },
   { bg: 'linear-gradient(150deg,#F5EEF8 0%,#E8D5F0 55%,#C8A4D0 100%)', accent: '#A07AB0' },
 ];
+
+const hreflang = [
+  { lang: 'vi', url: `${siteUrl}/vi/` },
+  { lang: 'en', url: `${siteUrl}/` },
+  { lang: 'x-default', url: `${siteUrl}/` },
+];
+
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+];
 ---
-<BaseLayout lang={lang} padTop={false}>
+<BaseLayout lang={lang} padTop={false} hreflang={hreflang} breadcrumbs={breadcrumbs}>
 
   <!-- ── HERO ── -->
   <section class="hero">
@@ -233,18 +244,33 @@ const trendingPalettes = [
 
 </BaseLayout>
 
-<script define:vars={{ allPostsData, postBase: '/vi/posts' }}>
+<script define:vars={{ allPostsData }}>
+  const esc = (value) => {
+    const s = String(value ?? '');
+    let out = '';
+    for (const ch of s) {
+      if (ch === '&') out += '&amp;';
+      else if (ch === '<') out += '&lt;';
+      else if (ch === '>') out += '&gt;';
+      else if (ch === '"') out += '&quot;';
+      else if (ch === "'") out += '&#39;';
+      else out += ch;
+    }
+    return out;
+  };
+
   try {
-    const views = {};
+    const views = new Map();
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith('vh_views_')) {
-        views[key.replace('vh_views_', '')] = parseInt(localStorage.getItem(key) || '0');
+        const slug = key.replace('vh_views_', '');
+        views.set(slug, Number.parseInt(localStorage.getItem(key) || '0', 10) || 0);
       }
     }
     const sorted = allPostsData
-      .filter(p => (views[p.slug] || 0) >= 2)
-      .sort((a, b) => (views[b.slug] || 0) - (views[a.slug] || 0))
+      .filter((p) => (views.get(p.slug) ?? 0) >= 2)
+      .sort((a, b) => (views.get(b.slug) ?? 0) - (views.get(a.slug) ?? 0))
       .slice(0, 3);
     if (sorted.length >= 2) {
       const grid = document.getElementById('trending-grid');
@@ -260,9 +286,9 @@ const trendingPalettes = [
           const pal = palettes[pi];
           const hasImage = !!p.previewImage;
           return `
-          <a href="${postBase}/${p.slug}" class="trending-card">
+          <a href="/vi/posts/${esc(p.slug)}" class="trending-card">
             <div class="trending-img-wrap" style="background:${pal.bg};position:relative">
-              ${hasImage ? `<img class="trending-img" src="${p.previewImage}" alt="${p.title.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.display='none';var ph=this.parentElement.querySelector('.trending-placeholder');if(ph)ph.style.display='flex'">` : ''}
+              ${hasImage ? `<img class="trending-img" src="${esc(p.previewImage)}" alt="${esc(p.title)}" loading="lazy" onerror="this.style.display='none';var ph=this.parentElement.querySelector('.trending-placeholder');if(ph)ph.style.display='flex'">` : ''}
               <div class="trending-placeholder" style="position:absolute;inset:0;display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center">
                 <svg width="56" height="56" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <ellipse cx="80" cy="80" rx="30" ry="44" fill="${pal.accent}" fill-opacity="0.13" transform="rotate(0 80 80)"/>
@@ -279,9 +305,9 @@ const trendingPalettes = [
               </div>
             </div>
             <div class="trending-body">
-              <span class="trending-tag">${p.tags[0] || ''}</span>
-              <h3 class="trending-title">${p.title}</h3>
-              <p class="trending-desc">${p.description}</p>
+              <span class="trending-tag">${esc(p.tags[0] || '')}</span>
+              <h3 class="trending-title">${esc(p.title)}</h3>
+              <p class="trending-desc">${esc(p.description)}</p>
               <span class="trending-cta">Đọc tiếp →</span>
             </div>
           </a>`;

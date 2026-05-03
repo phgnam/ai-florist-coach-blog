@@ -1,4 +1,8 @@
-User-agent: *
+import type { APIRoute } from 'astro';
+
+const SITE = import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app';
+
+const rules = `User-agent: *
 Allow: /
 
 # Block AI training scrapers (non-beneficial)
@@ -30,4 +34,11 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://ai-florist-coach-blog.vercel.app/sitemap-index.xml
+Sitemap: ${SITE}/sitemap-index.xml
+`;
+
+export const GET: APIRoute = () => {
+  return new Response(rules, {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
+};

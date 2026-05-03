@@ -16,7 +16,7 @@ const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://
 
 function readingTime(body: string): number {
   const text = body.replace(/<[^>]+>/g, ' ').replace(/import\s+[^;]+;/g, ' ');
-  const words = text.trim().split(/\s+/).filter((w) => /\w/.test(w)).length;
+  const words = text.trim().split(/\s+/).filter((w) => /[\p{L}]/u.test(w)).length;
   return Math.max(1, Math.round(words / 200));
 }
 
@@ -42,6 +42,7 @@ const ogImage = heroImage?.src ?? firstBodyImage(post.body);
 
 const hreflang = [
   { lang: 'vi', url: `${siteUrl}/vi/posts/${post.id}` },
+  { lang: 'en', url: `${siteUrl}/posts/${post.id}` },
   { lang: 'x-default', url: `${siteUrl}/vi/posts/${post.id}` },
 ];
 
@@ -67,14 +68,14 @@ const breadcrumbs = [
 >
   <script define:vars={{ slug: post.id, lang }}>
     const trackPostView = () => {
-      if (!slug || !lang || sessionStorage.getItem(`post-view:${lang}:${slug}`)) return;
+      if (!slug || !lang || localStorage.getItem(`post-view:${lang}:${slug}`)) return;
 
       const payload = JSON.stringify({ slug, lang });
 
       if (navigator.sendBeacon) {
         const sent = navigator.sendBeacon('/api/post-view', new Blob([payload], { type: 'application/json' }));
         if (sent) {
-          sessionStorage.setItem(`post-view:${lang}:${slug}`, '1');
+          localStorage.setItem(`post-view:${lang}:${slug}`, '1');
           return;
         }
       }
@@ -85,7 +86,7 @@ const breadcrumbs = [
         body: payload,
         keepalive: true,
       })
-        .then(() => sessionStorage.setItem(`post-view:${lang}:${slug}`, '1'))
+        .then(() => localStorage.setItem(`post-view:${lang}:${slug}`, '1'))
         .catch(() => {});
     };
 

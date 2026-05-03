@@ -5,8 +5,6 @@ import PostCard from '../components/PostCard.astro';
 import { useTranslations } from '../i18n/utils';
 import { getPostViewCounts } from '../lib/postViews';
 
-export const prerender = true;
-
 const firstPreviewImage = (post: any) => {
   const figureImage = post.body.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
   return figureImage ?? (post.data.heroImage as any);
@@ -266,18 +264,32 @@ const breadcrumbs = [
 
 </BaseLayout>
 
-<script define:vars={{ allPostsData, postBase: '/posts' }}>
+<script define:vars={{ allPostsData }}>
+  const esc = (value) => {
+    const s = String(value ?? '');
+    let out = '';
+    for (const ch of s) {
+      if (ch === '&') out += '&amp;';
+      else if (ch === '<') out += '&lt;';
+      else if (ch === '>') out += '&gt;';
+      else if (ch === '"') out += '&quot;';
+      else if (ch === "'") out += '&#39;';
+      else out += ch;
+    }
+    return out;
+  };
   try {
-    const views = {};
+    const views = new Map();
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith('vh_views_')) {
-        views[key.replace('vh_views_', '')] = parseInt(localStorage.getItem(key) || '0');
+        const slug = key.replace('vh_views_', '');
+        views.set(slug, Number.parseInt(localStorage.getItem(key) || '0', 10) || 0);
       }
     }
     const sorted = allPostsData
-      .filter(p => (views[p.slug] || 0) >= 2)
-      .sort((a, b) => (views[b.slug] || 0) - (views[a.slug] || 0))
+      .filter((p) => (views.get(p.slug) ?? 0) >= 2)
+      .sort((a, b) => (views.get(b.slug) ?? 0) - (views.get(a.slug) ?? 0))
       .slice(0, 3);
     if (sorted.length >= 2) {
       const grid = document.getElementById('trending-grid');
@@ -293,9 +305,9 @@ const breadcrumbs = [
           const pal = palettes[pi];
           const hasImage = !!p.previewImage;
           return `
-          <a href="${postBase}/${p.slug}" class="trending-card">
+          <a href="/posts/${esc(p.slug)}" class="trending-card">
             <div class="trending-img-wrap" style="background:${pal.bg};position:relative">
-              ${hasImage ? `<img class="trending-img" src="${p.previewImage}" alt="${p.title.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.display='none';var ph=this.parentElement.querySelector('.trending-placeholder');if(ph)ph.style.display='flex'">` : ''}
+              ${hasImage ? `<img class="trending-img" src="${esc(p.previewImage)}" alt="${esc(p.title)}" loading="lazy" onerror="this.style.display='none';var ph=this.parentElement.querySelector('.trending-placeholder');if(ph)ph.style.display='flex'">` : ''}
               <div class="trending-placeholder" style="position:absolute;inset:0;display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center">
                 <svg width="56" height="56" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                   <ellipse cx="80" cy="80" rx="30" ry="44" fill="${pal.accent}" fill-opacity="0.13" transform="rotate(0 80 80)"/>
@@ -312,9 +324,9 @@ const breadcrumbs = [
               </div>
             </div>
             <div class="trending-body">
-              <span class="trending-tag">${p.tags[0] || ''}</span>
-              <h3 class="trending-title">${p.title}</h3>
-              <p class="trending-desc">${p.description}</p>
+              <span class="trending-tag">${esc(p.tags[0] || '')}</span>
+              <h3 class="trending-title">${esc(p.title)}</h3>
+              <p class="trending-desc">${esc(p.description)}</p>
               <span class="trending-cta">Read more →</span>
             </div>
           </a>`;
@@ -323,7 +335,6 @@ const breadcrumbs = [
     }
   } catch (_) {}
 </script>
-
 
 <style>
   .hero {
