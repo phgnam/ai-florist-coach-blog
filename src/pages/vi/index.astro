@@ -196,17 +196,43 @@ const allTags = [...tagCounts.entries()]
       const grid = document.getElementById('trending-grid');
       if (section && grid) {
         section.style.display = 'block';
-        grid.innerHTML = sorted.map(p => `
+        grid.innerHTML = sorted.map(p => {
+          const palettes = [
+            { bg: 'linear-gradient(150deg,#FDF0F2 0%,#F5C8D2 55%,#EDA8B8 100%)', accent: '#C47A8A' },
+            { bg: 'linear-gradient(150deg,#F5E6EA 0%,#EDA8B8 55%,#C47A8A 100%)', accent: '#9B5968' },
+            { bg: 'linear-gradient(150deg,#FDF5F0 0%,#F0E2D0 55%,#E8C8A0 100%)', accent: '#C8956A' },
+            { bg: 'linear-gradient(150deg,#F5EEF8 0%,#E8D5F0 55%,#C8A4D0 100%)', accent: '#A07AB0' },
+          ];
+          const pi = Math.abs(p.title.charCodeAt(0) + (p.title.charCodeAt(1) || 0)) % 4;
+          const pal = palettes[pi];
+          const hasImage = !!p.previewImage;
+          return `
           <a href="${postBase}/${p.slug}" class="trending-card">
-            ${p.previewImage ? `<div class="trending-img-wrap"><img class="trending-img" src="${p.previewImage}" alt="${p.title.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.display='none';this.parentElement.style.display='none'"></div>` : ''}
+            <div class="trending-img-wrap" style="background:${pal.bg};position:relative">
+              ${hasImage ? `<img class="trending-img" src="${p.previewImage}" alt="${p.title.replace(/"/g,'&quot;')}" loading="lazy" onerror="this.style.display='none';var ph=this.parentElement.querySelector('.trending-placeholder');if(ph)ph.style.display='flex'">` : ''}
+              <div class="trending-placeholder" style="position:absolute;inset:0;display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center">
+                <svg width="56" height="56" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <ellipse cx="80" cy="80" rx="30" ry="44" fill="${pal.accent}" fill-opacity="0.13" transform="rotate(0 80 80)"/>
+                  <ellipse cx="80" cy="80" rx="30" ry="44" fill="${pal.accent}" fill-opacity="0.11" transform="rotate(45 80 80)"/>
+                  <ellipse cx="80" cy="80" rx="30" ry="44" fill="${pal.accent}" fill-opacity="0.11" transform="rotate(90 80 80)"/>
+                  <ellipse cx="80" cy="80" rx="30" ry="44" fill="${pal.accent}" fill-opacity="0.11" transform="rotate(135 80 80)"/>
+                  <circle cx="80" cy="80" r="12" fill="${pal.accent}" fill-opacity="0.28"/>
+                  <circle cx="80" cy="80" r="5" fill="${pal.accent}" fill-opacity="0.55"/>
+                  <circle cx="80" cy="44" r="4" fill="${pal.accent}" fill-opacity="0.18"/>
+                  <circle cx="80" cy="116" r="4" fill="${pal.accent}" fill-opacity="0.18"/>
+                  <circle cx="44" cy="80" r="4" fill="${pal.accent}" fill-opacity="0.18"/>
+                  <circle cx="116" cy="80" r="4" fill="${pal.accent}" fill-opacity="0.18"/>
+                </svg>
+              </div>
+            </div>
             <div class="trending-body">
               <span class="trending-tag">${p.tags[0] || ''}</span>
               <h3 class="trending-title">${p.title}</h3>
               <p class="trending-desc">${p.description}</p>
               <span class="trending-cta">Đọc tiếp →</span>
             </div>
-          </a>
-        `).join('');
+          </a>`;
+        }).join('');
       }
     }
   } catch (_) {}
