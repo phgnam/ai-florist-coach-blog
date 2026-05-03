@@ -3,6 +3,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { GLOSSARY_TERMS_VI, getVITermBySlug } from '../../../data/glossary-vi';
 import { GLOSSARY_TERMS } from '../../../data/glossary';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   return GLOSSARY_TERMS_VI.map(term => ({ params: { term: term.slug } }));
 }
@@ -14,7 +16,7 @@ if (!term) return Astro.redirect('/vi/learn/');
 const enTerm = GLOSSARY_TERMS.find(t => t.slug === termSlug);
 
 const lang = 'vi' as const;
-const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
 
 const hreflang = [
   { lang: 'en', url: `${siteUrl}/learn/${term.slug}/` },

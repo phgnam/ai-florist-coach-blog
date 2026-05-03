@@ -11,7 +11,7 @@ const tagCounts = posts.flatMap((p) => p.data.tags).reduce((acc, tag) => {
   acc[tag] = (acc[tag] ?? 0) + 1;
   return acc;
 }, {} as Record<string, number>);
-const tags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+const tags = (Object.entries(tagCounts) as [string, number][]).sort((a, b) => b[1] - a[1]);
 
 const tagEmoji: Record<string, string> = {
   guide: '📖',
