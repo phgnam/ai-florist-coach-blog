@@ -15,7 +15,11 @@ const p = (path: string) => localePath(lang, path);
 const alternateLang = lang === 'vi' ? 'en' : 'vi';
 const alternateUrl = alternatePath(Astro.url.pathname, lang);
 const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
-const isActive = (path: string) => pathname === (path.replace(/\/+$/, '') || '/');
+const isActive = (path: string) => {
+  const normalized = path.replace(/\/+$/, '') || '/';
+  if (normalized === '/') return pathname === '/';
+  return pathname === normalized || pathname.startsWith(`${normalized}/`);
+};
 ---
 <header
   id="site-header"
