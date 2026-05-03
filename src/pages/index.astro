@@ -3,6 +3,9 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { useTranslations } from '../i18n/utils';
+import { getPostViewCounts } from '../lib/postViews';
+
+export const prerender = true;
 
 const firstPreviewImage = (post: any) => {
   const figureImage = post.body.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
@@ -11,7 +14,7 @@ const firstPreviewImage = (post: any) => {
 
 const lang = 'en' as const;
 const t = useTranslations(lang);
-const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
 
 const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -41,7 +44,13 @@ const allTags = [...tagCounts.entries()]
   .slice(0, 12)
   .map(([tag]) => tag);
 
-const trendingPosts = allPosts.slice(0, 3);
+const postViews = await getPostViewCounts(lang, allPosts.map((post) => post.id));
+const trendingPosts = [...allPosts]
+  .sort((a, b) => {
+    const viewsDiff = (postViews.get(b.id) ?? 0) - (postViews.get(a.id) ?? 0);
+    return viewsDiff || b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+  })
+  .slice(0, 3);
 const trendingPalettes = [
   { bg: 'linear-gradient(150deg,#FDF0F2 0%,#F5C8D2 55%,#EDA8B8 100%)', accent: '#C47A8A' },
   { bg: 'linear-gradient(150deg,#F5E6EA 0%,#EDA8B8 55%,#C47A8A 100%)', accent: '#9B5968' },

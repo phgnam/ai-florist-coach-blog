@@ -8,9 +8,11 @@ import RelatedPosts from '../../components/RelatedPosts.astro';
 import AuthorBox from '../../components/AuthorBox.astro';
 import { useTranslations } from '../../i18n/utils';
 
+export const prerender = true;
+
 const lang = 'en' as const;
 const t = useTranslations(lang);
-const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
 
 function readingTime(body: string): number {
   const text = body.replace(/<[^>]+>/g, ' ').replace(/import\s+[^;]+;/g, ' ');
@@ -63,6 +65,39 @@ const breadcrumbs = [
   hreflang={hreflang}
   breadcrumbs={breadcrumbs}
 >
+  <script define:vars={{ slug: post.id, lang }}>
+    const trackPostView = () => {
+      if (!slug || !lang || sessionStorage.getItem(`post-view:${lang}:${slug}`)) return;
+
+      const payload = JSON.stringify({ slug, lang });
+
+      if (navigator.sendBeacon) {
+        const sent = navigator.sendBeacon('/api/post-view', new Blob([payload], { type: 'application/json' }));
+        if (sent) {
+          sessionStorage.setItem(`post-view:${lang}:${slug}`, '1');
+          return;
+        }
+      }
+
+      fetch('/api/post-view', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: payload,
+        keepalive: true,
+      })
+        .then(() => sessionStorage.setItem(`post-view:${lang}:${slug}`, '1'))
+        .catch(() => {});
+    };
+
+    if (document.visibilityState === 'visible') {
+      trackPostView();
+    } else {
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') trackPostView();
+      }, { once: true });
+    }
+  </script>
+
   <div id="reading-progress"></div>
 
   <div class="post-hero">
@@ -112,7 +147,7 @@ const breadcrumbs = [
       <div class="share-box fade-up fade-up-4">
         <p class="share-text">{t('post.share')}</p>
         <div class="share-tags">
-          {tags.map(tag => <span class="share-tag">#{tag}</span>)}
+          {tags.map((tag: string) => <span class="share-tag">#{tag}</span>)}
         </div>
         <div class="social-share" aria-label="Social sharing">
           <a class="share-btn share-btn--x" href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`${siteUrl}/posts/${post.id}`)}&text=${encodeURIComponent(title)}`} target="_blank" rel="noreferrer">X / Twitter</a>

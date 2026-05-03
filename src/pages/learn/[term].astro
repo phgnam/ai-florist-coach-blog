@@ -2,8 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { GLOSSARY_TERMS, getTermBySlug } from '../../data/glossary';
 
+export const prerender = true;
+
 const lang = 'en' as const;
-const siteUrl = (Astro.site?.toString() ?? 'https://vuon-hoa.replit.app').replace(/\/$/, '');
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
 
 export async function getStaticPaths() {
   return GLOSSARY_TERMS.map(term => ({
@@ -154,7 +156,7 @@ const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6
           Florist Care Tips
         </h2>
         <ul class="care-list">
-          {term.careTips.map(tip => (
+          {term.careTips.map((tip: string) => (
             <li class="care-item">
               <span class="care-check">✓</span>
               <span>{tip}</span>
@@ -170,7 +172,7 @@ const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6
           Common Varieties
         </h2>
         <div class="varieties-grid">
-          {term.commonVarieties.map(v => (
+          {term.commonVarieties.map((v: { name: string; description: string }) => (
             <div class="variety-card">
               <h3 class="variety-name">{v.name}</h3>
               <p class="variety-desc">{v.description}</p>
@@ -186,7 +188,7 @@ const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6
           Best Used For
         </h2>
         <div class="best-for-list">
-          {term.bestFor.map(use => (
+          {term.bestFor.map((use: string) => (
             <span class="use-tag">{use}</span>
           ))}
         </div>

@@ -30,4 +30,4 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://vuon-hoa.replit.app/sitemap-index.xml
+Sitemap: https://ai-florist-coach-blog.vercel.app/sitemap-index.xml
