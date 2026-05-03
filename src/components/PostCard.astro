@@ -36,11 +36,11 @@ const showPlaceholder = !heroImage && !previewImageUrl && !heroImageUrl;
   <a href={href} class="card-image-link" aria-hidden="true" tabindex="-1">
     <div class="card-image-wrap">
       {heroImage ? (
-        <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.closest('.card-image-wrap').querySelector('.card-placeholder');if(p)p.style.display='flex'" />
+        <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
       ) : previewImageUrl ? (
-        <img src={previewImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.closest('.card-image-wrap').querySelector('.card-placeholder');if(p)p.style.display='flex'" />
+        <img src={previewImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
       ) : heroImageUrl ? (
-        <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';var p=this.closest('.card-image-wrap').querySelector('.card-placeholder');if(p)p.style.display='flex'" />
+        <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
       ) : null}
       <div class="card-placeholder" style={`background:${palette.bg};${showPlaceholder ? '' : 'display:none'}`}>
         <svg class="placeholder-bloom" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

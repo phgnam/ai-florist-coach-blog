@@ -162,7 +162,7 @@ const trendingPalettes = [
             <div class="trending-img-wrap" style={`background:${pal.bg};position:relative`}>
               {hasImage && (
                 <img class="trending-img" src={previewImage} alt={post.data.heroAlt ?? post.data.title} loading="lazy"
-                  onerror="this.style.display='none';var ph=this.parentElement.querySelector('.trending-placeholder');if(ph)ph.style.display='flex'" />
+                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
               )}
               <div class="trending-placeholder" style={`position:absolute;inset:0;display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center`}>
                 <svg width="56" height="56" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
