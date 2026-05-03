@@ -63,6 +63,18 @@ blog/
 
 ## Adding a post
 
+> **MANDATORY:** Every new article MUST follow [`docs/seo-aeo-playbook.md`](./docs/seo-aeo-playbook.md). No exceptions.
+>
+> Before writing, confirm:
+> - Topic comes from **Google Search Console** impression data (no intuition picks).
+> - Title is a specific long-tail **question** (not a broad "ultimate guide").
+> - First section is a **Quick Answer** block (40–60 words) directly answering the title question.
+> - All H2 headings are phrased as questions.
+> - Article emits `Article` + `FAQPage` JSON-LD; FAQ section mirrors the schema.
+> - After publish: ping IndexNow and request indexing in GSC.
+>
+> Skipping any of the above is a defect — see the playbook's "What NOT to Do" section.
+
 Create `src/content/posts/<slug>.mdx`:
 
 ```mdx
@@ -98,11 +110,15 @@ Giscus is included but disabled until you provide IDs. The `<Giscus />` componen
 
 ## SEO checklist
 
+> Authoritative rule: [`docs/seo-aeo-playbook.md`](./docs/seo-aeo-playbook.md). The list below is the **technical** baseline only — content/AEO requirements live in the playbook.
+
 - `<title>`, `<meta description>`, canonical, OG, Twitter Card — all in `src/components/SEO.astro`.
-- JSON-LD: homepage emits `Blog`, every post emits `BlogPosting` (with author, dates, image, keywords).
+- JSON-LD: homepage emits `Blog`, every post emits `BlogPosting` (with author, dates, image, keywords). Articles MUST also emit `FAQPage` per the playbook.
 - Sitemap: `/sitemap-index.xml` (excludes drafts).
 - RSS: `/rss.xml`.
 - `public/robots.txt` references the sitemap.
+- `llms.txt` at site root for AEO (LLM crawlers).
+- Performance budget: PageSpeed desktop ≥ 95, mobile LCP ≤ 1.0s target.
 
 ## Search (Pagefind)
 
