@@ -9,7 +9,7 @@ export const peachBlossom: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa đào: loài hoa Tết hồng của miền Bắc Việt Nam, sự khác biệt ' +
     'văn hóa giữa đào Hà Nội và mai miền Nam, điều hòa cành và tính giờ Tết. ' +
-    'Từ Vườn Hoa.',
+    'Từ Yor Flower.',
   summary:
     'Hoa đào là loài hoa năm cánh hồng biểu tượng của Tết Nguyên Đán miền Bắc ' +
     'Việt Nam, đối ứng địa lý của hoa mai miền Nam. Mỗi Tết, Hà Nội và miền ' +

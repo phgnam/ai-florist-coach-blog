@@ -8,7 +8,7 @@ export const lily: GlossaryTermVI = {
   title: 'Hoa Ly — Ý Nghĩa, Các Giống & Hướng Dẫn Chăm Sóc',
   metaDescription:
     'Hướng dẫn đầy đủ về hoa ly: ý nghĩa theo màu sắc, cách loại bỏ phấn hoa, ' +
-    'mẹo kéo dài tuổi thọ trong bình. Từ chuyên gia Vườn Hoa.',
+    'mẹo kéo dài tuổi thọ trong bình. Từ chuyên gia Yor Flower.',
   summary:
     'Hoa ly là loài hoa hình loa kèn thuộc chi Lilium, có nguồn gốc từ vùng ' +
     'ôn đới Bắc bán cầu. Bông hoa to và hương thơm nồng nàn khiến chúng là ' +

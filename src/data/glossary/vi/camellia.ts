@@ -9,7 +9,7 @@ export const camellia: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn trà my: nguồn gốc trà từ Trung Quốc và Việt Nam, hoa biểu ' +
     'tượng của Coco Chanel, vì sao trà my tươi dễ thâm, và chăm sóc bông cắt. ' +
-    'Từ Vườn Hoa.',
+    'Từ Yor Flower.',
   summary:
     'Trà my (Camellia japonica và họ hàng) là chi cây thường xanh từ Đông Á, ' +
     'bao gồm cây trà (Camellia sinensis). Bông hoa tự nó là một hình hoa hồng ' +

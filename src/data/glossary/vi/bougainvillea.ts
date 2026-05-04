@@ -9,7 +9,7 @@ export const bougainvillea: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa giấy: nguồn gốc Nam Mỹ, vì sao "cánh hoa" rực rỡ thực ra ' +
     'là lá, vì sao hoa giấy lát ngập đường phố Việt Nam và mẹo chăm sóc cành ' +
-    'cắt. Từ Vườn Hoa.',
+    'cắt. Từ Yor Flower.',
   summary:
     'Hoa giấy (Bougainvillea) là cây leo bụi Nam Mỹ được nhà thám hiểm hải ' +
     'quân Pháp Louis Antoine de Bougainville giới thiệu vào ngành cảnh quan ' +

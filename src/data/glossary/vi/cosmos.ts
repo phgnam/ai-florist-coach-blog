@@ -8,7 +8,7 @@ export const cosmos: GlossaryTermVI = {
   title: 'Hoa Sao Nhái (Cosmos) — Ý Nghĩa, Nguồn Gốc Mexico & Chăm Sóc Florist Cottage',
   metaDescription:
     'Hướng dẫn hoa sao nhái: hoa dại Mexico, biểu tượng "hài hòa", tên Việt ' +
-    'Nam và chăm sóc các bông daisy mảnh trong floristry cắt. Từ Vườn Hoa.',
+    'Nam và chăm sóc các bông daisy mảnh trong floristry cắt. Từ Yor Flower.',
   summary:
     'Hoa sao nhái (Cosmos bipinnatus và C. sulphureus) là hoa dại Mexico và ' +
     'Trung Mỹ được các nhà truyền giáo Tây Ban Nha giới thiệu vào ngành cảnh ' +

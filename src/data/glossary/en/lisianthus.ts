@@ -9,7 +9,7 @@ export const lisianthus: GlossaryTerm = {
   metaDescription:
     'Lisianthus guide: why florists call it the "rose alternative", Texas ' +
     'wildflower origins, double-bloom varieties, and conditioning tips. From ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Lisianthus (Eustoma grandiflorum), also called prairie gentian or Texas ' +
     'bluebell, is a North American wildflower native to the Great Plains and ' +

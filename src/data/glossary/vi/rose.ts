@@ -7,7 +7,7 @@ export const rose: GlossaryTermVI = {
   title: 'Hoa Hồng — Ý Nghĩa, Cách Chăm Sóc & Các Giống Phổ Biến',
   metaDescription:
     'Tìm hiểu tất cả về hoa hồng: ý nghĩa theo màu sắc, cách giữ hoa hồng ' +
-    'tươi lâu, các giống phổ biến và mùa nở. Tổng hợp từ chuyên gia Vườn Hoa.',
+    'tươi lâu, các giống phổ biến và mùa nở. Tổng hợp từ chuyên gia Yor Flower.',
   summary:
     'Hoa hồng là loài hoa được công nhận rộng rãi nhất thế giới, được trồng ' +
     'hơn 5.000 năm. Với hơn 300 loài và hàng chục nghìn giống cây trồng, hoa ' +

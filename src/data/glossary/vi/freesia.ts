@@ -8,7 +8,7 @@ export const freesia: GlossaryTermVI = {
   title: 'Hoa Freesia — Hương Thơm, Ý Nghĩa & Hướng Dẫn Florist',
   metaDescription:
     'Hướng dẫn hoa freesia: tại sao freesia là lựa chọn hương thơm cho đám ' +
-    'cưới, cách mở nụ hoa, tuổi thọ bình. Từ Vườn Hoa.',
+    'cưới, cách mở nụ hoa, tuổi thọ bình. Từ Yor Flower.',
   summary:
     'Hoa freesia có nguồn gốc từ vùng Cape Floristic của Nam Phi và được đánh ' +
     'giá cao hơn hầu hết hoa cắt vì hương thơm đặc biệt. Một cành duy nhất có ' +

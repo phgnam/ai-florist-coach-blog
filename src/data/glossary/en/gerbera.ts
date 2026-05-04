@@ -9,7 +9,7 @@ export const gerbera: GlossaryTerm = {
   metaDescription:
     'Gerbera daisy guide: South African origin, why florists wire the stems, ' +
     'the world\'s 5th-most-popular cut flower, colour symbolism, and care ' +
-    'tips. From Vườn Hoa.',
+    'tips. From Yor Flower.',
   summary:
     'Gerbera (Gerbera jamesonii) is a single-stem composite flower from the ' +
     'South African Transvaal grasslands, named after German botanist Traugott ' +

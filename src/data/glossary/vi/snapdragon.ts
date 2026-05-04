@@ -9,7 +9,7 @@ export const snapdragon: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa mõm sói: cơ chế hàm rồng, nguồn gốc hoa dại Địa Trung Hải, ' +
     'vì sao florist trân trọng cho chiều cao và chuyển động, mẹo chăm sóc. Từ ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Hoa mõm sói (Antirrhinum majus) là cây thường niên hình cuống cao từ ' +
     'vùng bờ biển đá Địa Trung Hải. Tên thông thường đến từ cơ chế hoa độc ' +

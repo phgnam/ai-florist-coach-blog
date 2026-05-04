@@ -42,7 +42,7 @@ export function MaisonFleur() {
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
             <div style={{ height: 1, width: 32, background: "#C8956A" }} />
             <p style={{ fontFamily: "'Didact Gothic', sans-serif", fontSize: 10, letterSpacing: "0.4em", fontWeight: 400, color: "#C8956A", textTransform: "uppercase", margin: 0 }}>
-              Vườn Hoa · Identité de Marque
+              Yor Flower · Identité de Marque
             </p>
           </div>
           <h1 style={{ fontSize: 70, fontWeight: 400, lineHeight: 1.0, margin: "0 0 4px", color: "#FAF7F2" }}>
@@ -122,7 +122,7 @@ export function MaisonFleur() {
             </div>
             <div style={{ padding: "14px 18px", background: "#FAF7F2", border: "1px solid #D4B8A0" }}>
               <p style={{ fontFamily: "'Didact Gothic', sans-serif", fontSize: 10, color: "#C8956A", letterSpacing: "0.2em", textTransform: "uppercase", margin: "0 0 8px", fontWeight: 400 }}>Welcome</p>
-              <p style={{ fontFamily: "'Didact Gothic', sans-serif", fontSize: 13, fontWeight: 400, margin: 0, color: "#3A2830", lineHeight: 1.7, letterSpacing: "0.02em" }}>Chào mừng đến Vườn Hoa — nơi kiến thức và vẻ đẹp gặp nhau trong từng trang viết được chắt lọc kỹ lưỡng.</p>
+              <p style={{ fontFamily: "'Didact Gothic', sans-serif", fontSize: 13, fontWeight: 400, margin: 0, color: "#3A2830", lineHeight: 1.7, letterSpacing: "0.02em" }}>Chào mừng đến Yor Flower — nơi kiến thức và vẻ đẹp gặp nhau trong từng trang viết được chắt lọc kỹ lưỡng.</p>
             </div>
             <div style={{ padding: "14px 18px", background: "#FAF7F2", border: "1px solid #D4B8A0" }}>
               <p style={{ fontFamily: "'Didact Gothic', sans-serif", fontSize: 10, color: "#C8956A", letterSpacing: "0.2em", textTransform: "uppercase", margin: "0 0 8px", fontWeight: 400 }}>Call to Action</p>
@@ -156,14 +156,14 @@ export function MaisonFleur() {
               <p style={{ fontFamily: "'Didact Gothic', sans-serif", fontSize: 12, color: "#6B5560", margin: 0, lineHeight: 1.7, letterSpacing: "0.01em" }}>Những mẹo nhỏ từ chuyên gia giúp bó hoa...</p>
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #E8DDD4", display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 22, height: 22, background: "#1A1318", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>✦</div>
-                <span style={{ fontFamily: "'Didact Gothic', sans-serif", fontSize: 11, color: "#6B5560", letterSpacing: "0.08em" }}>Vườn Hoa · 2 thg 5, 2026</span>
+                <span style={{ fontFamily: "'Didact Gothic', sans-serif", fontSize: 11, color: "#6B5560", letterSpacing: "0.08em" }}>Yor Flower · 2 thg 5, 2026</span>
               </div>
             </div>
           </div>
           <div style={{ background: "#1A1318", padding: "14px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "2px solid #C8956A" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ width: 24, height: 24, background: "transparent", border: "1px solid #C8956A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11 }}>✦</div>
-              <span style={{ fontSize: 15, fontWeight: 400, color: "#FAF7F2", letterSpacing: "0.05em" }}>Vườn Hoa</span>
+              <span style={{ fontSize: 15, fontWeight: 400, color: "#FAF7F2", letterSpacing: "0.05em" }}>Yor Flower</span>
             </div>
             <div style={{ display: "flex", gap: 24 }}>
               {["Bài viết","Chủ đề","Giới thiệu"].map(n => (

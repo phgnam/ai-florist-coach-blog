@@ -9,7 +9,7 @@ export const snapdragon: GlossaryTerm = {
   metaDescription:
     'Snapdragon guide: the dragon-jaw flower mechanism, Mediterranean ' +
     'wildflower origins, why florists prize them for height and movement, and ' +
-    'care tips. From Vườn Hoa.',
+    'care tips. From Yor Flower.',
   summary:
     'Snapdragons (Antirrhinum majus) are tall spiked annuals from the rocky ' +
     'coastlines of the Mediterranean. Their common name comes from the unique ' +

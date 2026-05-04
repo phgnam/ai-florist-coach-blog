@@ -9,7 +9,7 @@ export const bougainvillea: GlossaryTerm = {
   metaDescription:
     'Bougainvillea guide: South American origin, why the colourful "petals" ' +
     'are actually leaves, why hoa giấy lines Vietnamese streets, and care ' +
-    'tips for cut sprays. From Vườn Hoa.',
+    'tips for cut sprays. From Yor Flower.',
   summary:
     'Bougainvillea is a South American climbing shrub introduced to global ' +
     'horticulture in the 1760s by the French naval explorer Louis Antoine de ' +

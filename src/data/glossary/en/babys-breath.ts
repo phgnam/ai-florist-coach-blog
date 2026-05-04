@@ -9,7 +9,7 @@ export const babysBreath: GlossaryTerm = {
   metaDescription:
     'Baby\'s breath guide: the world\'s most-used wedding filler flower, ' +
     'Mediterranean origin, the "innocent" symbolism, and care tips for the ' +
-    'cloud of tiny white blooms. From Vườn Hoa.',
+    'cloud of tiny white blooms. From Yor Flower.',
   summary:
     'Baby\'s breath (Gypsophila paniculata) is a Mediterranean and Eurasian ' +
     'perennial in the carnation family, producing immense airy clouds of tiny ' +

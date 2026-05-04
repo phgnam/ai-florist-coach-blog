@@ -8,7 +8,7 @@ export const alstroemeria: GlossaryTermVI = {
   title: 'Hoa Thủy Tiên Peru (Alstroemeria) — Ý Nghĩa, Tuổi Thọ Bình & Chăm Sóc',
   metaDescription:
     'Hướng dẫn alstroemeria: nguồn gốc Nam Mỹ, vì sao bền hơn gần như mọi hoa ' +
-    'cắt khác, biểu tượng tình bạn, mẹo loại bỏ phấn hoa. Từ Vườn Hoa.',
+    'cắt khác, biểu tượng tình bạn, mẹo loại bỏ phấn hoa. Từ Yor Flower.',
   summary:
     'Hoa thủy tiên Peru (alstroemeria) — còn gọi là hoa ly Inca — là chi từ ' +
     'Nam Mỹ vùng Andes và Patagonia, được Linnaeus đặt tên theo người bạn ' +

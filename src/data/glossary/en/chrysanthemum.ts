@@ -9,7 +9,7 @@ export const chrysanthemum: GlossaryTerm = {
   metaDescription:
     'Chrysanthemum guide: cultural symbolism in Asia vs Europe, best ' +
     'varieties for arrangements, and how to keep mums fresh. From floristry ' +
-    'experts at Vườn Hoa.',
+    'experts at Yor Flower.',
   summary:
     'Chrysanthemums ("mums") have been cultivated in China for over 3,500 ' +
     'years. Today they are the second most popular cut flower globally after ' +

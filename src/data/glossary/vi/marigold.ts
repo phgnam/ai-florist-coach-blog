@@ -8,7 +8,7 @@ export const marigold: GlossaryTermVI = {
   title: 'Hoa Vạn Thọ — Ý Nghĩa, Công Dụng & Tại Sao Florist Yêu Thích',
   metaDescription:
     'Hướng dẫn hoa vạn thọ: ý nghĩa trong Ngày của Người Chết, công dụng ' +
-    'thiêng liêng ở châu Á, cách dùng trong florist hiện đại. Từ Vườn Hoa.',
+    'thiêng liêng ở châu Á, cách dùng trong florist hiện đại. Từ Yor Flower.',
   summary:
     'Hoa vạn thọ (Tagetes) có nguồn gốc từ châu Mỹ nhưng đã được áp dụng là ' +
     'hoa thiêng liêng ở châu Á và được dùng trong mọi thứ từ vòng hoa đến ' +

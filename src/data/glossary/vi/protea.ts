@@ -9,7 +9,7 @@ export const protea: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn protea: quốc hoa Nam Phi, các giống king và pincushion, dòng ' +
     'dõi cổ xưa, vì sao những bông hoa ấn tượng này hoạt động cả tươi lẫn ' +
-    'khô. Từ Vườn Hoa.',
+    'khô. Từ Yor Flower.',
   summary:
     'Protea (chi Protea) là loài hoa biểu tượng nhất của Vương quốc Hoa Cape ' +
     'Nam Phi và là quốc hoa của đất nước này. Vẻ ngoài điêu khắc, gần như ' +

@@ -9,7 +9,7 @@ export const lily: GlossaryTerm = {
   metaDescription:
     'Complete guide to lilies: symbolism, Oriental vs Asiatic varieties, ' +
     'pollen removal tips, and how to extend vase life. Expert advice from ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Lilies are trumpet-shaped flowers from the genus Lilium, native to ' +
     'temperate regions of the Northern Hemisphere. Their bold blooms and ' +

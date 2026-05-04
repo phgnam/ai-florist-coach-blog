@@ -8,7 +8,7 @@ export const chrysanthemum: GlossaryTermVI = {
   title: 'Hoa Cúc — Ý Nghĩa, Các Giống & Hướng Dẫn Florist',
   metaDescription:
     'Hướng dẫn hoa cúc: ý nghĩa văn hóa ở châu Á và châu Âu, các giống tốt ' +
-    'nhất cho cắm hoa, cách giữ cúc tươi. Từ chuyên gia florist Vườn Hoa.',
+    'nhất cho cắm hoa, cách giữ cúc tươi. Từ chuyên gia florist Yor Flower.',
   summary:
     'Hoa cúc đã được trồng ở Trung Quốc hơn 3.500 năm. Ngày nay chúng là loài ' +
     'hoa cắt phổ biến thứ hai toàn cầu sau hoa hồng, được đánh giá cao vì sự ' +

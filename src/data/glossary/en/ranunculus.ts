@@ -9,7 +9,7 @@ export const ranunculus: GlossaryTerm = {
   metaDescription:
     'Ranunculus guide: why florists love them for weddings, how many petals a ' +
     'single ranunculus has, seasonal availability, and conditioning tips. ' +
-    'From Vườn Hoa.',
+    'From Yor Flower.',
   summary:
     'Ranunculus (buttercups) have become one of the most beloved flowers in ' +
     'contemporary wedding floristry, valued for their extraordinary density ' +

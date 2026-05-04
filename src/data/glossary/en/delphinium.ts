@@ -9,7 +9,7 @@ export const delphinium: GlossaryTerm = {
   metaDescription:
     'Delphinium guide: the rare true-blue tall flower, "ardent attachment" ' +
     'symbolism, July birth flower, and care for the dramatic vertical spike. ' +
-    'From Vườn Hoa.',
+    'From Yor Flower.',
   summary:
     'Delphinium (Delphinium genus, with annual species often called larkspur) ' +
     'is a tall perennial spike flower native to the Northern Hemisphere ' +

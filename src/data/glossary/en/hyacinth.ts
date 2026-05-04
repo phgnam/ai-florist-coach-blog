@@ -9,7 +9,7 @@ export const hyacinth: GlossaryTerm = {
   metaDescription:
     'Hyacinth guide: the Greek myth behind the name, why this is the most ' +
     'fragrant spring bulb, Persian Nowruz traditions, and how to keep cut ' +
-    'hyacinths upright. From Vườn Hoa.',
+    'hyacinths upright. From Yor Flower.',
   summary:
     'Hyacinth (Hyacinthus orientalis) is a dense column of waxy, star-shaped ' +
     'florets growing from a single bulb, releasing what many florists ' +

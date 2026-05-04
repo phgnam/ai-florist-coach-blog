@@ -8,7 +8,7 @@ export const hydrangea: GlossaryTerm = {
   title: 'Hydrangea — Meaning, Colors & How to Revive Wilted Stems',
   metaDescription:
     'Hydrangea guide for florists: how to revive wilting, why colors change ' +
-    'with soil pH, best varieties for bouquets, and care tips. From Vườn Hoa.',
+    'with soil pH, best varieties for bouquets, and care tips. From Yor Flower.',
   summary:
     'Hydrangeas are large, mophead or lacecap flowering shrubs beloved by ' +
     'florists for their ability to add dramatic volume to arrangements. Their ' +

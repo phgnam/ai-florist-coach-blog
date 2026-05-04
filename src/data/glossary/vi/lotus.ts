@@ -9,7 +9,7 @@ export const lotus: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa sen: ý nghĩa thiêng liêng trong văn hóa Việt Nam, Phật ' +
     'giáo và Hindu giáo, lý do sen vươn lên trong sạch từ bùn lầy, cách bảo ' +
-    'quản và mùa thu hoạch. Từ Vườn Hoa.',
+    'quản và mùa thu hoạch. Từ Yor Flower.',
   summary:
     'Hoa sen (Nelumbo nucifera) là quốc hoa không chính thức của Việt Nam và ' +
     'là một trong những loài hoa mang ý nghĩa tâm linh sâu sắc nhất châu Á. ' +

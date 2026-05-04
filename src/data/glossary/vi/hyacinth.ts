@@ -9,7 +9,7 @@ export const hyacinth: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn lan dạ hương: thần thoại Hy Lạp đằng sau cái tên, lý do đây là ' +
     'củ hoa mùa xuân thơm nhất, truyền thống Nowruz Ba Tư, cách giữ hoa thẳng ' +
-    'đứng. Từ Vườn Hoa.',
+    'đứng. Từ Yor Flower.',
   summary:
     'Lan dạ hương (Hyacinthus orientalis) là một cột dày đặc các bông hoa ' +
     'hình sao sáp mọc từ một củ duy nhất, tỏa ra hương thơm ngọt mạnh mà ' +

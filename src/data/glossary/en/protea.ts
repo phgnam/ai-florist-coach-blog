@@ -9,7 +9,7 @@ export const protea: GlossaryTerm = {
   metaDescription:
     'Protea guide: South African national flower, the king and pincushion ' +
     'varieties, ancient lineage, and why these dramatic blooms work as both ' +
-    'fresh and dried floristry. From Vườn Hoa.',
+    'fresh and dried floristry. From Yor Flower.',
   summary:
     'Proteas (genus Protea) are the most iconic flowers of South Africa\'s ' +
     'Cape Floral Kingdom and the country\'s national flower. Their sculptural, ' +

@@ -8,7 +8,7 @@ export const zinnia: GlossaryTermVI = {
   title: 'Hoa Cúc Ngũ Sắc (Zinnia) — Ý Nghĩa, Nguồn Gốc Mexico & Chăm Sóc Florist Hè',
   metaDescription:
     'Hướng dẫn zinnia: hoa dại hè Mexico, hoa đầu tiên trồng trên Trạm Vũ Trụ ' +
-    'Quốc Tế, giống Benary\'s Giant và chăm sóc bông cắt bền lâu. Từ Vườn Hoa.',
+    'Quốc Tế, giống Benary\'s Giant và chăm sóc bông cắt bền lâu. Từ Yor Flower.',
   summary:
     'Hoa cúc ngũ sắc (Zinnia elegans) là hoa dại Mexico trong họ cúc — cuống ' +
     'thẳng đứng cứng cáp mang bông đầy đặn, nhiều cánh trong những màu bão ' +

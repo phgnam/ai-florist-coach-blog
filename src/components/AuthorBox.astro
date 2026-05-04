@@ -10,13 +10,13 @@ const { author, lang } = Astro.props;
 const t = useTranslations(lang);
 
 const bios: Record<string, { en: string; vi: string }> = {
-  'Vườn Hoa': {
-    en: 'Vườn Hoa is a companion blog to the AI Florist Coach app — sharing knowledge, inspiration, and craft for florists and flower lovers.',
-    vi: 'Vườn Hoa là blog đồng hành của ứng dụng AI Florist Coach — chia sẻ kiến thức, cảm hứng và kỹ năng cho các florist và người yêu hoa.',
+  'Yor Flower': {
+    en: 'Yor Flower is a companion blog to the AI Florist Coach app — sharing knowledge, inspiration, and craft for florists and flower lovers.',
+    vi: 'Yor Flower là blog đồng hành của ứng dụng AI Florist Coach — chia sẻ kiến thức, cảm hứng và kỹ năng cho các florist và người yêu hoa.',
   },
 };
 
-const bio = (bios[author] ?? bios['Vườn Hoa'])[lang];
+const bio = (bios[author] ?? bios['Yor Flower'])[lang];
 ---
 
 <div class="author-box">

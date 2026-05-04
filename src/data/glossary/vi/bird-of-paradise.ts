@@ -9,7 +9,7 @@ export const birdOfParadise: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn thiên điểu: nguồn gốc Nam Phi, vì sao bông trông như chim ' +
     'nhiệt đới, cách "mở" bông tiếp theo bằng tay và chăm sóc cuống cắt bền. ' +
-    'Từ Vườn Hoa.',
+    'Từ Yor Flower.',
   summary:
     'Hoa thiên điểu (Strelitzia reginae) là cây bản địa Nam Phi đặt tên theo ' +
     'Hoàng hậu Charlotte của Mecklenburg-Strelitz, vợ vua George III. Hoa là ' +

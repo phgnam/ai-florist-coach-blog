@@ -9,7 +9,7 @@ export const gerbera: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa đồng tiền: nguồn gốc Nam Phi, lý do florist gài dây kim ' +
     'loại vào cuống, loài hoa cắt phổ biến thứ 5 thế giới, ý nghĩa theo màu, ' +
-    'mẹo chăm sóc. Từ Vườn Hoa.',
+    'mẹo chăm sóc. Từ Yor Flower.',
   summary:
     'Hoa đồng tiền (Gerbera jamesonii) là hoa composite một cuống xuất xứ từ ' +
     'đồng cỏ Transvaal Nam Phi, đặt tên theo nhà thực vật học Đức Traugott ' +

@@ -9,7 +9,7 @@ export const cherryBlossom: GlossaryTerm = {
   metaDescription:
     'Cherry blossom guide: the Japanese sakura tradition, the meaning of mono ' +
     'no aware, branch-flower handling tips, and the brief seasonal ' +
-    'availability for florists. From Vườn Hoa.',
+    'availability for florists. From Yor Flower.',
   summary:
     'Cherry blossom — sakura in Japanese, hoa anh đào in Vietnamese — is the ' +
     'bloom of various ornamental Prunus tree species. The flower is the most ' +

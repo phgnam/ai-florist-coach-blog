@@ -8,7 +8,7 @@ export const lisianthus: GlossaryTermVI = {
   title: 'Hoa Cát Tường (Lisianthus) — Thay Thế Hoa Hồng, Ý Nghĩa & Chăm Sóc',
   metaDescription:
     'Hướng dẫn hoa cát tường: vì sao florist gọi đây là "thay thế hoa hồng", ' +
-    'nguồn gốc hoa dại Texas, các giống bông kép, mẹo điều hòa. Từ Vườn Hoa.',
+    'nguồn gốc hoa dại Texas, các giống bông kép, mẹo điều hòa. Từ Yor Flower.',
   summary:
     'Hoa cát tường (Eustoma grandiflorum), còn gọi là long đởm thảo nguyên ' +
     'hoặc chuông Texas, là hoa dại Bắc Mỹ bản địa Đại bình nguyên và Bắc ' +

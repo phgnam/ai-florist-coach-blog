@@ -9,7 +9,7 @@ export const alstroemeria: GlossaryTerm = {
   metaDescription:
     'Alstroemeria guide: South American origins, why it lasts longer than ' +
     'almost any other cut flower, friendship symbolism, and pollen-removal ' +
-    'tips. From Vườn Hoa.',
+    'tips. From Yor Flower.',
   summary:
     'Alstroemeria — the Peruvian lily or Inca lily — is a South American ' +
     'genus from the Andes and Patagonia, named by Linnaeus after his Swedish ' +

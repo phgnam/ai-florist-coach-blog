@@ -9,7 +9,7 @@ export const hibiscus: GlossaryTerm = {
   metaDescription:
     'Hibiscus guide: Malaysia\'s national flower, Hawaii state flower, ' +
     'Vietnamese dâm bụt as a hedge plant, Hindu Kali association, and care ' +
-    'for one-day blooms. From Vườn Hoa.',
+    'for one-day blooms. From Yor Flower.',
   summary:
     'Hibiscus is a genus of over 200 species, with the large-flowered ' +
     'tropical Hibiscus rosa-sinensis as the florist standard. Five wide silky ' +

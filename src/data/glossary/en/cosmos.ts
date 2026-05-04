@@ -9,7 +9,7 @@ export const cosmos: GlossaryTerm = {
   metaDescription:
     'Cosmos guide: Mexican wildflower origin, "harmony" symbolism, popular ' +
     'Vietnamese name "sao nhái", and care for the airy daisy-shaped flowers ' +
-    'in cut floristry. From Vườn Hoa.',
+    'in cut floristry. From Yor Flower.',
   summary:
     'Cosmos (Cosmos bipinnatus and C. sulphureus) is a Mexican and Central ' +
     'American wildflower introduced to global horticulture by Spanish ' +

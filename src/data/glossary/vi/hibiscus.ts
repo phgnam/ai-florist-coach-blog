@@ -9,7 +9,7 @@ export const hibiscus: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn dâm bụt: quốc hoa Malaysia, hoa bang Hawaii, dâm bụt làng quê ' +
     'Việt Nam, gắn với nữ thần Kali Hindu giáo, và chăm sóc bông một ngày. Từ ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Hoa dâm bụt là một chi gồm hơn 200 loài, với hibiscus rosa-sinensis ' +
     'nhiệt đới hoa lớn là chuẩn florist. Năm cánh hoa lớn lụa vây quanh một ' +

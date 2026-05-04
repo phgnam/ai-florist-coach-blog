@@ -9,7 +9,7 @@ export const lavender: GlossaryTerm = {
   metaDescription:
     'Lavender guide: fragrance profiles, calming symbolism, drying techniques ' +
     'for preserved arrangements, and growing tips. From floristry experts at ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Lavender is an aromatic shrub in the mint family, native to the ' +
     'Mediterranean. Its silvery-purple flower spikes and distinctive ' +

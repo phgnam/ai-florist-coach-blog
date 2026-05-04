@@ -63,7 +63,7 @@ const websiteSchema = {
       "@type": "WebSite",
       "@id": `${siteUrl}/#website`,
       "url": `${siteUrl}/`,
-      "name": "Vườn Hoa",
+      "name": "Yor Flower",
       "description": "A blog about flowers and floristry, powered by AI Florist Coach.",
       "inLanguage": ["en", "vi"],
       "potentialAction": {
@@ -78,7 +78,7 @@ const websiteSchema = {
     {
       "@type": "Organization",
       "@id": `${siteUrl}/#organization`,
-      "name": "Vườn Hoa",
+      "name": "Yor Flower",
       "url": `${siteUrl}/`,
       "logo": {
         "@type": "ImageObject",
@@ -97,12 +97,12 @@ const articleSchema = (type === 'article' && pubDate) ? {
   "description": description,
   "author": {
     "@type": "Organization",
-    "name": author ?? "Vườn Hoa",
+    "name": author ?? "Yor Flower",
     "url": siteUrl
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Vườn Hoa",
+    "name": "Yor Flower",
     "url": `${siteUrl}/`,
     "logo": {
       "@type": "ImageObject",
@@ -171,7 +171,7 @@ const breadcrumbSchema = breadcrumbs.length >= 2 ? {
 <meta property="og:title" content={fullTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:locale" content={ogLocale} />
-<meta property="og:site_name" content="Vườn Hoa" />
+<meta property="og:site_name" content="Yor Flower" />
 {ogImage && <meta property="og:image" content={ogImage} />}
 {ogImage && <meta property="og:image:width" content="1200" />}
 {ogImage && <meta property="og:image:height" content="630" />}

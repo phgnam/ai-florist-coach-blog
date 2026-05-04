@@ -8,7 +8,7 @@ export const margueriteDaisy: GlossaryTermVI = {
   title: 'Hoa Cúc La Mã (Marguerite Daisy) — Ý Nghĩa, Chăm Sóc Hoa Dại & Sử Dụng Florist',
   metaDescription:
     'Hướng dẫn cúc la mã: phân biệt với đồng tiền, cottage cổ điển, nguồn gốc ' +
-    'oxeye daisy, "yêu, không yêu" và chăm sóc cuống mảnh. Từ Vườn Hoa.',
+    'oxeye daisy, "yêu, không yêu" và chăm sóc cuống mảnh. Từ Yor Flower.',
   summary:
     'Cúc la mã (Argyranthemum frutescens, cũng Leucanthemum vulgare cho dạng ' +
     'oxeye dại) là daisy cổ điển cánh trắng-tâm vàng của vườn cottage, đồng ' +

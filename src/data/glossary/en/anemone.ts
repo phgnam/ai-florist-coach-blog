@@ -9,7 +9,7 @@ export const anemone: GlossaryTerm = {
   metaDescription:
     'Anemone guide for florists: Greek mythology symbolism, why anemones are ' +
     'a winter-spring specialty, how to keep them open and fresh, and best ' +
-    'varieties. From Vườn Hoa.',
+    'varieties. From Yor Flower.',
   summary:
     'Anemones are woodland and meadow flowers in the buttercup family, grown ' +
     'from corms and prized for their jewel-toned petals and striking black ' +

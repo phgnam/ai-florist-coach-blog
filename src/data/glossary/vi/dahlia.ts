@@ -8,7 +8,7 @@ export const dahlia: GlossaryTermVI = {
   title: 'Hoa Thược Dược — Ý Nghĩa, Các Giống & Hướng Dẫn Florist',
   metaDescription:
     'Hướng dẫn hoa thược dược: ý nghĩa, các giống từ café au lait đến dinner ' +
-    'plate, cách sơ chế và tính theo mùa. Từ Vườn Hoa.',
+    'plate, cách sơ chế và tính theo mùa. Từ Yor Flower.',
   summary:
     'Hoa thược dược là chi thực vật có củ có nguồn gốc từ Mexico. Với hơn 57 ' +
     'loài và 20.000+ giống, chúng cung cấp sự đa dạng về hình dạng, màu sắc ' +

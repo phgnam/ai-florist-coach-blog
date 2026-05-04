@@ -8,7 +8,7 @@ export const sunflower: GlossaryTermVI = {
   title: 'Hoa Hướng Dương — Ý Nghĩa, Chăm Sóc & Các Giống',
   metaDescription:
     'Hướng dẫn florist về hoa hướng dương: ý nghĩa, cách giữ chúng thẳng đứng ' +
-    'trong cắm hoa, các giống tốt nhất. Từ Vườn Hoa.',
+    'trong cắm hoa, các giống tốt nhất. Từ Yor Flower.',
   summary:
     'Hoa hướng dương có nguồn gốc từ châu Mỹ và được người bản địa trồng hơn ' +
     '4.500 năm trước. Kích thước ấn tượng và màu sắc ấm áp khiến chúng là ' +

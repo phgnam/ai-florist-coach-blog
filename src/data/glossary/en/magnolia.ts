@@ -9,7 +9,7 @@ export const magnolia: GlossaryTerm = {
   metaDescription:
     'Magnolia guide: symbolism of the ancient flower, best varieties for cut ' +
     'use, how to preserve magnolia branches, and seasonal availability. From ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Magnolias are among the most ancient flowering plants on Earth, with ' +
     'fossil records dating back 95 million years — predating bees. Their ' +

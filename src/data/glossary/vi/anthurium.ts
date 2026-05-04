@@ -9,7 +9,7 @@ export const anthurium: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hồng môn: nguồn gốc nhiệt đới Mỹ, vì sao "bông hoa" hình trái ' +
     'tim là một chiếc lá, vì sao đây là một trong những hoa cắt bền lâu nhất ' +
-    'và mẹo chăm sóc. Từ Vườn Hoa.',
+    'và mẹo chăm sóc. Từ Yor Flower.',
   summary:
     'Hoa hồng môn (Anthurium andraeanum và họ hàng) là chi nhiệt đới Mỹ với ' +
     'khoảng 1.000 loài, với nghề hoa cắt chủ yếu là các giống lai tạo cho mo ' +

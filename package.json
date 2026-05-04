@@ -1,5 +1,5 @@
 {
-  "name": "vuon-hoa-blog",
+  "name": "yor-flower-blog",
   "version": "1.0.0",
   "description": "Static blog about flowers built with Astro, MDX, TailwindCSS v3, and Pagefind.",
   "scripts": {

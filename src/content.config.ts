@@ -12,7 +12,7 @@ const posts = defineCollection({
       heroImage: image().optional(),
       heroAlt: z.string().optional(),
       tags: z.array(z.string()).default([]),
-      author: z.string().default('Vườn Hoa'),
+      author: z.string().default('Yor Flower'),
       draft: z.boolean().default(false),
       lang: z.enum(['vi', 'en']).default('vi'),
     }),

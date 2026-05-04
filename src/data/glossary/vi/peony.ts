@@ -8,7 +8,7 @@ export const peony: GlossaryTermVI = {
   title: 'Hoa Mẫu Đơn — Ý Nghĩa, Mùa Nở & Cách Chăm Sóc',
   metaDescription:
     'Hướng dẫn florist về hoa mẫu đơn: khi nào nở, cách mở nụ hoa, mẹo kéo ' +
-    'dài tuổi thọ trong bình. Từ Vườn Hoa.',
+    'dài tuổi thọ trong bình. Từ Yor Flower.',
   summary:
     'Hoa mẫu đơn là một trong những loài hoa được thèm muốn nhất thế giới, ' +
     'nổi tiếng với những bông hoa nhiều lớp cánh phồng và hương thơm ngọt ' +

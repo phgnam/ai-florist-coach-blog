@@ -9,7 +9,7 @@ export const callaLily: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa rum: vì sao chiếc kèn thực ra là lá chứ không phải hoa, ' +
     'lịch sử đám cưới Art Deco, các giống mini và khổng lồ, mẹo giữ cuống ' +
-    'thẳng. Từ Vườn Hoa.',
+    'thẳng. Từ Yor Flower.',
   summary:
     'Hoa rum (Zantedeschia) không phải họ hàng thật của hoa ly mà là hoa môn ' +
     'bản địa Nam Phi, mà "kèn" mang tính biểu tượng thực ra là một chiếc lá ' +

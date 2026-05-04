@@ -9,7 +9,7 @@ export const freesia: GlossaryTerm = {
   metaDescription:
     'Complete freesia guide: why freesias are the fragrance choice for ' +
     'weddings, how to open buds, single vs double varieties, and vase life ' +
-    'tips. From Vườn Hoa.',
+    'tips. From Yor Flower.',
   summary:
     'Freesias are native to the Cape Floristic Region of South Africa and are ' +
     'prized above almost all other cut flowers for their exceptional ' +

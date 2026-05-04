@@ -9,7 +9,7 @@ export const tuberose: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa huệ: truyền thống bàn thờ Việt Nam, vì sao đây là một ' +
     'trong những hương hoa mạnh nhất Trái Đất, sử dụng nước hoa (Fracas, ' +
-    'Carnal Flower) và mẹo chăm sóc. Từ Vườn Hoa.',
+    'Carnal Flower) và mẹo chăm sóc. Từ Yor Flower.',
   summary:
     'Hoa huệ (Polianthes tuberosa, gần đây được phân loại lại là Agave amica) ' +
     'là cây lưu niên Mexico với cuống cao của bông hoa hình sao sáp trắng và ' +

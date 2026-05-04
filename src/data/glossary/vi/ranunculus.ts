@@ -8,7 +8,7 @@ export const ranunculus: GlossaryTermVI = {
   title: 'Hoa Mao Lương — Ý Nghĩa, Mùa & Hướng Dẫn Chăm Sóc Cho Florist',
   metaDescription:
     'Hướng dẫn hoa mao lương: tại sao florist yêu thích cho đám cưới, số cánh ' +
-    'hoa trong một bông, tính theo mùa. Từ Vườn Hoa.',
+    'hoa trong một bông, tính theo mùa. Từ Yor Flower.',
   summary:
     'Hoa mao lương (ranunculus) đã trở thành một trong những loài hoa được ' +
     'yêu thích nhất trong nghề florist đám cưới đương đại, được đánh giá cao ' +

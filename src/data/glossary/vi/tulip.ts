@@ -8,7 +8,7 @@ export const tulip: GlossaryTermVI = {
   title: 'Hoa Tulip — Ý Nghĩa Theo Màu, Mẹo Chăm Sóc & Các Giống',
   metaDescription:
     'Hướng dẫn hoa tulip: ý nghĩa màu sắc, tại sao tulip tiếp tục mọc trong ' +
-    'bình, mẹo chăm sóc và các giống tốt nhất cho sắp xếp hoa. Từ Vườn Hoa.',
+    'bình, mẹo chăm sóc và các giống tốt nhất cho sắp xếp hoa. Từ Yor Flower.',
   summary:
     'Hoa tulip là một trong những loài hoa cắt được trồng rộng rãi nhất toàn ' +
     'cầu, với hơn 3.000 giống được đăng ký. Có nguồn gốc từ Trung Á, chúng là ' +

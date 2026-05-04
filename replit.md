@@ -1,4 +1,4 @@
-# Vườn Hoa — AI Florist Coach Blog
+# Yor Flower — AI Florist Coach Blog
 
 Static blog about flowers built with Astro 6, MDX, TailwindCSS v3, and Pagefind for static-site search.
 

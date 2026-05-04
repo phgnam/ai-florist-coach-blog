@@ -8,7 +8,7 @@ export const magnolia: GlossaryTermVI = {
   title: 'Hoa Mộc Lan — Ý Nghĩa, Các Giống & Dùng Trong Florist',
   metaDescription:
     'Hướng dẫn hoa mộc lan: ý nghĩa của loài hoa cổ đại, các giống tốt nhất ' +
-    'để cắt, cách bảo quản cành mộc lan. Từ Vườn Hoa.',
+    'để cắt, cách bảo quản cành mộc lan. Từ Yor Flower.',
   summary:
     'Hoa mộc lan là một trong những loài thực vật có hoa cổ đại nhất Trái ' +
     'Đất, với hóa thạch có niên đại 95 triệu năm — trước cả loài ong. Những ' +

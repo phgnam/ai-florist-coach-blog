@@ -9,7 +9,7 @@ export const apricotBlossom: GlossaryTerm = {
   metaDescription:
     'Apricot blossom guide: the yellow Tết flower of southern Vietnam, why it ' +
     'must bloom on Lunar New Year\'s morning, branch conditioning tips, and ' +
-    'care. From Vườn Hoa.',
+    'care. From Yor Flower.',
   summary:
     'Apricot blossom — hoa mai (Ochna integerrima or yellow apricot) — is the ' +
     'iconic golden five-petalled flower of southern Vietnamese Tết. Every ' +

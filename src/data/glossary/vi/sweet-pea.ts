@@ -8,7 +8,7 @@ export const sweetPea: GlossaryTermVI = {
   title: 'Hoa Đậu Thơm — Hương Thơm, Ý Nghĩa & Hướng Dẫn Florist',
   metaDescription:
     'Hướng dẫn hoa đậu thơm: tại sao florist trân trọng chúng vì hương thơm, ' +
-    'cách sơ chế cuống mỏng manh, tính theo mùa. Từ Vườn Hoa.',
+    'cách sơ chế cuống mỏng manh, tính theo mùa. Từ Yor Flower.',
   summary:
     'Hoa đậu thơm là cây hàng năm leo có nguồn gốc từ Sicily, được đưa vào ' +
     'trồng trọt vào thế kỷ 17 và đạt đỉnh phổ biến ở Anh thời Edward. Chúng ' +

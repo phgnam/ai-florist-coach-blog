@@ -34,7 +34,7 @@ export function PetalIvory() {
         </svg>
         <div style={{ position: "relative", maxWidth: 520 }}>
           <p style={{ fontFamily: "'Jost', sans-serif", fontSize: 11, letterSpacing: "0.3em", fontWeight: 400, color: "#C47A8A", textTransform: "uppercase", marginBottom: 20 }}>
-            Vườn Hoa · Brand Identity
+            Yor Flower · Brand Identity
           </p>
           <h1 style={{ fontSize: 72, fontWeight: 300, lineHeight: 1.05, margin: "0 0 8px", color: "#4A2D35" }}>
             Petal
@@ -114,7 +114,7 @@ export function PetalIvory() {
             </div>
             <div style={{ padding: "14px 18px", background: "#FAF5EE", borderRadius: 8, border: "1px solid #E8D8DC" }}>
               <p style={{ fontFamily: "'Jost', sans-serif", fontSize: 10, color: "#C47A8A", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 6px", fontWeight: 500 }}>Welcome Message</p>
-              <p style={{ fontFamily: "'Jost', sans-serif", fontSize: 13, fontWeight: 300, margin: 0, color: "#6B4A52", lineHeight: 1.6 }}>Chào mừng bạn đến Vườn Hoa — góc nhỏ xinh xắn dành cho những ai yêu hoa bằng cả trái tim.</p>
+              <p style={{ fontFamily: "'Jost', sans-serif", fontSize: 13, fontWeight: 300, margin: 0, color: "#6B4A52", lineHeight: 1.6 }}>Chào mừng bạn đến Yor Flower — góc nhỏ xinh xắn dành cho những ai yêu hoa bằng cả trái tim.</p>
             </div>
             <div style={{ padding: "14px 18px", background: "#FAF5EE", borderRadius: 8, border: "1px solid #E8D8DC" }}>
               <p style={{ fontFamily: "'Jost', sans-serif", fontSize: 10, color: "#C47A8A", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 6px", fontWeight: 500 }}>Call to Action</p>
@@ -141,7 +141,7 @@ export function PetalIvory() {
               <p style={{ fontFamily: "'Jost', sans-serif", fontSize: 12, color: "#9E8A80", margin: 0, lineHeight: 1.6, fontWeight: 300 }}>Những mẹo nhỏ từ chuyên gia giúp bó hoa của bạn...</p>
               <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#E8A4B0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>🌸</div>
-                <span style={{ fontFamily: "'Jost', sans-serif", fontSize: 11, color: "#9E8A80", fontWeight: 300 }}>Vườn Hoa · 2 thg 5, 2026</span>
+                <span style={{ fontFamily: "'Jost', sans-serif", fontSize: 11, color: "#9E8A80", fontWeight: 300 }}>Yor Flower · 2 thg 5, 2026</span>
               </div>
             </div>
           </div>
@@ -149,7 +149,7 @@ export function PetalIvory() {
           <div style={{ background: "rgba(250,245,238,0.95)", borderRadius: 10, padding: "12px 18px", display: "flex", alignItems: "center", justifyContent: "space-between", border: "1px solid #E8D8DC" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#E8A4B0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13 }}>🌸</div>
-              <span style={{ fontSize: 16, fontWeight: 300, color: "#4A2D35" }}>Vườn Hoa</span>
+              <span style={{ fontSize: 16, fontWeight: 300, color: "#4A2D35" }}>Yor Flower</span>
             </div>
             <div style={{ display: "flex", gap: 18 }}>
               {["Bài viết","Chủ đề","Giới thiệu"].map(n => (
