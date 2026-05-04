@@ -1,24 +1,23 @@
 ---
 import { getCollection } from 'astro:content';
 import PostsListing from '../../../components/PostsListing.astro';
+import { paginate } from '../../../lib/posts-pagination';
 
 export const prerender = true;
 
-const POSTS_PER_PAGE = 36;
 const lang = 'vi' as const;
 
 const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
-const posts = allPosts.slice(0, POSTS_PER_PAGE);
+const { slice: posts, currentPage, totalPages } = paginate(allPosts, 1);
 ---
 <PostsListing
   lang={lang}
   title="Tất cả bài viết"
   description="Danh sách tất cả bài viết trên Vườn Hoa"
   posts={posts}
-  currentPage={1}
+  currentPage={currentPage}
   totalPages={totalPages}
   basePath="/vi/posts"
   postSlugPrefix="/vi/posts"

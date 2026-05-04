@@ -30,6 +30,9 @@ interface Props {
   tags?: string[];
   hreflang?: HreflangLink[];
   breadcrumbs?: BreadcrumbItem[];
+  noindex?: boolean;
+  prevUrl?: string;
+  nextUrl?: string;
 }
 
 const {
@@ -45,6 +48,9 @@ const {
   tags,
   hreflang = [],
   breadcrumbs = [],
+  noindex,
+  prevUrl,
+  nextUrl,
 } = Astro.props;
 ---
 <!doctype html>
@@ -62,6 +68,9 @@ const {
       tags={tags}
       hreflang={hreflang}
       breadcrumbs={breadcrumbs}
+      noindex={noindex}
+      prevUrl={prevUrl}
+      nextUrl={nextUrl}
     />
   </head>
   <body>
@@ -127,9 +136,11 @@ const {
     });
   }
 
-  // Scroll-reveal for post cards
+  // Scroll-reveal for post cards (skip priority cards so LCP isn't gated)
   (function () {
-    const cards = Array.from(document.querySelectorAll('.post-card')) as HTMLElement[];
+    const cards = Array.from(
+      document.querySelectorAll('.post-card:not(.post-card--priority)')
+    ) as HTMLElement[];
     if (!('IntersectionObserver' in window) || !cards.length) return;
 
     cards.forEach((c) => {

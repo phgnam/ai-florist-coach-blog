@@ -40,7 +40,7 @@ const palette = palettes[pi];
 const showPlaceholder = !heroImage && !previewImageUrl && !heroImageUrl;
 ---
 
-<article class:list={['post-card', featured && 'post-card--featured']}>
+<article class:list={['post-card', featured && 'post-card--featured', priority && 'post-card--priority']}>
   <a href={href} class="card-image-link" aria-hidden="true" tabindex="-1">
     <div class="card-image-wrap">
       {isAstroImage ? (

@@ -3,7 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from './PostCard.astro';
 import Pagination from './Pagination.astro';
 import { useTranslations } from '../i18n/utils';
+import { postsPageUrl } from '../lib/posts-pagination';
 import type { CollectionEntry } from 'astro:content';
+import type { ImageMetadata } from 'astro:assets';
 
 interface Props {
   lang: 'en' | 'vi';
@@ -19,12 +21,26 @@ interface Props {
 const { lang, title, description, posts, currentPage, totalPages, basePath, postSlugPrefix } = Astro.props;
 const t = useTranslations(lang);
 
-const firstPreviewImage = (post: CollectionEntry<'posts'>) => {
+const firstPreviewImage = (post: CollectionEntry<'posts'>): string | ImageMetadata | undefined => {
   const figureImage = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
-  return figureImage ?? (post.data.heroImage as any);
+  return figureImage ?? (post.data.heroImage as ImageMetadata | undefined);
 };
+
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
+const pagedTitle = currentPage > 1 ? `${title} — ${t('posts.page')} ${currentPage}` : title;
+const prevUrl = currentPage > 1 ? `${siteUrl}${postsPageUrl(basePath, currentPage - 1)}` : undefined;
+const nextUrl = currentPage < totalPages ? `${siteUrl}${postsPageUrl(basePath, currentPage + 1)}` : undefined;
+const noindex = currentPage > 1;
 ---
-<BaseLayout lang={lang} title={title} description={description} padTop={false}>
+<BaseLayout
+  lang={lang}
+  title={pagedTitle}
+  description={description}
+  padTop={false}
+  noindex={noindex}
+  prevUrl={prevUrl}
+  nextUrl={nextUrl}
+>
 
   <div class="page-header">
     <div class="header-deco" aria-hidden="true">
@@ -83,7 +99,9 @@ const firstPreviewImage = (post: CollectionEntry<'posts'>) => {
   .empty-icon { display:block; font-size:3rem; margin-bottom:1rem; }
 
   /* ── Staggered card entrance ── */
-  .posts-grid :global(.post-card) {
+  /* Skip the opacity/transform gate on priority cards so the LCP image paints
+     immediately (the BaseLayout IntersectionObserver also skips this class). */
+  .posts-grid :global(.post-card:not(.post-card--priority)) {
     opacity: 0;
     transform: translateY(22px);
     animation: cardEntrance 0.5s ease forwards;

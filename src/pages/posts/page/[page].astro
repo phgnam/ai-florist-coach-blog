@@ -2,24 +2,23 @@
 import { getCollection } from 'astro:content';
 import PostsListing from '../../../components/PostsListing.astro';
 import { useTranslations } from '../../../i18n/utils';
+import { paginate } from '../../../lib/posts-pagination';
 
 export const prerender = true;
 
-const POSTS_PER_PAGE = 36;
 const lang = 'en' as const;
 
 export async function getStaticPaths() {
-  const POSTS_PER_PAGE = 36;
   const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-  const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
-  // Page 1 lives at /posts (index.astro). Generate pages 2..N here.
+  const { totalPages } = paginate(allPosts, 1);
+  // Page 1 lives at /posts (index.astro); generate pages 2..N here.
   return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => {
-    const page = i + 2;
-    const posts = allPosts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
+    const pageNumber = i + 2;
+    const { slice } = paginate(allPosts, pageNumber);
     return {
-      params: { page: String(page) },
-      props: { posts, currentPage: page, totalPages },
+      params: { page: String(pageNumber) },
+      props: { posts: slice, currentPage: pageNumber, totalPages },
     };
   });
 }
