@@ -50,6 +50,7 @@ const sectionLabels = {
   data-section-glossary={sectionLabels.glossary}
   data-section-tool={sectionLabels.tool}
   data-section-guide={sectionLabels.guide}
+  data-loading-text={t('search.loading')}
 >
   <div class="search-modal" role="combobox" aria-haspopup="listbox" aria-expanded="true" aria-owns="search-results">
     <div class="search-header">
@@ -82,6 +83,11 @@ const sectionLabels = {
     </div>
 
     <div id="search-suggestions" class="search-suggestions"></div>
+
+    <div id="search-loading" class="search-loading hidden" role="status" aria-live="polite">
+      <span class="search-loading-spinner" aria-hidden="true"></span>
+      <span class="search-loading-text">{t('search.loading')}</span>
+    </div>
   </div>
 </dialog>
 )}
@@ -231,6 +237,38 @@ const sectionLabels = {
     padding: 12px 16px 18px;
   }
   .search-suggestions:empty { display: none; }
+
+  .search-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 36px 20px;
+    color: var(--taupe);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+  }
+  .search-loading.hidden { display: none; }
+  .search-loading-spinner {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--ivory-dark);
+    border-top-color: var(--blush-dark);
+    animation: search-spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes search-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Tap feedback for the trigger so the user gets immediate visual response
+     even on slow connections where the dialog itself takes a frame to paint. */
+  .search-trigger:active { transform: scale(0.94); }
+  .search-trigger--mobile:active {
+    background: rgba(232, 164, 176, 0.32);
+    border-color: rgba(196, 122, 138, 0.6);
+  }
 </style>
 
 <style is:global>
@@ -372,8 +410,9 @@ const sectionLabels = {
   const emptyMsg = document.getElementById('search-empty-msg');
   const metaEl = document.getElementById('search-meta');
   const suggestionsEl = document.getElementById('search-suggestions');
+  const loadingEl = document.getElementById('search-loading');
 
-  if (!dialog || !input || !resultsEl || !emptyEl || !metaEl || !suggestionsEl) {
+  if (!dialog || !input || !resultsEl || !emptyEl || !metaEl || !suggestionsEl || !loadingEl) {
     // Component not rendered on this page
   } else {
     const lang = (dialog.dataset.lang as 'en' | 'vi') ?? 'en';
@@ -394,25 +433,46 @@ const sectionLabels = {
     let activeIndex = -1;
     let resultLinks: HTMLAnchorElement[] = [];
     let lastSearchToken = 0;
+    // Single in-flight promise so concurrent callers (open + first keystroke)
+    // share one Pagefind fetch instead of racing.
+    let indexPromise: Promise<void> | null = null;
 
-    async function loadIndex() {
-      if (loaded) return;
-      pagefind = await loadPagefind();
-      if (pagefind) {
-        try {
-          const filterCounts = await pagefind.filters();
-          const tagCounts = filterCounts.tag ?? {};
-          popularTags = Object.entries(tagCounts)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 8)
-            .map(([tag]) => tag);
-        } catch {
-          popularTags = [];
+    function loadIndex(): Promise<void> {
+      if (loaded) return Promise.resolve();
+      if (indexPromise) return indexPromise;
+      const p = (async () => {
+        pagefind = await loadPagefind();
+        if (pagefind) {
+          try {
+            const filterCounts = await pagefind.filters();
+            const tagCounts = filterCounts.tag ?? {};
+            popularTags = Object.entries(tagCounts)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 8)
+              .map(([tag]) => tag);
+          } catch {
+            popularTags = [];
+          }
+          // Only mark as loaded once pagefind itself is available, so a
+          // transient load failure doesn't permanently disable search.
+          loaded = true;
+        } else {
+          // Failed (e.g. dev server with no built index) — clear the cached
+          // promise so a later open retries instead of being stuck.
+          indexPromise = null;
         }
-        // Only mark as loaded once pagefind itself is available, so a
-        // transient load failure doesn't permanently disable search.
-        loaded = true;
-      }
+      })();
+      indexPromise = p;
+      return p;
+    }
+
+    function showLoading() {
+      loadingEl!.classList.remove('hidden');
+      suggestionsEl!.style.display = 'none';
+    }
+
+    function hideLoading() {
+      loadingEl!.classList.add('hidden');
     }
 
     function renderResults(hits: PagefindResultData[], query: string) {
@@ -509,6 +569,16 @@ const sectionLabels = {
         return;
       }
       suggestionsEl!.style.display = 'none';
+      // Wait for Pagefind if it hasn't finished loading yet so a fast typist
+      // doesn't hit the "unavailable" branch just because the index is
+      // still in flight.
+      if (!loaded) {
+        showLoading();
+        await loadIndex();
+        hideLoading();
+        // Drop this search if a newer one started while we were waiting.
+        if (input!.value.trim() !== trimmed) return;
+      }
       if (!pagefind) {
         emptyMsg!.textContent = 'Search index unavailable in dev — run `npm run build`.';
         emptyEl!.classList.remove('hidden');
@@ -540,18 +610,41 @@ const sectionLabels = {
       resultLinks[next].scrollIntoView({ block: 'nearest' });
     }
 
-    async function openSearch(initialQuery?: string) {
-      await loadIndex();
-      if (suggestionsEl!.children.length === 0 || !input!.value.trim()) {
-        renderSuggestions();
-        suggestionsEl!.style.display = '';
-      }
+    function openSearch(initialQuery?: string) {
+      // Open the dialog *immediately* so the click feels instant. Pagefind
+      // is loaded in parallel; until it's ready we show a loading state
+      // inside the dialog instead of blocking the open.
+      if (!dialog!.open) dialog!.showModal();
+      // Focus on the next frame — focusing a hidden element no-ops, and
+      // some browsers need a tick after showModal() before focus sticks.
+      requestAnimationFrame(() => input!.focus());
+
       if (initialQuery) {
         input!.value = initialQuery;
-        doSearch(initialQuery);
       }
-      dialog!.showModal();
-      setTimeout(() => input!.focus(), 50);
+
+      const hasQuery = input!.value.trim().length >= 2;
+
+      if (hasQuery) {
+        // doSearch handles its own loading state.
+        doSearch(input!.value);
+      } else if (loaded) {
+        renderSuggestions();
+        suggestionsEl!.style.display = '';
+      } else {
+        // Index still cold — show a spinner instead of an empty dialog.
+        showLoading();
+        loadIndex().then(() => {
+          hideLoading();
+          // User may have started typing while we were loading.
+          if (input!.value.trim().length >= 2) {
+            doSearch(input!.value);
+          } else {
+            renderSuggestions();
+            suggestionsEl!.style.display = '';
+          }
+        });
+      }
     }
 
     function readHashQuery(): string {
@@ -572,7 +665,17 @@ const sectionLabels = {
       history.replaceState({}, '', url);
     }
 
+    // Pre-warm the Pagefind index on the first hover / touch so by the time
+    // the user actually clicks, the bundle and metadata are already in cache.
+    // `pointerenter` fires on hover (desktop) and the first finger-down on
+    // touch screens, well before the synthesized `click`.
+    const prewarm = () => {
+      void loadIndex();
+    };
     document.querySelectorAll<HTMLButtonElement>('[data-search-trigger]').forEach((btn) => {
+      btn.addEventListener('pointerenter', prewarm, { once: true });
+      btn.addEventListener('pointerdown', prewarm, { once: true });
+      btn.addEventListener('focus', prewarm, { once: true });
       btn.addEventListener('click', () => openSearch());
     });
 
