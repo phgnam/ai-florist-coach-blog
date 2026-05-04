@@ -1,76 +1,24 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import PostCard from '../../../components/PostCard.astro';
+import PostsListing from '../../../components/PostsListing.astro';
+import { paginate } from '../../../lib/posts-pagination';
+
+export const prerender = true;
 
 const lang = 'vi' as const;
 
-const firstPreviewImage = (post: any) => {
-  const figureImage = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
-  return figureImage ?? post.data.heroImage;
-};
-
-const posts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const { slice: posts, currentPage, totalPages } = paginate(allPosts, 1);
 ---
-<BaseLayout lang={lang} title="Tất cả bài viết" description="Danh sách tất cả bài viết trên Vườn Hoa" padTop={false}>
-
-  <div class="page-header">
-    <div class="header-deco" aria-hidden="true">
-      <svg viewBox="0 0 300 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="220" cy="100" rx="55" ry="28" fill="rgba(196,122,138,0.13)" transform="rotate(20 220 100)"/>
-        <ellipse cx="260" cy="180" rx="40" ry="20" fill="rgba(232,164,176,0.1)" transform="rotate(-15 260 180)"/>
-        <circle cx="200" cy="50" r="8" fill="rgba(200,149,106,0.25)"/>
-        <circle cx="270" cy="240" r="5" fill="rgba(232,164,176,0.3)"/>
-      </svg>
-    </div>
-    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
-      <p class="page-eyebrow">Thư viện tri thức</p>
-      <h1 class="page-title">Tất cả bài viết</h1>
-      <p class="page-sub">Khám phá bộ sưu tập bài viết về hoa, nghề florist và nghệ thuật sống.</p>
-    </div>
-  </div>
-
-  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14">
-    {posts.length === 0 ? (
-      <div class="empty-state">
-        <span class="empty-icon">🌱</span>
-        <p>Chưa có bài viết nào. Vườn hoa đang lớn dần...</p>
-      </div>
-    ) : (
-      <div class="posts-grid">
-        {posts.map((post) => (
-          <PostCard
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            slug={`/vi/posts/${post.id}`}
-            tags={post.data.tags}
-            previewImageUrl={firstPreviewImage(post)}
-            heroAlt={post.data.heroAlt}
-          />
-        ))}
-      </div>
-    )}
-  </div>
-</BaseLayout>
-
-<style>
-  .page-header { background:linear-gradient(155deg,#FDF0F2 0%,#F5E6EA 48%,#EDA8B8 100%); position:relative; overflow:hidden; }
-  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:100px; background:linear-gradient(to top,var(--ivory),transparent); pointer-events:none; }
-  .header-deco { position:absolute; right:0; top:0; bottom:0; width:320px; pointer-events:none; opacity:0.75; }
-  .header-deco svg { width:100%; height:100%; }
-  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.66rem; font-weight:600; letter-spacing:0.32em; text-transform:uppercase; color:var(--gold); margin-bottom:1.1rem; }
-  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.8rem,7vw,5.2rem); font-weight:300; color:var(--mauve); line-height:1.06; margin:0 0 1.25rem; letter-spacing:-0.01em; }
-  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:480px; margin:0 auto; line-height:1.75; }
-  .posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1.85rem; }
-  .empty-state { text-align:center; padding:6rem 0; color:var(--taupe); }
-  .empty-icon { display:block; font-size:3rem; margin-bottom:1rem; }
-  .posts-grid :global(.post-card) { opacity:0; transform:translateY(22px); animation:cardEntrance 0.5s ease forwards; }
-  .posts-grid :global(.post-card:nth-child(1)) { animation-delay:0.05s; }
-  .posts-grid :global(.post-card:nth-child(2)) { animation-delay:0.12s; }
-  .posts-grid :global(.post-card:nth-child(3)) { animation-delay:0.19s; }
-  .posts-grid :global(.post-card:nth-child(4)) { animation-delay:0.26s; }
-  .posts-grid :global(.post-card:nth-child(n+5)) { animation-delay:0.35s; }
-  @keyframes cardEntrance { to { opacity:1; transform:translateY(0); } }
-</style>
+<PostsListing
+  lang={lang}
+  title="Tất cả bài viết"
+  description="Danh sách tất cả bài viết trên Vườn Hoa"
+  posts={posts}
+  currentPage={currentPage}
+  totalPages={totalPages}
+  basePath="/vi/posts"
+  postSlugPrefix="/vi/posts"
+/>

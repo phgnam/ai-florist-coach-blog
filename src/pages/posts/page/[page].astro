@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import PostsListing from '../../../components/PostsListing.astro';
+import { useTranslations } from '../../../i18n/utils';
+import { paginate } from '../../../lib/posts-pagination';
+
+export const prerender = true;
+
+const lang = 'en' as const;
+
+export async function getStaticPaths() {
+  const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en'))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const { totalPages } = paginate(allPosts, 1);
+  // Page 1 lives at /posts (index.astro); generate pages 2..N here.
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => {
+    const pageNumber = i + 2;
+    const { slice } = paginate(allPosts, pageNumber);
+    return {
+      params: { page: String(pageNumber) },
+      props: { posts: slice, currentPage: pageNumber, totalPages },
+    };
+  });
+}
+
+const { posts, currentPage, totalPages } = Astro.props;
+const t = useTranslations(lang);
+---
+<PostsListing
+  lang={lang}
+  title={t('posts.title')}
+  description={t('posts.sub')}
+  posts={posts}
+  currentPage={currentPage}
+  totalPages={totalPages}
+  basePath="/posts"
+  postSlugPrefix="/posts"
+/>

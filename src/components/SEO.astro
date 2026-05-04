@@ -25,6 +25,9 @@ interface Props {
   tags?: string[];
   hreflang?: HreflangLink[];
   breadcrumbs?: BreadcrumbItem[];
+  noindex?: boolean;
+  prevUrl?: string;
+  nextUrl?: string;
 }
 
 const {
@@ -40,6 +43,9 @@ const {
   tags = [],
   hreflang = [],
   breadcrumbs = [],
+  noindex = false,
+  prevUrl,
+  nextUrl,
 } = Astro.props;
 
 const fullTitle = title ? `${title} | ${SITE_TITLE}` : SITE_TITLE;
@@ -131,6 +137,9 @@ const breadcrumbSchema = breadcrumbs.length >= 2 ? {
 <meta name="theme-color" content="#C47A8A" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="canonical" href={canonicalURL} />
+{prevUrl && <link rel="prev" href={prevUrl} />}
+{nextUrl && <link rel="next" href={nextUrl} />}
+{noindex && <meta name="robots" content="noindex, follow" />}
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 {tags.length > 0 && <meta name="keywords" content={tags.join(', ')} />}
