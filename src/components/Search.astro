@@ -4,14 +4,23 @@ import { useTranslations } from '../i18n/utils';
 
 interface Props {
   lang?: Lang;
+  variant?: 'desktop' | 'mobile';
+  triggerOnly?: boolean;
 }
-const { lang = 'en' } = Astro.props;
+const { lang = 'en', variant = 'desktop', triggerOnly = false } = Astro.props;
 const t = useTranslations(lang);
+
+const sectionLabels = {
+  article: t('search.section.article'),
+  glossary: t('search.section.glossary'),
+  tool: t('search.section.tool'),
+  guide: t('search.section.guide'),
+};
 ---
 
 <button
-  id="search-btn"
-  class="search-trigger"
+  class:list={['search-trigger', variant === 'mobile' && 'search-trigger--mobile']}
+  data-search-trigger
   aria-label={t('nav.search')}
   title={t('nav.search')}
 >
@@ -21,8 +30,23 @@ const t = useTranslations(lang);
   </svg>
 </button>
 
-<dialog id="search-dialog" aria-label={t('nav.search')}>
-  <div class="search-modal">
+{!triggerOnly && (
+<dialog
+  id="search-dialog"
+  class="search-dialog"
+  aria-label={t('nav.search')}
+  data-lang={lang}
+  data-no-results={t('search.noResults')}
+  data-hint-text={t('search.hint')}
+  data-results-text={t('search.results')}
+  data-recent-label={t('search.recent')}
+  data-popular-label={t('search.popular')}
+  data-section-article={sectionLabels.article}
+  data-section-glossary={sectionLabels.glossary}
+  data-section-tool={sectionLabels.tool}
+  data-section-guide={sectionLabels.guide}
+>
+  <div class="search-modal" role="combobox" aria-haspopup="listbox" aria-expanded="true" aria-owns="search-results">
     <div class="search-header">
       <div class="search-input-wrap">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -34,12 +58,15 @@ const t = useTranslations(lang);
           placeholder={t('search.placeholder')}
           autocomplete="off"
           spellcheck="false"
+          aria-controls="search-results"
+          aria-autocomplete="list"
         />
         <kbd class="search-esc">ESC</kbd>
       </div>
+      <p class="search-meta" id="search-meta" aria-live="polite"></p>
     </div>
 
-    <div id="search-results" class="search-results" role="listbox" aria-live="polite"></div>
+    <div id="search-results" class="search-results" role="listbox"></div>
 
     <div id="search-empty" class="search-empty hidden">
       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
@@ -48,8 +75,11 @@ const t = useTranslations(lang);
       <p class="search-empty-main" id="search-empty-msg"></p>
       <p class="search-empty-hint">{t('search.hint')}</p>
     </div>
+
+    <div id="search-suggestions" class="search-suggestions"></div>
   </div>
 </dialog>
+)}
 
 <style>
   .search-trigger {
@@ -66,7 +96,20 @@ const t = useTranslations(lang);
   }
   .search-trigger:hover { color: var(--blush-dark); }
 
-  dialog {
+  .search-trigger--mobile {
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid rgba(196, 122, 138, 0.25);
+    color: var(--mauve);
+    background: rgba(255, 255, 255, 0.6);
+  }
+  .search-trigger--mobile:hover {
+    background: rgba(232, 164, 176, 0.18);
+    border-color: rgba(196, 122, 138, 0.45);
+  }
+
+  .search-dialog {
     border: none;
     background: transparent;
     padding: 0;
@@ -77,7 +120,7 @@ const t = useTranslations(lang);
     max-height: 85vh;
     overflow: visible;
   }
-  dialog::backdrop {
+  .search-dialog::backdrop {
     background: rgba(60, 40, 50, 0.45);
     backdrop-filter: blur(4px);
   }
@@ -88,6 +131,9 @@ const t = useTranslations(lang);
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(130, 80, 100, 0.18), 0 4px 20px rgba(130, 80, 100, 0.1);
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
   }
 
   .search-header {
@@ -136,11 +182,22 @@ const t = useTranslations(lang);
     opacity: 0.7;
   }
 
-  .search-results {
-    max-height: calc(85vh - 80px);
-    overflow-y: auto;
-    padding: 8px;
+  .search-meta {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    color: var(--taupe);
+    margin: 8px 4px 0;
+    min-height: 0.9em;
+    letter-spacing: 0.04em;
   }
+  .search-meta:empty { display: none; }
+
+  .search-results {
+    overflow-y: auto;
+    padding: 4px 8px 8px;
+    flex: 1;
+  }
+  .search-results:empty { padding: 0; }
 
   .search-empty {
     padding: 40px 24px;
@@ -164,128 +221,45 @@ const t = useTranslations(lang);
     color: var(--taupe);
     margin: 0;
   }
+
+  .search-suggestions {
+    padding: 12px 16px 18px;
+  }
+  .search-suggestions:empty { display: none; }
 </style>
 
-<script define:vars={{ lang, noResultsText: t('search.noResults'), hintText: t('search.hint') }}>
-  const btn = document.getElementById('search-btn');
-  const dialog = document.getElementById('search-dialog');
-  const input = document.getElementById('search-input');
-  const resultsEl = document.getElementById('search-results');
-  const emptyEl = document.getElementById('search-empty');
-  const emptyMsg = document.getElementById('search-empty-msg');
-
-  let fuse = null;
-  let allPosts = [];
-  let loaded = false;
-
-  async function loadIndex() {
-    if (loaded) return;
-    const res = await fetch('/search.json');
-    allPosts = await res.json();
-    const filtered = allPosts.filter(p => p.lang === lang);
-
-    const { default: Fuse } = await import('fuse.js');
-    fuse = new Fuse(filtered, {
-      keys: [
-        { name: 'title', weight: 2 },
-        { name: 'description', weight: 1 },
-        { name: 'tags', weight: 0.8 },
-      ],
-      threshold: 0.35,
-      includeScore: true,
-      minMatchCharLength: 2,
-    });
-    loaded = true;
-  }
-
-  function renderResults(results) {
-    if (!resultsEl || !emptyEl) return;
-
-    if (results === null) {
-      resultsEl.innerHTML = '';
-      emptyEl.classList.add('hidden');
-      return;
-    }
-
-    if (results.length === 0) {
-      resultsEl.innerHTML = '';
-      emptyEl.classList.remove('hidden');
-      return;
-    }
-
-    emptyEl.classList.add('hidden');
-
-    const postPath = lang === 'vi' ? '/vi/posts/' : '/posts/';
-
-    resultsEl.innerHTML = results.map(({ item }) => `
-      <a href="${postPath}${item.slug}" class="result-item" role="option">
-        <div class="result-title">${item.title}</div>
-        ${item.description ? `<div class="result-desc">${item.description}</div>` : ''}
-        ${item.tags?.length ? `<div class="result-tags">${item.tags.slice(0, 4).map(tag => `<span class="result-tag">${tag}</span>`).join('')}</div>` : ''}
-      </a>
-    `).join('');
-  }
-
-  function doSearch(query) {
-    if (!fuse || !query.trim()) {
-      renderResults(null);
-      return;
-    }
-    const q = query.trim();
-    if (q.length < 2) {
-      renderResults(null);
-      return;
-    }
-    const results = fuse.search(q, { limit: 8 });
-    if (emptyMsg) emptyMsg.textContent = `${noResultsText} "${q}"`;
-    renderResults(results.length ? results : []);
-  }
-
-  async function openSearch() {
-    await loadIndex();
-    dialog?.showModal();
-    setTimeout(() => input?.focus(), 50);
-  }
-
-  btn?.addEventListener('click', openSearch);
-
-  input?.addEventListener('input', (e) => {
-    doSearch(e.target.value);
-  });
-
-  dialog?.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') dialog?.close();
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-      e.preventDefault();
-      openSearch();
-    }
-  });
-
-  dialog?.addEventListener('close', () => {
-    if (input) input.value = '';
-    renderResults(null);
-  });
-
-  resultsEl?.addEventListener('click', () => dialog?.close());
-</script>
-
 <style is:global>
+  .result-section {
+    padding: 4px 4px 8px;
+  }
+  .result-section + .result-section {
+    border-top: 1px solid var(--ivory-dark);
+    margin-top: 4px;
+    padding-top: 8px;
+  }
+  .result-section-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    padding: 4px 10px;
+    margin: 0 0 2px;
+  }
   .result-item {
     display: block;
     padding: 12px 14px;
     border-radius: 10px;
     text-decoration: none;
-    transition: background 0.15s;
+    transition: background 0.15s, border-color 0.15s;
     margin-bottom: 2px;
     border: 1px solid transparent;
   }
-  .result-item:hover {
-    background: rgba(232, 164, 176, 0.12);
-    border-color: rgba(196, 122, 138, 0.2);
+  .result-item:hover,
+  .result-item.is-active {
+    background: rgba(232, 164, 176, 0.14);
+    border-color: rgba(196, 122, 138, 0.28);
   }
   .result-title {
     font-family: 'Playfair Display', serif;
@@ -295,7 +269,8 @@ const t = useTranslations(lang);
     margin-bottom: 3px;
     line-height: 1.35;
   }
-  .result-desc {
+  .result-desc,
+  .result-snippet {
     font-family: 'Jost', sans-serif;
     font-size: 0.8rem;
     color: var(--text-mid);
@@ -305,6 +280,12 @@ const t = useTranslations(lang);
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin-bottom: 6px;
+  }
+  .result-snippet mark {
+    background: rgba(232, 164, 176, 0.45);
+    color: var(--mauve);
+    padding: 0 2px;
+    border-radius: 3px;
   }
   .result-tags {
     display: flex;
@@ -321,4 +302,363 @@ const t = useTranslations(lang);
     border-radius: 999px;
     padding: 2px 8px;
   }
+  .result-kind-badge {
+    display: inline-block;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    background: var(--ivory-dark);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-right: 6px;
+    vertical-align: 2px;
+  }
+
+  .suggestion-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--taupe);
+    margin: 0 0 8px;
+  }
+  .suggestion-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .suggestion-pill {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    background: white;
+    border: 1px solid var(--ivory-dark);
+    color: var(--mauve);
+    border-radius: 999px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .suggestion-pill:hover {
+    border-color: var(--blush-dark);
+    color: var(--blush-dark);
+  }
 </style>
+
+<script>
+  import {
+    indexDocs,
+    fuseOptions,
+    buildSnippet,
+    escapeHtml,
+    loadRecentSearches,
+    saveRecentSearch,
+    groupHits,
+    trackSearchDebounced,
+    type IndexedDoc,
+  } from '../lib/searchClient';
+  import type { SearchDoc } from '../lib/searchIndex';
+  import type { default as FuseType } from 'fuse.js';
+
+  const dialog = document.getElementById('search-dialog') as HTMLDialogElement | null;
+  const input = document.getElementById('search-input') as HTMLInputElement | null;
+  const resultsEl = document.getElementById('search-results');
+  const emptyEl = document.getElementById('search-empty');
+  const emptyMsg = document.getElementById('search-empty-msg');
+  const metaEl = document.getElementById('search-meta');
+  const suggestionsEl = document.getElementById('search-suggestions');
+
+  if (!dialog || !input || !resultsEl || !emptyEl || !metaEl || !suggestionsEl) {
+    // Component not rendered on this page
+  } else {
+    const lang = (dialog.dataset.lang as 'en' | 'vi') ?? 'en';
+    const noResultsText = dialog.dataset.noResults ?? 'No results';
+    const resultsText = dialog.dataset.resultsText ?? 'results';
+    const recentLabel = dialog.dataset.recentLabel ?? 'Recent searches';
+    const popularLabel = dialog.dataset.popularLabel ?? 'Popular topics';
+    const sectionLabels: Record<string, string> = {
+      article: dialog.dataset.sectionArticle ?? 'Articles',
+      glossary: dialog.dataset.sectionGlossary ?? 'Glossary',
+      tool: dialog.dataset.sectionTool ?? 'Tools',
+      guide: dialog.dataset.sectionGuide ?? 'Guides',
+    };
+
+    let fuse: FuseType<IndexedDoc> | null = null;
+    let docs: IndexedDoc[] = [];
+    let popularTags: string[] = [];
+    let loaded = false;
+    let activeIndex = -1;
+    let lastResults: ReturnType<typeof renderResults> | null = null;
+    let resultLinks: HTMLAnchorElement[] = [];
+
+    async function loadIndex() {
+      if (loaded) return;
+      try {
+        const res = await fetch(`/search.${lang}.json`);
+        const raw: SearchDoc[] = await res.json();
+        docs = indexDocs(raw);
+      } catch {
+        docs = [];
+      }
+
+      const { default: Fuse } = await import('fuse.js');
+      fuse = new Fuse(docs, fuseOptions);
+
+      const tagCount = new Map<string, number>();
+      for (const d of docs) {
+        if (d.kind !== 'article') continue;
+        for (const tag of d.tags) {
+          tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
+        }
+      }
+      popularTags = [...tagCount.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 8)
+        .map(([t]) => t);
+
+      loaded = true;
+    }
+
+    function renderResults(hits: ReturnType<NonNullable<typeof fuse>['search']> | null, query: string) {
+      activeIndex = -1;
+      resultLinks = [];
+
+      if (!hits || hits.length === 0) {
+        resultsEl!.innerHTML = '';
+        if (query.trim().length >= 2) {
+          emptyMsg!.textContent = `${noResultsText} "${query.trim()}"`;
+          emptyEl!.classList.remove('hidden');
+          metaEl!.textContent = '';
+        } else {
+          emptyEl!.classList.add('hidden');
+          metaEl!.textContent = '';
+        }
+        return null;
+      }
+
+      emptyEl!.classList.add('hidden');
+      metaEl!.textContent = `${hits.length} ${resultsText}`;
+
+      const grouped = groupHits(hits);
+      resultsEl!.innerHTML = grouped
+        .map((g, gi) => {
+          const items = g.hits
+            .map((hit, i) => {
+              const idx = grouped.slice(0, gi).reduce((sum, x) => sum + x.hits.length, 0) + i;
+              const item = hit.item;
+              const snippet = buildSnippet(item.body, query) ?? null;
+              const desc = snippet
+                ? `<div class="result-snippet">${snippet}</div>`
+                : item.description
+                  ? `<div class="result-desc">${escapeHtml(item.description)}</div>`
+                  : '';
+              const tags =
+                item.tags.length > 0
+                  ? `<div class="result-tags">${item.tags
+                      .slice(0, 4)
+                      .map((tag) => `<span class="result-tag">${escapeHtml(tag)}</span>`)
+                      .join('')}</div>`
+                  : '';
+              return `
+                <a href="${item.url}" class="result-item" role="option" id="result-${idx}" data-idx="${idx}">
+                  <div class="result-title">${escapeHtml(item.title)}</div>
+                  ${desc}
+                  ${tags}
+                </a>`;
+            })
+            .join('');
+          return `
+            <div class="result-section">
+              <p class="result-section-label">${sectionLabels[g.kind]}</p>
+              ${items}
+            </div>`;
+        })
+        .join('');
+
+      resultLinks = Array.from(resultsEl!.querySelectorAll<HTMLAnchorElement>('.result-item'));
+      return hits;
+    }
+
+    function renderSuggestions() {
+      const recent = loadRecentSearches();
+      const recentBlock =
+        recent.length > 0
+          ? `<p class="suggestion-label">${escapeHtml(recentLabel)}</p>
+             <div class="suggestion-pills">${recent
+               .map((q) => `<button class="suggestion-pill" data-suggest-q="${escapeHtml(q)}">${escapeHtml(q)}</button>`)
+               .join('')}</div>`
+          : '';
+      const popularBlock =
+        popularTags.length > 0
+          ? `<p class="suggestion-label">${escapeHtml(popularLabel)}</p>
+             <div class="suggestion-pills">${popularTags
+               .map((tag) => `<button class="suggestion-pill" data-suggest-tag="${escapeHtml(tag)}">#${escapeHtml(tag)}</button>`)
+               .join('')}</div>`
+          : '';
+      suggestionsEl!.innerHTML = recentBlock + popularBlock;
+    }
+
+    function clearAll() {
+      resultsEl!.innerHTML = '';
+      emptyEl!.classList.add('hidden');
+      metaEl!.textContent = '';
+      activeIndex = -1;
+      resultLinks = [];
+    }
+
+    function doSearch(query: string) {
+      if (!fuse) return;
+      const trimmed = query.trim();
+      if (trimmed.length < 2) {
+        clearAll();
+        suggestionsEl!.innerHTML.length === 0 && renderSuggestions();
+        suggestionsEl!.style.display = '';
+        return;
+      }
+      suggestionsEl!.style.display = 'none';
+      const hits = fuse.search(trimmed, { limit: 12 });
+      lastResults = renderResults(hits, trimmed);
+      trackSearchDebounced(trimmed, lang, hits.length);
+    }
+
+    function setActive(idx: number) {
+      if (resultLinks.length === 0) return;
+      const next = ((idx % resultLinks.length) + resultLinks.length) % resultLinks.length;
+      activeIndex = next;
+      resultLinks.forEach((el, i) => el.classList.toggle('is-active', i === next));
+      input!.setAttribute('aria-activedescendant', `result-${next}`);
+      resultLinks[next].scrollIntoView({ block: 'nearest' });
+    }
+
+    async function openSearch(initialQuery?: string) {
+      await loadIndex();
+      if (suggestionsEl!.children.length === 0 || !input!.value.trim()) {
+        renderSuggestions();
+        suggestionsEl!.style.display = '';
+      }
+      if (initialQuery) {
+        input!.value = initialQuery;
+        doSearch(initialQuery);
+      }
+      dialog!.showModal();
+      setTimeout(() => input!.focus(), 50);
+    }
+
+    function readHashQuery(): string {
+      const hash = window.location.hash;
+      if (!hash) return '';
+      const m = hash.match(/(?:^|&|#)q=([^&]+)/);
+      return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+    }
+
+    function writeHashQuery(query: string) {
+      const trimmed = query.trim();
+      const url = new URL(window.location.href);
+      if (trimmed.length >= 2) {
+        url.hash = `q=${encodeURIComponent(trimmed)}`;
+      } else if (url.hash.startsWith('#q=')) {
+        url.hash = '';
+      }
+      history.replaceState({}, '', url);
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('[data-search-trigger]').forEach((btn) => {
+      btn.addEventListener('click', () => openSearch());
+    });
+
+    input!.addEventListener('input', (e) => {
+      const value = (e.target as HTMLInputElement).value;
+      doSearch(value);
+      writeHashQuery(value);
+    });
+
+    const initialHashQuery = readHashQuery();
+    if (initialHashQuery) {
+      openSearch(initialHashQuery);
+    }
+    window.addEventListener('hashchange', () => {
+      const q = readHashQuery();
+      if (q && !dialog!.open) openSearch(q);
+    });
+
+    input!.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setActive(activeIndex + 1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setActive(activeIndex <= 0 ? resultLinks.length - 1 : activeIndex - 1);
+      } else if (e.key === 'Enter') {
+        if (activeIndex >= 0 && resultLinks[activeIndex]) {
+          e.preventDefault();
+          const q = input!.value.trim();
+          if (q) saveRecentSearch(q);
+          window.location.href = resultLinks[activeIndex].href;
+        } else if (input!.value.trim().length >= 2) {
+          // Fallback: send to /search page
+          const q = input!.value.trim();
+          saveRecentSearch(q);
+          const path = lang === 'vi' ? '/vi/search' : '/search';
+          window.location.href = `${path}?q=${encodeURIComponent(q)}`;
+        }
+      }
+    });
+
+    suggestionsEl!.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const pill = target.closest<HTMLButtonElement>('.suggestion-pill');
+      if (!pill) return;
+      const q = pill.dataset.suggestQ;
+      const tag = pill.dataset.suggestTag;
+      if (q) {
+        input!.value = q;
+        doSearch(q);
+      } else if (tag) {
+        const path = lang === 'vi' ? '/vi/search' : '/search';
+        window.location.href = `${path}?tag=${encodeURIComponent(tag)}`;
+      }
+    });
+
+    dialog!.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog!.close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') dialog!.close();
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (dialog!.open) {
+          dialog!.close();
+        } else {
+          openSearch();
+        }
+      }
+    });
+
+    dialog!.addEventListener('close', () => {
+      const q = input!.value.trim();
+      if (q.length >= 2) saveRecentSearch(q);
+      input!.value = '';
+      input!.removeAttribute('aria-activedescendant');
+      clearAll();
+      suggestionsEl!.innerHTML = '';
+      const url = new URL(window.location.href);
+      if (url.hash.startsWith('#q=')) {
+        url.hash = '';
+        history.replaceState({}, '', url);
+      }
+    });
+
+    resultsEl!.addEventListener('click', (e) => {
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('.result-item');
+      if (!link) return;
+      const q = input!.value.trim();
+      if (q.length >= 2) saveRecentSearch(q);
+      // Let the browser navigate naturally; just close the modal
+      dialog!.close();
+    });
+  }
+</script>

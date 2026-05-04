@@ -4,8 +4,8 @@ import { buildSearchIndex } from '../lib/searchIndex';
 export const prerender = true;
 
 export const GET: APIRoute = async () => {
-  const [en, vi] = await Promise.all([buildSearchIndex('en'), buildSearchIndex('vi')]);
-  return new Response(JSON.stringify([...en, ...vi]), {
+  const docs = await buildSearchIndex('vi');
+  return new Response(JSON.stringify(docs), {
     headers: {
       'Content-Type': 'application/json',
       'Cache-Control': 'public, max-age=3600',
