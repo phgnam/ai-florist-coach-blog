@@ -166,6 +166,7 @@ if (offenders.length > 0) {
 }
 
 if (duplicateOffenders.length > 0) {
+  hasError = true;
   console.warn(
     '\n⚠ Unique image rule violated (docs/seo-aeo-playbook.md §4):',
   );
