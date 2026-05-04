@@ -33,4 +33,7 @@ const clean = (s: string) => s.replace(/[,\n]/g, ' ').trim();
 {image && <span hidden data-pagefind-meta={`image:${image}`}></span>}
 {imageAlt && <span hidden data-pagefind-meta={`image_alt:${clean(imageAlt)}`}></span>}
 <span hidden data-pagefind-filter={`kind:${kind}`}></span>
-{tags.map((tag) => <span hidden data-pagefind-filter={`tag:${tag}`}></span>)}
+{tags
+  .map((tag) => clean(tag))
+  .filter((tag) => tag.length > 0)
+  .map((tag) => <span hidden data-pagefind-filter={`tag:${tag}`}></span>)}
