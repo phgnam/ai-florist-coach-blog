@@ -9,7 +9,7 @@ export const stock: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa tử la lan: hoa dại Địa Trung Hải, vì sao đây là một trong ' +
     'những hoa cắt thơm nhất, biểu tượng "vẻ đẹp lâu dài" và chăm sóc dạng ' +
-    'cuống. Từ Vườn Hoa.',
+    'cuống. Từ Yor Flower.',
   summary:
     'Hoa tử la lan (Matthiola incana) là cây lưỡng niên Địa Trung Hải với ' +
     'cuống cao dày của hoa thơm bốn cánh trong các màu pastel dịu. Là một ' +

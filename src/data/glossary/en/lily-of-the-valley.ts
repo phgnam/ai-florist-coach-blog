@@ -9,7 +9,7 @@ export const lilyOfTheValley: GlossaryTerm = {
   metaDescription:
     'Lily of the valley guide: why it appears in royal bridal bouquets, the ' +
     'powerful fragrance and equally powerful toxicity, May 1 traditions in ' +
-    'France, and brief seasonal availability. From Vườn Hoa.',
+    'France, and brief seasonal availability. From Yor Flower.',
   summary:
     'Lily of the valley (Convallaria majalis) is a small perennial woodland ' +
     'plant native to Eurasia, producing arching stems lined with tiny white ' +

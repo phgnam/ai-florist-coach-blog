@@ -9,7 +9,7 @@ export const plumeria: GlossaryTerm = {
   metaDescription:
     'Plumeria guide: Hawaiian lei flower, Pacific and Southeast Asian ' +
     'symbolism, why the fragrance peaks at night, and care tips for tropical ' +
-    'floristry. From Vườn Hoa.',
+    'floristry. From Yor Flower.',
   summary:
     'Plumeria (Plumeria rubra), known as frangipani in much of the world and ' +
     '"hoa sứ" or "hoa đại" in Vietnam, is a tropical tree flower with five ' +

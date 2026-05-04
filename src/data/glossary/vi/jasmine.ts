@@ -8,7 +8,7 @@ export const jasmine: GlossaryTermVI = {
   title: 'Hoa Nhài — Hương Thơm, Biểu Tượng & Công Dụng Trong Florist',
   metaDescription:
     'Hướng dẫn hoa nhài: tại sao hoa nhài là loài hoa thơm quan trọng nhất ' +
-    'thương mại, ý nghĩa văn hóa sâu sắc ở châu Á. Từ Vườn Hoa.',
+    'thương mại, ý nghĩa văn hóa sâu sắc ở châu Á. Từ Yor Flower.',
   summary:
     'Hoa nhài là một chi khoảng 200 loài cây bụi và dây leo trong họ ô liu. ' +
     'Đây là loài hoa thơm quan trọng nhất thương mại trên thế giới, tạo nền ' +

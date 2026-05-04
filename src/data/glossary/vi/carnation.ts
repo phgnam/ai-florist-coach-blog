@@ -8,7 +8,7 @@ export const carnation: GlossaryTermVI = {
   title: 'Hoa Cẩm Chướng — Ý Nghĩa Theo Màu, Các Loại & Hướng Dẫn Chăm Sóc',
   metaDescription:
     'Hướng dẫn đầy đủ về hoa cẩm chướng: ý nghĩa màu sắc, cách giữ cẩm chướng ' +
-    'tươi 3+ tuần, loại spray vs tiêu chuẩn. Từ Vườn Hoa.',
+    'tươi 3+ tuần, loại spray vs tiêu chuẩn. Từ Yor Flower.',
   summary:
     'Hoa cẩm chướng (Dianthus caryophyllus) là một trong những loài hoa được ' +
     'trồng lâu đời nhất thế giới, với lịch sử hơn 2.000 năm. Dù bị coi nhẹ là ' +

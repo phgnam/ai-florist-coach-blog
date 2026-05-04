@@ -9,7 +9,7 @@ export const anthurium: GlossaryTerm = {
   metaDescription:
     'Anthurium guide: tropical American origin, why the heart-shaped "flower" ' +
     'is a leaf, why it is one of the longest-lasting cut flowers, and care ' +
-    'tips. From Vườn Hoa.',
+    'tips. From Yor Flower.',
   summary:
     'Anthurium (Anthurium andraeanum and relatives) is a tropical American ' +
     'genus of around 1,000 species, with the cut-flower trade dominated by ' +

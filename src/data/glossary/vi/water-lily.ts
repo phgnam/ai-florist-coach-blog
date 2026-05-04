@@ -9,7 +9,7 @@ export const waterLily: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa súng: phân biệt với hoa sen, cảm hứng vườn Giverny của ' +
     'Monet, thẩm mỹ ao Việt Nam và chăm sóc bông ngắn ngủi nhưng biểu tượng. ' +
-    'Từ Vườn Hoa.',
+    'Từ Yor Flower.',
   summary:
     'Hoa súng (chi Nymphaea) là loài hoa thủy sinh thật với lá nổi và bông ' +
     'hình chén trong trắng, hồng, vàng và dạng sen-Ai-Cập xanh hiếm. Phân ' +

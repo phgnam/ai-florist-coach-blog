@@ -9,7 +9,7 @@ export const daffodil: GlossaryTerm = {
   metaDescription:
     'Daffodil care guide: why daffodils need their own vase, the meaning of ' +
     'the trumpet shape, the Welsh and Chinese New Year traditions, and how to ' +
-    'make them last. From Vườn Hoa.',
+    'make them last. From Yor Flower.',
   summary:
     'Daffodils (Narcissus) are the unmistakable trumpet-and-cup flowers of ' +
     'early spring. Native to Europe and North Africa, they grow from bulbs ' +

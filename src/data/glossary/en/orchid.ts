@@ -9,7 +9,7 @@ export const orchid: GlossaryTerm = {
   metaDescription:
     'The complete orchid care guide: watering frequency, light needs, why ' +
     'orchids drop blooms, and how to get a Phalaenopsis to rebloom. Expert ' +
-    'advice from Vườn Hoa.',
+    'advice from Yor Flower.',
   summary:
     'Orchids form the largest family of flowering plants, with over 28,000 ' +
     'documented species. As potted plants, Phalaenopsis orchids are the ' +

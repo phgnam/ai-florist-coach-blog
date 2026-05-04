@@ -9,7 +9,7 @@ export const lilyOfTheValley: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn linh lan: vì sao xuất hiện trong bó hoa cô dâu hoàng gia, ' +
     'hương thơm mạnh và độc tính cũng mạnh ngang, truyền thống 1/5 tại Pháp, ' +
-    'và mùa ngắn ngủi. Từ Vườn Hoa.',
+    'và mùa ngắn ngủi. Từ Yor Flower.',
   summary:
     'Linh lan (Convallaria majalis) là cây thân thảo lưu niên rừng nhỏ bản ' +
     'địa Á-Âu, sản xuất các cuống cong xếp những bông hình chuông trắng nhỏ. ' +

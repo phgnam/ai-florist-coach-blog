@@ -1,4 +1,4 @@
-export const SITE_TITLE = 'Vườn Hoa — AI Florist Coach Blog';
+export const SITE_TITLE = 'Yor Flower — AI Florist Coach Blog';
 export const SITE_DESCRIPTION = 'Blog về hoa và nghề florist, được hỗ trợ bởi AI Florist Coach.';
 
 export const GISCUS = {

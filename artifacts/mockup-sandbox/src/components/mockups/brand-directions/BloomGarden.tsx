@@ -38,7 +38,7 @@ export function BloomGarden() {
 
         <div style={{ position: "relative", maxWidth: 540 }}>
           <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, letterSpacing: "0.3em", fontWeight: 400, color: "#A5CAB8", textTransform: "uppercase", marginBottom: 20 }}>
-            Vườn Hoa · Brand Identity
+            Yor Flower · Brand Identity
           </p>
           <h1 style={{ fontSize: 68, fontWeight: 300, lineHeight: 1.0, margin: "0 0 4px", color: "#FBF7F0" }}>
             Bloom
@@ -117,7 +117,7 @@ export function BloomGarden() {
             </div>
             <div style={{ padding: "14px 18px", background: "#FBF7F0", borderRadius: 8, border: "1px solid #C8DFD0" }}>
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#4A7C6F", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 6px", fontWeight: 500 }}>Welcome Message</p>
-              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300, margin: 0, color: "#3A6459", lineHeight: 1.6 }}>Xin chào! Bạn vừa bước vào Vườn Hoa — nơi chúng tôi chia sẻ mọi điều thú vị về hoa và nghề florist.</p>
+              <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 300, margin: 0, color: "#3A6459", lineHeight: 1.6 }}>Xin chào! Bạn vừa bước vào Yor Flower — nơi chúng tôi chia sẻ mọi điều thú vị về hoa và nghề florist.</p>
             </div>
             <div style={{ padding: "14px 18px", background: "#FBF7F0", borderRadius: 8, border: "1px solid #C8DFD0" }}>
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: "#4A7C6F", letterSpacing: "0.15em", textTransform: "uppercase", margin: "0 0 6px", fontWeight: 500 }}>Call to Action</p>
@@ -147,14 +147,14 @@ export function BloomGarden() {
               <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: "#7DB09A", margin: 0, lineHeight: 1.6, fontWeight: 300 }}>Những mẹo nhỏ từ chuyên gia giúp bó hoa...</p>
               <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 22, height: 22, borderRadius: "50%", background: "#E5EFE8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>🌿</div>
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#7DB09A", fontWeight: 300 }}>Vườn Hoa · 2 thg 5, 2026</span>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: "#7DB09A", fontWeight: 300 }}>Yor Flower · 2 thg 5, 2026</span>
               </div>
             </div>
           </div>
           <div style={{ background: "#2D5A4A", borderRadius: 10, padding: "12px 18px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#4A7C6F", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13 }}>🌿</div>
-              <span style={{ fontSize: 16, fontWeight: 300, color: "#FBF7F0" }}>Vườn Hoa</span>
+              <span style={{ fontSize: 16, fontWeight: 300, color: "#FBF7F0" }}>Yor Flower</span>
             </div>
             <div style={{ display: "flex", gap: 18 }}>
               {["Bài viết","Chủ đề","Giới thiệu"].map(n => (

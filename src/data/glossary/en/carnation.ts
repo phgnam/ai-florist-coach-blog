@@ -9,7 +9,7 @@ export const carnation: GlossaryTerm = {
   metaDescription:
     'Complete carnation guide: color symbolism, how to make carnations last ' +
     '3+ weeks, spray vs standard types, and design tips for florists. From ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Carnations (Dianthus caryophyllus) are one of the oldest cultivated ' +
     'flowers in the world, with a history spanning over 2,000 years. Despite ' +

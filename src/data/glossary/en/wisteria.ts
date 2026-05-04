@@ -9,7 +9,7 @@ export const wisteria: GlossaryTerm = {
   metaDescription:
     'Wisteria guide: Japanese fuji symbolism, Chinese imperial origin, why ' +
     'Ashikaga\'s wisteria tunnels are one of Japan\'s top spring sights, and ' +
-    'cascade-installation care. From Vườn Hoa.',
+    'cascade-installation care. From Yor Flower.',
   summary:
     'Wisteria (Wisteria sinensis from China and W. floribunda from Japan) is ' +
     'a deciduous climbing vine producing massive cascading clusters of ' +

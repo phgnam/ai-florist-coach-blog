@@ -9,7 +9,7 @@ export const wisteria: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn đậu tía: biểu tượng fuji Nhật Bản, nguồn gốc hoàng gia Trung ' +
     'Hoa, vì sao đường hầm đậu tía Ashikaga là một trong những cảnh xuân hàng ' +
-    'đầu Nhật Bản và chăm sóc lắp đặt thác. Từ Vườn Hoa.',
+    'đầu Nhật Bản và chăm sóc lắp đặt thác. Từ Yor Flower.',
   summary:
     'Đậu tía (Wisteria sinensis từ Trung Quốc và W. floribunda từ Nhật Bản) ' +
     'là dây leo rụng lá sản xuất các cụm hoa hình đậu thơm thác đổ trong tím, ' +

@@ -9,7 +9,7 @@ export const daffodil: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn chăm sóc thủy tiên: tại sao thủy tiên phải cắm bình riêng, ý ' +
     'nghĩa hình kèn, truyền thống xứ Wales và Tết Nguyên Đán Trung Hoa, cách ' +
-    'giữ hoa lâu. Từ Vườn Hoa.',
+    'giữ hoa lâu. Từ Yor Flower.',
   summary:
     'Hoa thủy tiên (Narcissus) là loài hoa kèn-và-chén không thể nhầm lẫn của ' +
     'đầu xuân. Bản địa châu Âu và Bắc Phi, mọc từ củ và đã trở thành biểu ' +

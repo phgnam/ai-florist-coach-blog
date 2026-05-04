@@ -9,7 +9,7 @@ export const zinnia: GlossaryTerm = {
   metaDescription:
     'Zinnia guide: Mexican summer wildflower, the first flower grown on the ' +
     'International Space Station, "Benary\'s Giant" cultivars, and care for ' +
-    'the long-lasting cut blooms. From Vườn Hoa.',
+    'the long-lasting cut blooms. From Yor Flower.',
   summary:
     'Zinnia (Zinnia elegans) is a Mexican wildflower in the daisy family — ' +
     'sturdy upright stems carry full, multi-petalled blooms in the most ' +

@@ -9,7 +9,7 @@ export const sunflower: GlossaryTerm = {
   metaDescription:
     'Florist guide to sunflowers: symbolism, how to keep them upright in ' +
     'arrangements, best varieties, and seasonal availability. Expert tips ' +
-    'from Vườn Hoa.',
+    'from Yor Flower.',
   summary:
     'Sunflowers are native to the Americas and were cultivated by Indigenous ' +
     'peoples over 4,500 years ago. Their commanding size and warm colour make ' +

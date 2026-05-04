@@ -9,7 +9,7 @@ export const plumeria: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa sứ: vòng hoa lei Hawaii, biểu tượng Thái Bình Dương và ' +
     'Đông Nam Á, vì sao hương thơm đỉnh điểm vào ban đêm, mẹo chăm sóc cho ' +
-    'florist nhiệt đới. Từ Vườn Hoa.',
+    'florist nhiệt đới. Từ Yor Flower.',
   summary:
     'Hoa sứ (Plumeria rubra), được biết đến là frangipani ở phần lớn thế giới ' +
     'và "hoa sứ" hoặc "hoa đại" tại Việt Nam, là hoa của cây nhiệt đới với ' +

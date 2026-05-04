@@ -9,7 +9,7 @@ export const waterLily: GlossaryTerm = {
   metaDescription:
     'Water lily guide: distinct from lotus, Monet\'s Giverny garden ' +
     'inspiration, Vietnamese pond aesthetics, and care for the brief-lived ' +
-    'but iconic blooms. From Vườn Hoa.',
+    'but iconic blooms. From Yor Flower.',
   summary:
     'Water lily (Nymphaea genus) is a true aquatic flower with floating ' +
     'leaves and cup-shaped blooms in white, pink, yellow, and the rare blue ' +

@@ -8,7 +8,7 @@ export const marigold: GlossaryTerm = {
   title: 'Marigold — Meaning, Uses & Why Florists Love Them',
   metaDescription:
     'Marigold guide: Día de Muertos symbolism, sacred uses across cultures, ' +
-    'how to use marigolds in modern floristry, and care tips. From Vườn Hoa.',
+    'how to use marigolds in modern floristry, and care tips. From Yor Flower.',
   summary:
     'Marigolds (Tagetes) are native to the Americas but have been adopted as ' +
     'sacred flowers across Asia and used in everything from garlands to ' +

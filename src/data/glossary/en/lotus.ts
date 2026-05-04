@@ -9,7 +9,7 @@ export const lotus: GlossaryTerm = {
   metaDescription:
     'Lotus flower guide: sacred symbolism in Vietnamese, Buddhist, and Hindu ' +
     'traditions, why the bloom rises clean from muddy water, vase-life ' +
-    'conditioning, and seasonal availability. From Vườn Hoa.',
+    'conditioning, and seasonal availability. From Yor Flower.',
   summary:
     'The lotus (Nelumbo nucifera) is the unofficial national flower of ' +
     'Vietnam and one of the most spiritually significant blooms in Asia. It ' +

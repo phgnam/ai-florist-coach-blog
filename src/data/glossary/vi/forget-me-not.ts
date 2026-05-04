@@ -8,7 +8,7 @@ export const forgetMeNot: GlossaryTermVI = {
   title: 'Hoa Lưu Ly (Forget-me-not) — Ý Nghĩa, Xanh Thật & Sử Dụng Florist',
   metaDescription:
     'Hướng dẫn lưu ly: hoa xuân xanh thật, hoa bang Alaska, biểu tượng nhận ' +
-    'thức Alzheimer và mẹo chăm sóc filler bó hoa mỏng manh. Từ Vườn Hoa.',
+    'thức Alzheimer và mẹo chăm sóc filler bó hoa mỏng manh. Từ Yor Flower.',
   summary:
     'Hoa lưu ly (Myosotis sylvatica và họ hàng) là một bông năm cánh nhỏ ' +
     'trong xanh cobalt tinh khiết với tâm vàng, bản địa rìa rừng khắp châu ' +

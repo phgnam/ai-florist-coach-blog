@@ -9,7 +9,7 @@ export const peachBlossom: GlossaryTerm = {
   metaDescription:
     'Peach blossom guide: the pink Tết flower of northern Vietnam, the ' +
     'cultural difference between Hà Nội đào and southern mai, branch ' +
-    'conditioning, and bloom timing for Lunar New Year. From Vườn Hoa.',
+    'conditioning, and bloom timing for Lunar New Year. From Yor Flower.',
   summary:
     'Peach blossom — hoa đào — is the iconic pink five-petalled flower of ' +
     'northern Vietnamese Tết, the geographic counterpart to the southern hoa ' +

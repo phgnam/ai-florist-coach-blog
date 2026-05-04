@@ -9,7 +9,7 @@ export const iris: GlossaryTerm = {
   metaDescription:
     'Iris guide: the meaning of purple, blue, and yellow irises, Bearded vs ' +
     'Dutch varieties, how to condition iris stems, and when irises are in ' +
-    'season. From Vườn Hoa.',
+    'season. From Yor Flower.',
   summary:
     'The iris is named after the Greek goddess of the rainbow, reflecting the ' +
     'extraordinary range of colours available in its 300+ species. The ' +

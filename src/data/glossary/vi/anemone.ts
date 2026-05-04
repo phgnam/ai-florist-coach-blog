@@ -8,7 +8,7 @@ export const anemone: GlossaryTermVI = {
   title: 'Hoa Hải Quỳ — Ý Nghĩa, Khi Nào Có Mùa & Hướng Dẫn Chăm Sóc',
   metaDescription:
     'Hướng dẫn hoa hải quỳ cho florist: ý nghĩa thần thoại Hy Lạp, tại sao là ' +
-    'đặc sản đông-xuân, cách giữ hoa mở và tươi. Từ Vườn Hoa.',
+    'đặc sản đông-xuân, cách giữ hoa mở và tươi. Từ Yor Flower.',
   summary:
     'Hoa hải quỳ là những loài hoa rừng và đồng cỏ trong họ mao lương, được ' +
     'trồng từ củ và được đánh giá cao vì những cánh hoa màu đá quý và tâm hoa ' +

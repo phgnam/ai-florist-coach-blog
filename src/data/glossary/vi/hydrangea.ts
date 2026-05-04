@@ -8,7 +8,7 @@ export const hydrangea: GlossaryTermVI = {
   title: 'Hoa Cẩm Tú Cầu — Ý Nghĩa, Màu Sắc & Cách Hồi Phục Hoa Héo',
   metaDescription:
     'Hướng dẫn hoa cẩm tú cầu cho florist: cách hồi phục khi héo, tại sao màu ' +
-    'thay đổi theo pH đất, các giống tốt nhất. Từ Vườn Hoa.',
+    'thay đổi theo pH đất, các giống tốt nhất. Từ Yor Flower.',
   summary:
     'Hoa cẩm tú cầu là những cây bụi hoa lớn được florist yêu thích vì khả ' +
     'năng tạo khối lớn ấn tượng trong cắm hoa. Bản chất thay đổi màu của ' +

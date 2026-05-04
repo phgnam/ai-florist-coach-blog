@@ -9,7 +9,7 @@ export const forgetMeNot: GlossaryTerm = {
   metaDescription:
     'Forget-me-not guide: the true-blue spring flower, Alaska state flower, ' +
     'Alzheimer\'s awareness symbol, and care tips for the delicate bouquet ' +
-    'filler. From Vườn Hoa.',
+    'filler. From Yor Flower.',
   summary:
     'Forget-me-not (Myosotis sylvatica and relatives) is a tiny five-petalled ' +
     'flower in pure cobalt-blue with a yellow centre, native to woodland ' +

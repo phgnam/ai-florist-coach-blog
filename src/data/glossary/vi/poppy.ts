@@ -9,7 +9,7 @@ export const poppy: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa poppy: biểu tượng đỏ Ngày Tưởng Niệm, Iceland & Shirley ' +
     'poppy cho floristry, vì sao cuống poppy phải bịt và mẹo chăm sóc. Từ ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Hoa poppy là tên thông thường cho nhiều loài Papaver. Nghề hoa cắt tập ' +
     'trung vào Iceland poppy ngắn ngủi rực rỡ (P. nudicaule) và Shirley poppy ' +

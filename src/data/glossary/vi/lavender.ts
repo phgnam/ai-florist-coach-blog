@@ -8,7 +8,7 @@ export const lavender: GlossaryTermVI = {
   title: 'Hoa Oải Hương — Ý Nghĩa, Công Dụng & Hướng Dẫn Chăm Sóc',
   metaDescription:
     'Hướng dẫn hoa oải hương: hồ sơ hương thơm, ý nghĩa bình yên, kỹ thuật ' +
-    'sấy khô để bảo tồn. Từ chuyên gia florist Vườn Hoa.',
+    'sấy khô để bảo tồn. Từ chuyên gia florist Yor Flower.',
   summary:
     'Hoa oải hương là cây bụi thơm trong họ bạc hà, có nguồn gốc từ Địa Trung ' +
     'Hải. Những gié hoa màu tím bạc và hương thơm đặc trưng khiến nó là một ' +

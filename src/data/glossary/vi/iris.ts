@@ -8,7 +8,7 @@ export const iris: GlossaryTermVI = {
   title: 'Hoa Diên Vĩ — Ý Nghĩa, Các Giống & Hướng Dẫn Florist',
   metaDescription:
     'Hướng dẫn hoa diên vĩ: ý nghĩa màu tím, xanh và vàng, các giống Bearded ' +
-    'vs Dutch, cách sơ chế. Từ Vườn Hoa.',
+    'vs Dutch, cách sơ chế. Từ Yor Flower.',
   summary:
     'Hoa diên vĩ được đặt tên theo nữ thần cầu vồng Hy Lạp, phản ánh phạm vi ' +
     'màu sắc phi thường trong hơn 300 loài. Biểu tượng fleur-de-lis — trọng ' +

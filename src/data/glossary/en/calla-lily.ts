@@ -9,7 +9,7 @@ export const callaLily: GlossaryTerm = {
   metaDescription:
     'Calla lily guide: why the trumpet is technically a leaf not a flower, ' +
     'Art Deco wedding history, mini vs. giant varieties, and how to keep the ' +
-    'stems straight. From Vườn Hoa.',
+    'stems straight. From Yor Flower.',
   summary:
     'Calla lilies (Zantedeschia) are not true lilies but South African aroids ' +
     'whose iconic "trumpet" is actually a single curled leaf (the spathe) ' +

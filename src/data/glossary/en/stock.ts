@@ -9,7 +9,7 @@ export const stock: GlossaryTerm = {
   metaDescription:
     'Stock guide: Mediterranean wildflower, why this is one of the most ' +
     'fragrant cut flowers, "lasting beauty" symbolism, and care for the ' +
-    'spike-form bloom. From Vườn Hoa.',
+    'spike-form bloom. From Yor Flower.',
   summary:
     'Stock (Matthiola incana) is a Mediterranean biennial with tall dense ' +
     'spikes of fragrant four-petalled flowers in soft pastel colours. It is ' +

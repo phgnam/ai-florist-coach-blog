@@ -9,7 +9,7 @@ export const birdOfParadise: GlossaryTerm = {
   metaDescription:
     'Bird of paradise guide: South African origin, why the bloom looks like a ' +
     'tropical bird, how to "open" the next bloom by hand, and care for ' +
-    'long-lasting cut stems. From Vườn Hoa.',
+    'long-lasting cut stems. From Yor Flower.',
   summary:
     'Bird of paradise (Strelitzia reginae) is a South African native named ' +
     'after Queen Charlotte of Mecklenburg-Strelitz, consort of George III. ' +

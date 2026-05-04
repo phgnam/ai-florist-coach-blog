@@ -9,7 +9,7 @@ export const babysBreath: GlossaryTermVI = {
   metaDescription:
     'Hướng dẫn hoa bi: hoa filler đám cưới được dùng nhiều nhất thế giới, ' +
     'nguồn gốc Địa Trung Hải, biểu tượng "ngây thơ" và mẹo chăm sóc đám mây ' +
-    'hoa nhỏ trắng. Từ Vườn Hoa.',
+    'hoa nhỏ trắng. Từ Yor Flower.',
   summary:
     'Hoa bi (Gypsophila paniculata) là cây lưu niên Địa Trung Hải và Á-Âu ' +
     'trong họ cẩm chướng, sản xuất những đám mây thoáng khổng lồ của hoa năm ' +

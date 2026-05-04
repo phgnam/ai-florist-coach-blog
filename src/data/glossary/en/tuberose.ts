@@ -9,7 +9,7 @@ export const tuberose: GlossaryTerm = {
   metaDescription:
     'Tuberose guide: Vietnamese altar tradition, why this is one of the most ' +
     'powerful flower fragrances on Earth, perfume use (Fracas, Carnal ' +
-    'Flower), and care tips. From Vườn Hoa.',
+    'Flower), and care tips. From Yor Flower.',
   summary:
     'Tuberose (Polianthes tuberosa, recently reclassified as Agave amica) is ' +
     'a Mexican perennial with a tall spike of waxy white star-shaped flowers ' +

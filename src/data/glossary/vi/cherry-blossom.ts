@@ -8,7 +8,7 @@ export const cherryBlossom: GlossaryTermVI = {
   title: 'Hoa Anh Đào (Sakura) — Ý Nghĩa, Hanami & Chăm Sóc Cho Florist',
   metaDescription:
     'Hướng dẫn hoa anh đào: truyền thống sakura Nhật Bản, ý nghĩa mono no ' +
-    'aware, mẹo xử lý cành hoa, và mùa ngắn ngủi cho florist. Từ Vườn Hoa.',
+    'aware, mẹo xử lý cành hoa, và mùa ngắn ngủi cho florist. Từ Yor Flower.',
   summary:
     'Hoa anh đào — sakura trong tiếng Nhật, hoa anh đào trong tiếng Việt — là ' +
     'hoa của các loài cây cảnh thuộc chi Prunus. Đây là loài hoa mang nhiều ' +

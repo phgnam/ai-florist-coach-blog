@@ -8,7 +8,7 @@ export const peony: GlossaryTerm = {
   title: 'Peony — Meaning, Season & How to Care for Cut Peonies',
   metaDescription:
     'The florist\'s guide to peonies: when they bloom, how to open tight buds, ' +
-    'vase life tips, and what peonies symbolise. From Vườn Hoa.',
+    'vase life tips, and what peonies symbolise. From Yor Flower.',
   summary:
     'Peonies are among the most coveted flowers in the world, known for their ' +
     'billowing, multi-layered blooms and sweet fragrance. Their brief ' +

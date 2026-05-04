@@ -9,7 +9,7 @@ export const jasmine: GlossaryTerm = {
   metaDescription:
     'Jasmine flower guide: why jasmine is the most commercially important ' +
     'fragrant flower, its deep cultural significance across Asia, and how to ' +
-    'use it in arrangements. From Vườn Hoa.',
+    'use it in arrangements. From Yor Flower.',
   summary:
     'Jasmine is a genus of about 200 flowering shrubs and vines in the olive ' +
     'family. It is the most commercially important fragrant flower in the ' +

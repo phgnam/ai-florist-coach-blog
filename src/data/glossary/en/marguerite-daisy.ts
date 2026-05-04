@@ -9,7 +9,7 @@ export const margueriteDaisy: GlossaryTerm = {
   metaDescription:
     'Marguerite daisy guide: distinct from gerbera, the cottage-garden ' +
     'classic, oxeye daisy origins, "he loves me, he loves me not", and care ' +
-    'for the airy stems. From Vườn Hoa.',
+    'for the airy stems. From Yor Flower.',
   summary:
     'Marguerite daisy (Argyranthemum frutescens, also Leucanthemum vulgare ' +
     'for the wild oxeye form) is the classic white-petal-yellow-centre daisy ' +

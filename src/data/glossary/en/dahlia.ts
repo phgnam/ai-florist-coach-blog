@@ -9,7 +9,7 @@ export const dahlia: GlossaryTerm = {
   metaDescription:
     'Dahlia guide: symbolism, stunning varieties from café au lait to dinner ' +
     'plate, how to condition dahlias, and seasonal availability tips. From ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'Dahlias are a genus of tuberous flowering plants native to Mexico. With ' +
     'over 57 species and 20,000+ cultivars, they offer more variety in form, ' +

@@ -8,7 +8,7 @@ export const rose: GlossaryTerm = {
   metaDescription:
     'Everything about roses: symbolism by color, how to keep cut roses fresh ' +
     'longer, popular varieties, and when they bloom. From florist experts at ' +
-    'Vườn Hoa.',
+    'Yor Flower.',
   summary:
     'The rose is the world\'s most recognised flower, cultivated for over ' +
     '5,000 years. With more than 300 species and tens of thousands of ' +

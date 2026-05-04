@@ -8,7 +8,7 @@ export const gardenia: GlossaryTermVI = {
   title: 'Hoa Dạ Lý Hương — Hương Thơm, Ý Nghĩa & Cách Chăm Sóc',
   metaDescription:
     'Hướng dẫn hoa dạ lý hương cho florist: tại sao dễ bầm, cách xử lý cho ' +
-    'đám cưới, mẹo trồng. Từ Vườn Hoa.',
+    'đám cưới, mẹo trồng. Từ Yor Flower.',
   summary:
     'Hoa dạ lý hương là những cây bụi thường xanh nhiệt đới nổi tiếng với một ' +
     'trong những loài hoa thơm nhất trong thế giới thực vật. Bông hoa màu ' +

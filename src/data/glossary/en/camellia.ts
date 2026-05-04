@@ -9,7 +9,7 @@ export const camellia: GlossaryTerm = {
   metaDescription:
     'Camellia guide: tea origin from China and Vietnam, Coco Chanel\'s ' +
     'signature flower, why fresh camellias bruise so easily, and care for cut ' +
-    'blooms. From Vườn Hoa.',
+    'blooms. From Yor Flower.',
   summary:
     'Camellia (Camellia japonica and relatives) is a genus of evergreen ' +
     'shrubs from East Asia, including the tea plant (Camellia sinensis). The ' +

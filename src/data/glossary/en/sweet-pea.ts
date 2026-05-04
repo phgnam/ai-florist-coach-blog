@@ -9,7 +9,7 @@ export const sweetPea: GlossaryTerm = {
   metaDescription:
     'Sweet pea guide: why florists treasure them for their fragrance and ' +
     'movement, how to condition delicate sweet pea stems, seasonal ' +
-    'availability, and symbolism. From Vườn Hoa.',
+    'availability, and symbolism. From Yor Flower.',
   summary:
     'Sweet peas are climbing annuals native to Sicily, introduced to ' +
     'cultivation in the 17th century and reaching peak popularity in ' +
