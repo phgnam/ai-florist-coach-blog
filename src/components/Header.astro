@@ -45,7 +45,7 @@ const isActive = (path: string) => {
 
       <span class="nav-sep" aria-hidden="true"></span>
 
-      <Search lang={lang} />
+      <Search lang={lang} triggerOnly />
 
       {showLangSwitch && (
         <div class="lang-switch">
@@ -91,6 +91,11 @@ const isActive = (path: string) => {
     <a href={p('/tools')} class:list={['mobile-nav-link', pathname.startsWith(p('/tools')) && 'mobile-nav-link--active']}>{t('nav.tools')}</a>
     <a href={p('/about')} class:list={['mobile-nav-link', pathname.startsWith(p('/about')) && 'mobile-nav-link--active']}>{t('nav.about')}</a>
   </div>
+
+  <!-- Search dialog: rendered once at the header root so it sits outside the
+       responsively-hidden desktop nav and the mobile-only controls. Both the
+       desktop and mobile triggers above target this single <dialog>. -->
+  <Search lang={lang} dialogOnly />
 </header>
 
 <style>
