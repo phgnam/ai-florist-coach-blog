@@ -5,7 +5,7 @@ import Pagination from './Pagination.astro';
 import { useTranslations } from '../i18n/utils';
 import { postsPageUrl } from '../lib/posts-pagination';
 import type { CollectionEntry } from 'astro:content';
-import type { ImageMetadata } from 'astro:assets';
+import { firstPreviewImage } from '../lib/postPreviewImage';
 
 interface Props {
   lang: 'en' | 'vi';
@@ -20,11 +20,6 @@ interface Props {
 
 const { lang, title, description, posts, currentPage, totalPages, basePath, postSlugPrefix } = Astro.props;
 const t = useTranslations(lang);
-
-const firstPreviewImage = (post: CollectionEntry<'posts'>): string | ImageMetadata | undefined => {
-  const figureImage = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
-  return figureImage ?? (post.data.heroImage as ImageMetadata | undefined);
-};
 
 const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
 const pagedTitle = currentPage > 1 ? `${title} — ${t('posts.page')} ${currentPage}` : title;
