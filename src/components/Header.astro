@@ -71,6 +71,7 @@ const isActive = (path: string) => {
           <a href={alternateUrl} class="lang-alt">{alternateLang.toUpperCase()}</a>
         </div>
       )}
+      <Search lang={lang} variant="mobile" triggerOnly />
       <button id="mobile-menu-btn" class="mobile-btn p-1.5 rounded-lg" aria-label="Open menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>

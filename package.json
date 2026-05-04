@@ -1,15 +1,16 @@
 {
   "name": "vuon-hoa-blog",
   "version": "1.0.0",
-  "description": "Static blog about flowers built with Astro, MDX, TailwindCSS v4, and Pagefind.",
+  "description": "Static blog about flowers built with Astro, MDX, TailwindCSS v3, and Pagefind.",
   "scripts": {
     "dev": "astro dev --host 0.0.0.0 --port 5000",
     "prebuild": "node scripts/check-body-images.mjs",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build && pagefind --site .vercel/output/static",
     "build:astro": "astro build",
-    "build:search": "pagefind --site dist",
+    "build:search": "pagefind --site .vercel/output/static",
     "check:body-images": "node scripts/check-body-images.mjs",
-    "preview": "astro preview --host 0.0.0.0 --port 5000"
+    "preview": "astro preview --host 0.0.0.0 --port 5000",
+    "preview:static": "npx --yes http-server .vercel/output/static -p 5000 -a 0.0.0.0 -c-1"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.4",
@@ -22,7 +23,6 @@
     "@vercel/speed-insights": "^2.0.0",
     "astro": "^6.2.1",
     "autoprefixer": "^10.5.0",
-    "fuse.js": "^7.3.0",
     "postcss": "^8.5.13",
     "tailwindcss": "^3.4.19"
   },

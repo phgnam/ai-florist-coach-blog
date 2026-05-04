@@ -105,6 +105,10 @@ const breadcrumbs = [
         <a href="/vi/posts" class="btn-primary">Khám phá bài viết</a>
         <a href="/vi/about" class="btn-ghost">Giới thiệu →</a>
       </div>
+      <p class="hero-cmdk fade-up fade-up-4" aria-hidden="true">
+        <kbd>⌘</kbd><kbd>K</kbd>
+        <span>Nhấn để tìm kiếm</span>
+      </p>
     </div>
 
     <div class="scroll-indicator" aria-hidden="true">
@@ -343,6 +347,32 @@ const breadcrumbs = [
   .hero-title em { font-style:italic; color:var(--blush-dark); font-weight:300; }
   .hero-sub { font-family:'Jost',sans-serif; font-size:clamp(0.95rem,2vw,1.1rem); color:var(--mauve-mid); max-width:500px; margin:0 auto 2.5rem; font-weight:300; line-height:1.75; }
   .hero-actions { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; }
+  .hero-cmdk {
+    display: none;
+    margin: 1.5rem 0 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--taupe);
+    opacity: 0.85;
+  }
+  .hero-cmdk kbd {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(196, 122, 138, 0.25);
+    border-bottom-width: 2px;
+    border-radius: 5px;
+    padding: 1px 6px;
+    color: var(--mauve);
+  }
+  .hero-cmdk span { padding-left: 0.25rem; }
+  @media (min-width: 768px) {
+    .hero-cmdk { display: inline-flex; }
+  }
   .scroll-indicator { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; }
   .scroll-line { width:1px; height:52px; background:linear-gradient(to bottom,transparent,rgba(196,122,138,0.5)); animation:floatPetal 2.5s ease-in-out infinite; }
 

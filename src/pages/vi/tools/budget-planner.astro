@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
+
+export const prerender = true;
 
 const lang = 'vi' as const;
 const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
@@ -110,7 +113,7 @@ const faqSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} slot="head" />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
 
-  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
     <div class="max-w-6xl mx-auto px-6 py-4">
       <ol class="breadcrumb-list">
         <li><a href="/vi/">Trang chủ</a></li><li aria-hidden="true">›</li>
@@ -119,6 +122,9 @@ const faqSchema = {
       </ol>
     </div>
   </nav>
+
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Tính toán số bông hoa cho mọi loại lẵng và bó hoa kèm bảng chi phí buôn lẻ chi tiết." tags={["công cụ","ngân sách","kinh doanh"]} />
 
   <div class="page-header">
     <div class="max-w-5xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
@@ -239,6 +245,7 @@ const faqSchema = {
 
     </div>
   </div>
+  </article>
 </BaseLayout>
 
 <style>

@@ -15,8 +15,8 @@ knowledge:
       npm run dev
   - name: preview
     contents: |
-      # Serve the built dist/ locally on :5000 (use this to test Pagefind search):
-      npm run preview
+      # Serve the built static output on :5000 (use this to test Pagefind search):
+      npm run build && npm run preview:static
   - name: add-post
     contents: |
       # New articles MUST follow docs/seo-aeo-playbook.md:

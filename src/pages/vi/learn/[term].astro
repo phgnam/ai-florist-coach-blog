@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
 import { GLOSSARY_TERMS_VI, getVITermBySlug } from '../../../data/glossary-vi';
 import { GLOSSARY_TERMS } from '../../../data/glossary';
 
@@ -58,6 +59,8 @@ const faqSchema = {
     "acceptedAnswer": { "@type": "Answer", "text": item.a }
   }))
 };
+
+const tagValues = term.colors.map((c) => c.toLowerCase());
 ---
 <BaseLayout
   lang={lang}
@@ -69,7 +72,7 @@ const faqSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(definedTermSchema)} slot="head" />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
 
-  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
     <div class="max-w-6xl mx-auto px-6 py-4">
       <ol class="breadcrumb-list">
         <li><a href="/vi/">Trang chủ</a></li>
@@ -81,11 +84,13 @@ const faqSchema = {
     </div>
   </nav>
 
+  <article data-pagefind-body>
+  <PagefindMeta kind="glossary" description={term.summary} tags={tagValues} />
   <div class="term-header">
     <div class="max-w-6xl mx-auto px-6 py-20" style="position:relative;z-index:2">
       <div class="term-header-content">
         <div>
-          <div class="lang-bar">
+          <div class="lang-bar" data-pagefind-ignore>
             <a href={`/learn/${term.slug}/`} class="lang-switch-link">🇬🇧 Read in English</a>
             <span class="care-chip care-{term.careLevel}">{term.careLevel} chăm sóc</span>
           </div>
@@ -193,7 +198,7 @@ const faqSchema = {
       </div>
 
       <!-- Sidebar -->
-      <aside class="content-sidebar">
+      <aside class="content-sidebar" data-pagefind-ignore>
         <div class="sidebar-card">
           <h3 class="sidebar-heading">Khám Phá Thêm</h3>
           <div class="related-list">
@@ -220,6 +225,7 @@ const faqSchema = {
       </aside>
     </div>
   </div>
+  </article>
 </BaseLayout>
 
 <style>

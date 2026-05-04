@@ -1,24 +1,39 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
 import { useTranslations, localePath } from '../../i18n/utils';
+import { getCollection } from 'astro:content';
+import { GLOSSARY_TERMS_VI } from '../../data/glossary-vi';
+
+export const prerender = true;
 
 const lang = 'vi' as const;
 const t = useTranslations(lang);
 const p = (path: string) => localePath(lang, path);
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const posts = await getCollection(
+  'posts',
+  ({ data }: { data: { draft?: boolean; lang: string } }) => !data.draft && data.lang === lang,
+);
+const TOOL_COUNT = 4;
+const GUIDE_COUNT = 1;
+const totalDocs = posts.length + GLOSSARY_TERMS_VI.length + TOOL_COUNT + GUIDE_COUNT;
 
-const searchIndex = posts.map(post => ({
-  title: post.data.title,
-  description: post.data.description ?? '',
-  tags: post.data.tags ?? [],
-  lang: post.data.lang ?? 'vi',
-  slug: post.id,
-}));
+const tagCount = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of (post.data.tags ?? []) as string[]) {
+    tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
+  }
+}
+const allTags = [...tagCount.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .map(([tag]) => tag);
 
-const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
+const sectionLabels = {
+  article: t('search.section.article'),
+  glossary: t('search.section.glossary'),
+  tool: t('search.section.tool'),
+  guide: t('search.section.guide'),
+};
 ---
 
 <BaseLayout lang={lang} title="Tìm kiếm — Vườn Hoa" description={t('search.sub')} padTop={false}>
@@ -47,6 +62,7 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
           autofocus
         />
       </div>
+      <p id="page-search-meta" class="search-meta" aria-live="polite"></p>
     </div>
 
     <div class="tag-filters">
@@ -55,13 +71,23 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
         <button class="tag-pill tag-pill--active" data-tag="">
           {t('search.allTopics')}
         </button>
-        {allTags.map(tag => (
+        {allTags.map((tag) => (
           <button class="tag-pill" data-tag={tag}>#{tag}</button>
         ))}
       </div>
     </div>
 
-    <div id="page-search-results" class="results-grid"></div>
+    <div
+      id="page-search-results"
+      class="results-grid"
+      data-lang={lang}
+      data-no-results={t('search.noResults')}
+      data-results-text={t('search.results')}
+      data-section-article={sectionLabels.article}
+      data-section-glossary={sectionLabels.glossary}
+      data-section-tool={sectionLabels.tool}
+      data-section-guide={sectionLabels.guide}
+    ></div>
 
     <div id="page-search-empty" class="empty-state hidden">
       <span class="empty-icon">🔍</span>
@@ -71,7 +97,7 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
     </div>
 
     <div id="page-search-initial" class="initial-hint">
-      <p>Nhập từ khoá để tìm trong {posts.length} bài viết</p>
+      <p>Bắt đầu gõ để tìm trong {totalDocs} bài viết, từ điển, công cụ và hướng dẫn.</p>
     </div>
 
   </div>
@@ -137,6 +163,16 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
   #page-search-input::placeholder { color: var(--taupe); opacity: 0.6; }
   #page-search-input::-webkit-search-cancel-button { display: none; }
 
+  .search-meta {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    color: var(--taupe);
+    letter-spacing: 0.05em;
+    margin: 10px 4px 0;
+    min-height: 1em;
+  }
+  .search-meta:empty { display: none; }
+
   .tag-filters { margin-bottom: 2rem; }
   .tag-filters-label {
     font-family: 'Jost', sans-serif;
@@ -163,9 +199,13 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
     letter-spacing: 0.03em;
   }
   .tag-pill:hover { border-color: var(--blush-dark); color: var(--blush-dark); }
-  .tag-pill--active { background: var(--blush-dark); border-color: var(--blush-dark); color: white; }
+  .tag-pill--active {
+    background: var(--blush-dark);
+    border-color: var(--blush-dark);
+    color: white;
+  }
 
-  .results-grid { display: flex; flex-direction: column; gap: 12px; }
+  .results-grid { display: flex; flex-direction: column; gap: 1.25rem; }
 
   .empty-state {
     text-align: center;
@@ -194,8 +234,24 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
     font-size: 0.9rem;
     color: var(--taupe);
   }
+</style>
 
-  .result-card {
+<style is:global>
+  .page-result-section + .page-result-section {
+    border-top: 1px solid var(--ivory-dark);
+    padding-top: 1.25rem;
+    margin-top: 0.25rem;
+  }
+  .page-result-section-label {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blush-dark);
+    margin: 0 0 0.75rem;
+  }
+  .page-result-card {
     display: block;
     padding: 18px 22px;
     background: white;
@@ -203,13 +259,14 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
     border-radius: 12px;
     text-decoration: none;
     transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+    margin-bottom: 0.75rem;
   }
-  .result-card:hover {
+  .page-result-card:hover {
     border-color: rgba(196, 122, 138, 0.4);
     box-shadow: 0 4px 16px rgba(196, 122, 138, 0.1);
     transform: translateY(-1px);
   }
-  .result-card-title {
+  .page-result-card-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 1.1rem;
     font-weight: 600;
@@ -217,7 +274,8 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
     margin-bottom: 5px;
     line-height: 1.35;
   }
-  .result-card-desc {
+  .page-result-card-snippet,
+  .page-result-card-desc {
     font-family: 'Jost', sans-serif;
     font-size: 0.85rem;
     color: var(--taupe);
@@ -229,8 +287,18 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
     overflow: hidden;
     font-weight: 300;
   }
-  .result-card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-  .result-card-tag {
+  .page-result-card-snippet mark {
+    background: rgba(232, 164, 176, 0.45);
+    color: var(--mauve);
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+  .page-result-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .page-result-card-tag {
     font-family: 'Jost', sans-serif;
     font-size: 0.65rem;
     letter-spacing: 0.08em;
@@ -242,109 +310,198 @@ const allTags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
   }
 </style>
 
-<script define:vars={{ searchIndex, noResultsText: t('search.noResults') }}>
-  async function initSearch() {
-    const input = document.getElementById('page-search-input');
-    const resultsEl = document.getElementById('page-search-results');
-    const emptyEl = document.getElementById('page-search-empty');
-    const emptyMsg = document.getElementById('page-search-msg');
-    const initialEl = document.getElementById('page-search-initial');
+<script>
+  import {
+    escapeHtml,
+    saveRecentSearch,
+    trackSearchDebounced,
+    loadPagefind,
+    groupResultsByKind,
+    type PagefindModule,
+    type PagefindResultData,
+  } from '../../lib/searchClient';
 
+  const input = document.getElementById('page-search-input') as HTMLInputElement | null;
+  const resultsEl = document.getElementById('page-search-results');
+  const emptyEl = document.getElementById('page-search-empty');
+  const emptyMsg = document.getElementById('page-search-msg');
+  const initialEl = document.getElementById('page-search-initial');
+  const metaEl = document.getElementById('page-search-meta');
+
+  if (input && resultsEl && emptyEl && emptyMsg && initialEl && metaEl) {
+    const lang = (resultsEl.dataset.lang as 'en' | 'vi') ?? 'en';
+    const noResultsText = resultsEl.dataset.noResults ?? 'No results';
+    const resultsText = resultsEl.dataset.resultsText ?? 'results';
+    const sectionLabels: Record<string, string> = {
+      article: resultsEl.dataset.sectionArticle ?? 'Articles',
+      glossary: resultsEl.dataset.sectionGlossary ?? 'Glossary',
+      tool: resultsEl.dataset.sectionTool ?? 'Tools',
+      guide: resultsEl.dataset.sectionGuide ?? 'Guides',
+    };
+
+    let pagefind: PagefindModule | null = null;
     let activeTag = '';
+    let lastSearchToken = 0;
 
-    const pills = document.querySelectorAll('.tag-pill');
-    pills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        pills.forEach(p => p.classList.remove('tag-pill--active'));
-        pill.classList.add('tag-pill--active');
-        activeTag = pill.dataset.tag || '';
-        const q = input?.value.trim() || '';
-        const results = getResults(q);
-        render(results, q || activeTag);
-      });
-    });
+    async function init() {
+      pagefind = await loadPagefind();
 
-    const { default: Fuse } = await import('fuse.js');
-
-    function getResults(query) {
-      let items = searchIndex;
-      if (activeTag) {
-        items = items.filter(item => item.tags.includes(activeTag));
+      const params = new URLSearchParams(window.location.search);
+      const tagParam = params.get('tag');
+      if (tagParam) {
+        activeTag = tagParam;
+        document.querySelectorAll<HTMLButtonElement>('.tag-pill').forEach((pill) => {
+          pill.classList.remove('tag-pill--active');
+          if (pill.dataset.tag === tagParam) pill.classList.add('tag-pill--active');
+        });
       }
-      if (!query || query.length < 2) {
-        if (activeTag) return items.map(item => ({ item }));
+      const q = params.get('q');
+      if (q && input) {
+        input.value = q;
+      }
+      runQuery(input!.value);
+    }
+
+    async function getResults(
+      query: string,
+      token: number,
+    ): Promise<PagefindResultData[] | null> {
+      const trimmed = query.trim();
+      if (!pagefind) return [];
+
+      const filters: Record<string, string | string[]> | undefined = activeTag
+        ? { tag: activeTag }
+        : undefined;
+
+      const searchTerm = trimmed.length < 2 ? null : trimmed;
+      if (searchTerm === null && !activeTag) return [];
+
+      try {
+        const search = await pagefind.search(searchTerm, filters ? { filters } : undefined);
+        if (token !== lastSearchToken) return null;
+
+        const top = search.results.slice(0, 24);
+        const hits = await Promise.all(top.map((r) => r.data()));
+        if (token !== lastSearchToken) return null;
+        return hits;
+      } catch {
+        if (token !== lastSearchToken) return null;
         return [];
       }
-      const fuseLocal = new Fuse(items, {
-        keys: [
-          { name: 'title', weight: 2 },
-          { name: 'description', weight: 1 },
-          { name: 'tags', weight: 0.8 },
-        ],
-        threshold: 0.35,
-        includeScore: true,
-        minMatchCharLength: 2,
-      });
-      return fuseLocal.search(query, { limit: 12 });
     }
 
-    function render(results, query) {
-      if (!resultsEl || !emptyEl || !initialEl) return;
-      const hasQuery = query && query.length >= 1;
+    function render(hits: PagefindResultData[], query: string) {
+      const trimmed = query.trim();
+      const hasQuery = trimmed.length >= 2;
       if (!hasQuery && !activeTag) {
-        resultsEl.innerHTML = '';
-        emptyEl.classList.add('hidden');
-        initialEl.style.display = 'block';
+        resultsEl!.innerHTML = '';
+        emptyEl!.classList.add('hidden');
+        initialEl!.style.display = 'block';
+        metaEl!.textContent = '';
         return;
       }
-      initialEl.style.display = 'none';
-      if (results.length === 0) {
-        resultsEl.innerHTML = '';
-        if (emptyMsg) emptyMsg.textContent = `${noResultsText} "${query}"`;
-        emptyEl.classList.remove('hidden');
+      initialEl!.style.display = 'none';
+
+      if (hits.length === 0) {
+        resultsEl!.innerHTML = '';
+        if (emptyMsg) emptyMsg.textContent = `${noResultsText} "${trimmed || activeTag}"`;
+        emptyEl!.classList.remove('hidden');
+        metaEl!.textContent = `0 ${resultsText}`;
         return;
       }
-      emptyEl.classList.add('hidden');
-      resultsEl.innerHTML = results.map(({ item }) => `
-        <a href="/vi/posts/${item.slug}" class="result-card">
-          <div class="result-card-title">${item.title}</div>
-          ${item.description ? `<div class="result-card-desc">${item.description}</div>` : ''}
-          ${item.tags?.length ? `<div class="result-card-tags">${item.tags.slice(0, 5).map(t => `<span class="result-card-tag">${t}</span>`).join('')}</div>` : ''}
-        </a>
-      `).join('');
+
+      emptyEl!.classList.add('hidden');
+      metaEl!.textContent = `${hits.length} ${resultsText}`;
+
+      const grouped = groupResultsByKind(hits);
+      resultsEl!.innerHTML = grouped
+        .map((g) => {
+          const items = g.hits
+            .map((hit) => {
+              const title = hit.meta.title ?? hit.url;
+              const desc = hasQuery && hit.excerpt
+                ? `<div class="page-result-card-snippet">${hit.excerpt}</div>`
+                : hit.meta.description
+                  ? `<div class="page-result-card-desc">${escapeHtml(hit.meta.description)}</div>`
+                  : hit.excerpt
+                    ? `<div class="page-result-card-snippet">${hit.excerpt}</div>`
+                    : '';
+              const tags = (hit.filters.tag ?? []).slice(0, 5);
+              const tagsHtml =
+                tags.length > 0
+                  ? `<div class="page-result-card-tags">${tags
+                      .map((tag) => `<span class="page-result-card-tag">${escapeHtml(tag)}</span>`)
+                      .join('')}</div>`
+                  : '';
+              return `
+                <a href="${hit.url}" class="page-result-card">
+                  <div class="page-result-card-title">${escapeHtml(title)}</div>
+                  ${desc}
+                  ${tagsHtml}
+                </a>`;
+            })
+            .join('');
+          return `
+            <div class="page-result-section">
+              <p class="page-result-section-label">${sectionLabels[g.kind]}</p>
+              ${items}
+            </div>`;
+        })
+        .join('');
     }
 
-    input?.addEventListener('input', (e) => {
-      const q = e.target.value.trim();
-      const results = getResults(q);
-      render(results, q || (activeTag ? ' ' : ''));
-      if (q) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('q', q);
-        history.replaceState({}, '', url);
-      } else {
-        const url = new URL(window.location.href);
-        url.searchParams.delete('q');
-        history.replaceState({}, '', url);
+    async function runQuery(query: string) {
+      if (!pagefind) {
+        emptyEl!.classList.remove('hidden');
+        if (emptyMsg) emptyMsg.textContent = 'Search index unavailable in dev — run `npm run build`.';
+        return;
+      }
+      const token = ++lastSearchToken;
+      const hits = await getResults(query, token);
+      // Drop result if a newer search has started in the meantime.
+      if (hits === null || token !== lastSearchToken) return;
+      render(hits, query);
+      const trimmed = query.trim();
+      const url = new URL(window.location.href);
+      if (trimmed) url.searchParams.set('q', trimmed);
+      else url.searchParams.delete('q');
+      if (activeTag) url.searchParams.set('tag', activeTag);
+      else url.searchParams.delete('tag');
+      history.replaceState({}, '', url);
+      if (trimmed.length >= 2) {
+        trackSearchDebounced(trimmed, lang, hits.length);
+      }
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('.tag-pill').forEach((pill) => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll<HTMLButtonElement>('.tag-pill').forEach((p) =>
+          p.classList.remove('tag-pill--active')
+        );
+        pill.classList.add('tag-pill--active');
+        activeTag = pill.dataset.tag || '';
+        runQuery(input!.value);
+      });
+    });
+
+    input!.addEventListener('input', (e) => {
+      runQuery((e.target as HTMLInputElement).value);
+    });
+
+    input!.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const q = input!.value.trim();
+        if (q.length >= 2) saveRecentSearch(q);
       }
     });
 
-    const params = new URLSearchParams(window.location.search);
-    const q = params.get('q');
-    if (q && input) {
-      input.value = q;
-      render(getResults(q), q);
-    }
-    const tagParam = params.get('tag');
-    if (tagParam) {
-      activeTag = tagParam;
-      pills.forEach(p => {
-        p.classList.remove('tag-pill--active');
-        if (p.dataset.tag === tagParam) p.classList.add('tag-pill--active');
-      });
-      render(getResults(q || ''), q || tagParam);
-    }
-  }
+    resultsEl.addEventListener('click', (e) => {
+      const card = (e.target as HTMLElement).closest<HTMLAnchorElement>('.page-result-card');
+      if (!card) return;
+      const q = input!.value.trim();
+      if (q.length >= 2) saveRecentSearch(q);
+    });
 
-  initSearch();
+    init();
+  }
 </script>
