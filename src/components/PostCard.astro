@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro:assets';
 import FormattedDate from './FormattedDate.astro';
 import { useTranslations } from '../i18n/utils';
 
@@ -8,9 +10,9 @@ interface Props {
   pubDate: Date;
   slug: string;
   tags?: string[];
-  heroImage?: { src: string; width: number; height: number; format: string };
+  heroImage?: ImageMetadata;
   heroImageUrl?: string;
-  previewImageUrl?: string;
+  previewImageUrl?: string | ImageMetadata;
   heroAlt?: string;
   featured?: boolean;
   readingTime?: number;
@@ -20,6 +22,9 @@ const { title, description, pubDate, slug, tags = [], heroImage, heroImageUrl, p
 const lang = Astro.currentLocale === 'vi' ? 'vi' : 'en';
 const t = useTranslations(lang);
 const href = slug.startsWith('/') ? slug : `/posts/${slug}`;
+
+const resolvedImage: ImageMetadata | string | undefined = heroImage ?? previewImageUrl ?? heroImageUrl;
+const isAstroImage = resolvedImage != null && typeof resolvedImage === 'object' && 'src' in resolvedImage && 'width' in resolvedImage;
 
 const palettes = [
   { bg: 'linear-gradient(150deg,#FDF0F2 0%,#F5C8D2 55%,#EDA8B8 100%)', accent: '#C47A8A' },
@@ -35,12 +40,10 @@ const showPlaceholder = !heroImage && !previewImageUrl && !heroImageUrl;
 <article class:list={['post-card', featured && 'post-card--featured']}>
   <a href={href} class="card-image-link" aria-hidden="true" tabindex="-1">
     <div class="card-image-wrap">
-      {heroImage ? (
-        <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="card-image" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-      ) : previewImageUrl ? (
-        <img src={previewImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-      ) : heroImageUrl ? (
-        <img src={heroImageUrl} alt={heroAlt ?? title} class="card-image" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+      {isAstroImage ? (
+        <Image src={resolvedImage as ImageMetadata} alt={heroAlt ?? title} width={620} height={430} class="card-image" loading="lazy" />
+      ) : typeof resolvedImage === 'string' ? (
+        <img src={resolvedImage} alt={heroAlt ?? title} width="620" height="430" class="card-image" loading="lazy" />
       ) : null}
       <div class="card-placeholder" style={`background:${palette.bg};${showPlaceholder ? '' : 'display:none'}`}>
         <svg class="placeholder-bloom" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

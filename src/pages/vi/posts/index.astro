@@ -2,18 +2,28 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import PostCard from '../../../components/PostCard.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { useTranslations } from '../../../i18n/utils';
+
+const POSTS_PER_PAGE = 36;
 
 const lang = 'vi' as const;
+const t = useTranslations(lang);
 
 const firstPreviewImage = (post: any) => {
   const figureImage = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
   return figureImage ?? post.data.heroImage;
 };
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
+const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
+const pageParam = Astro.url.searchParams.get('page');
+const currentPage = Math.min(Math.max(1, Number(pageParam) || 1), totalPages);
+const posts = allPosts.slice((currentPage - 1) * POSTS_PER_PAGE, currentPage * POSTS_PER_PAGE);
 ---
-<BaseLayout lang={lang} title="Tất cả bài viết" description="Danh sách tất cả bài viết trên Vườn Hoa" padTop={false}>
+<BaseLayout lang={lang} title={t('posts.title')} description={t('posts.sub')} padTop={false}>
 
   <div class="page-header">
     <div class="header-deco" aria-hidden="true">
@@ -25,9 +35,9 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft && data.la
       </svg>
     </div>
     <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
-      <p class="page-eyebrow">Thư viện tri thức</p>
-      <h1 class="page-title">Tất cả bài viết</h1>
-      <p class="page-sub">Khám phá bộ sưu tập bài viết về hoa, nghề florist và nghệ thuật sống.</p>
+      <p class="page-eyebrow">{t('posts.eyebrow')}</p>
+      <h1 class="page-title">{t('posts.title')}</h1>
+      <p class="page-sub">{t('posts.sub')}</p>
     </div>
   </div>
 
@@ -35,22 +45,25 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft && data.la
     {posts.length === 0 ? (
       <div class="empty-state">
         <span class="empty-icon">🌱</span>
-        <p>Chưa có bài viết nào. Vườn hoa đang lớn dần...</p>
+        <p>{t('posts.empty')}</p>
       </div>
     ) : (
-      <div class="posts-grid">
-        {posts.map((post) => (
-          <PostCard
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            slug={`/vi/posts/${post.id}`}
-            tags={post.data.tags}
-            previewImageUrl={firstPreviewImage(post)}
-            heroAlt={post.data.heroAlt}
-          />
-        ))}
-      </div>
+      <>
+        <div class="posts-grid">
+          {posts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              slug={`/vi/posts/${post.id}`}
+              tags={post.data.tags}
+              previewImageUrl={firstPreviewImage(post)}
+              heroAlt={post.data.heroAlt}
+            />
+          ))}
+        </div>
+        <Pagination currentPage={currentPage} totalPages={totalPages} basePath="/vi/posts" lang={lang} />
+      </>
     )}
   </div>
 </BaseLayout>

@@ -1,0 +1,149 @@
+---
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+  lang?: 'en' | 'vi';
+}
+
+const { currentPage, totalPages, basePath, lang = 'en' } = Astro.props;
+const t = useTranslations(lang);
+
+function pageUrl(page: number): string {
+  if (page === 1) return basePath;
+  return `${basePath}?page=${page}`;
+}
+
+const prevUrl = currentPage > 1 ? pageUrl(currentPage - 1) : null;
+const nextUrl = currentPage < totalPages ? pageUrl(currentPage + 1) : null;
+
+const maxVisible = 5;
+let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+if (endPage - startPage + 1 < maxVisible) {
+  startPage = Math.max(1, endPage - maxVisible + 1);
+}
+const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+---
+
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="Pagination">
+    {prevUrl ? (
+      <a href={prevUrl} class="pagination-btn pagination-prev">{t('posts.prev')}</a>
+    ) : (
+      <span class="pagination-btn pagination-prev pagination-disabled">{t('posts.prev')}</span>
+    )}
+
+    <div class="pagination-pages">
+      {startPage > 1 && (
+        <>
+          <a href={pageUrl(1)} class="pagination-page">1</a>
+          {startPage > 2 && <span class="pagination-ellipsis">…</span>}
+        </>
+      )}
+      {pageNumbers.map((num) => (
+        num === currentPage ? (
+          <span class="pagination-page pagination-current" aria-current="page">{num}</span>
+        ) : (
+          <a href={pageUrl(num)} class="pagination-page">{num}</a>
+        )
+      ))}
+      {endPage < totalPages && (
+        <>
+          {endPage < totalPages - 1 && <span class="pagination-ellipsis">…</span>}
+          <a href={pageUrl(totalPages)} class="pagination-page">{totalPages}</a>
+        </>
+      )}
+    </div>
+
+    {nextUrl ? (
+      <a href={nextUrl} class="pagination-btn pagination-next">{t('posts.next')}</a>
+    ) : (
+      <span class="pagination-btn pagination-next pagination-disabled">{t('posts.next')}</span>
+    )}
+  </nav>
+)}
+
+<style>
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem;
+  }
+
+  .pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    color: var(--mauve-mid);
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(232,164,176,0.2);
+  }
+
+  .pagination-btn:hover:not(.pagination-disabled) {
+    background: rgba(253,240,242,0.9);
+    border-color: var(--blush);
+    color: var(--blush-dark);
+  }
+
+  .pagination-disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .pagination-page {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--mauve-mid);
+    font-weight: 400;
+    transition: all 0.2s ease;
+  }
+
+  .pagination-page:hover:not(.pagination-current) {
+    background: rgba(253,240,242,0.8);
+    color: var(--blush-dark);
+  }
+
+  .pagination-current {
+    background: linear-gradient(135deg, var(--blush) 0%, var(--blush-dark) 100%);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(196,122,138,0.25);
+  }
+
+  .pagination-ellipsis {
+    color: var(--taupe);
+    padding: 0 0.25rem;
+    user-select: none;
+  }
+
+  @media (max-width: 640px) {
+    .pagination { gap: 0.3rem; flex-wrap: wrap; }
+    .pagination-btn { padding: 0.5rem 0.8rem; font-size: 0.82rem; }
+    .pagination-page { width: 2rem; height: 2rem; font-size: 0.82rem; }
+  }
+</style>
