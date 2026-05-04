@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import PostsListing from '../../../../components/PostsListing.astro';
+
+export const prerender = true;
+
+const lang = 'vi' as const;
+
+export async function getStaticPaths() {
+  const POSTS_PER_PAGE = 36;
+  const allPosts = (await getCollection('posts', ({ data }) => !data.draft && data.lang === 'vi'))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, i) => {
+    const page = i + 2;
+    const posts = allPosts.slice((page - 1) * POSTS_PER_PAGE, page * POSTS_PER_PAGE);
+    return {
+      params: { page: String(page) },
+      props: { posts, currentPage: page, totalPages },
+    };
+  });
+}
+
+const { posts, currentPage, totalPages } = Astro.props;
+---
+<PostsListing
+  lang={lang}
+  title="Tất cả bài viết"
+  description="Danh sách tất cả bài viết trên Vườn Hoa"
+  posts={posts}
+  currentPage={currentPage}
+  totalPages={totalPages}
+  basePath="/vi/posts"
+  postSlugPrefix="/vi/posts"
+/>

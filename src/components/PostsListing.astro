@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from './PostCard.astro';
+import Pagination from './Pagination.astro';
+import { useTranslations } from '../i18n/utils';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  lang: 'en' | 'vi';
+  title: string;
+  description: string;
+  posts: CollectionEntry<'posts'>[];
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+  postSlugPrefix: string;
+}
+
+const { lang, title, description, posts, currentPage, totalPages, basePath, postSlugPrefix } = Astro.props;
+const t = useTranslations(lang);
+
+const firstPreviewImage = (post: CollectionEntry<'posts'>) => {
+  const figureImage = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
+  return figureImage ?? (post.data.heroImage as any);
+};
+---
+<BaseLayout lang={lang} title={title} description={description} padTop={false}>
+
+  <div class="page-header">
+    <div class="header-deco" aria-hidden="true">
+      <svg viewBox="0 0 300 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="220" cy="100" rx="55" ry="28" fill="rgba(196,122,138,0.13)" transform="rotate(20 220 100)"/>
+        <ellipse cx="260" cy="180" rx="40" ry="20" fill="rgba(232,164,176,0.1)" transform="rotate(-15 260 180)"/>
+        <circle cx="200" cy="50" r="8" fill="rgba(200,149,106,0.25)"/>
+        <circle cx="270" cy="240" r="5" fill="rgba(232,164,176,0.3)"/>
+      </svg>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 lg:px-10 py-24 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">{t('posts.eyebrow')}</p>
+      <h1 class="page-title">{t('posts.title')}</h1>
+      <p class="page-sub">{t('posts.sub')}</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14">
+    {posts.length === 0 ? (
+      <div class="empty-state">
+        <span class="empty-icon">🌱</span>
+        <p>{t('posts.empty')}</p>
+      </div>
+    ) : (
+      <>
+        <div class="posts-grid">
+          {posts.map((post, idx) => (
+            <PostCard
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              slug={`${postSlugPrefix}/${post.id}`}
+              tags={post.data.tags}
+              previewImageUrl={firstPreviewImage(post)}
+              heroAlt={post.data.heroAlt}
+              priority={idx === 0}
+            />
+          ))}
+        </div>
+        <Pagination currentPage={currentPage} totalPages={totalPages} basePath={basePath} lang={lang} />
+      </>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .page-header { background:linear-gradient(155deg,#FDF0F2 0%,#F5E6EA 48%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:100px; background:linear-gradient(to top,var(--ivory),transparent); pointer-events:none; }
+  .header-deco { position:absolute; right:0; top:0; bottom:0; width:320px; pointer-events:none; opacity:0.75; }
+  .header-deco svg { width:100%; height:100%; }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.66rem; font-weight:600; letter-spacing:0.32em; text-transform:uppercase; color:var(--gold); margin-bottom:1.1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.8rem,7vw,5.2rem); font-weight:300; color:var(--mauve); line-height:1.06; margin:0 0 1.25rem; letter-spacing:-0.01em; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:480px; margin:0 auto; line-height:1.75; }
+  .posts-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:1.85rem; }
+  .empty-state { text-align:center; padding:6rem 0; color:var(--taupe); }
+  .empty-icon { display:block; font-size:3rem; margin-bottom:1rem; }
+
+  /* ── Staggered card entrance ── */
+  .posts-grid :global(.post-card) {
+    opacity: 0;
+    transform: translateY(22px);
+    animation: cardEntrance 0.5s ease forwards;
+  }
+  .posts-grid :global(.post-card:nth-child(1)) { animation-delay: 0.05s; }
+  .posts-grid :global(.post-card:nth-child(2)) { animation-delay: 0.12s; }
+  .posts-grid :global(.post-card:nth-child(3)) { animation-delay: 0.19s; }
+  .posts-grid :global(.post-card:nth-child(4)) { animation-delay: 0.26s; }
+  .posts-grid :global(.post-card:nth-child(5)) { animation-delay: 0.33s; }
+  .posts-grid :global(.post-card:nth-child(6)) { animation-delay: 0.4s; }
+  .posts-grid :global(.post-card:nth-child(n+7)) { animation-delay: 0.45s; }
+  @keyframes cardEntrance {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

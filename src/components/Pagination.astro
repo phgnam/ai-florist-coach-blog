@@ -13,7 +13,7 @@ const t = useTranslations(lang);
 
 function pageUrl(page: number): string {
   if (page === 1) return basePath;
-  return `${basePath}?page=${page}`;
+  return `${basePath}/page/${page}`;
 }
 
 const prevUrl = currentPage > 1 ? pageUrl(currentPage - 1) : null;

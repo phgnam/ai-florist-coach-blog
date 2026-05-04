@@ -16,9 +16,12 @@ interface Props {
   heroAlt?: string;
   featured?: boolean;
   readingTime?: number;
+  priority?: boolean;
 }
 
-const { title, description, pubDate, slug, tags = [], heroImage, heroImageUrl, previewImageUrl, heroAlt, featured = false, readingTime } = Astro.props;
+const { title, description, pubDate, slug, tags = [], heroImage, heroImageUrl, previewImageUrl, heroAlt, featured = false, readingTime, priority = false } = Astro.props;
+const imgLoading = priority ? 'eager' : 'lazy';
+const imgFetchPriority = priority ? 'high' : 'auto';
 const lang = Astro.currentLocale === 'vi' ? 'vi' : 'en';
 const t = useTranslations(lang);
 const href = slug.startsWith('/') ? slug : `/posts/${slug}`;
@@ -41,9 +44,9 @@ const showPlaceholder = !heroImage && !previewImageUrl && !heroImageUrl;
   <a href={href} class="card-image-link" aria-hidden="true" tabindex="-1">
     <div class="card-image-wrap">
       {isAstroImage ? (
-        <Image src={resolvedImage as ImageMetadata} alt={heroAlt ?? title} width={620} height={430} class="card-image" loading="lazy" />
+        <Image src={resolvedImage as ImageMetadata} alt={heroAlt ?? title} width={620} height={430} class="card-image" loading={imgLoading} fetchpriority={imgFetchPriority} />
       ) : typeof resolvedImage === 'string' ? (
-        <img src={resolvedImage} alt={heroAlt ?? title} width="620" height="430" class="card-image" loading="lazy" />
+        <img src={resolvedImage} alt={heroAlt ?? title} width="620" height="430" class="card-image" loading={imgLoading} fetchpriority={imgFetchPriority} />
       ) : null}
       <div class="card-placeholder" style={`background:${palette.bg};${showPlaceholder ? '' : 'display:none'}`}>
         <svg class="placeholder-bloom" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
