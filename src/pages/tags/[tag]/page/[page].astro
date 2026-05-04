@@ -1,13 +1,13 @@
 ---
 import { getCollection } from 'astro:content';
-import TagPostsListing from '../../components/TagPostsListing.astro';
-import { tagIndexPaths } from '../../lib/tag-pages';
+import TagPostsListing from '../../../../components/TagPostsListing.astro';
+import { tagPaginationPaths } from '../../../../lib/tag-pages';
 
 export const prerender = true;
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft && data.lang === 'en');
-  return tagIndexPaths(posts);
+  return tagPaginationPaths(posts);
 }
 
 const { tag } = Astro.params;
