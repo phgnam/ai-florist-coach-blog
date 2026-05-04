@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../components/PagefindMeta.astro';
 
 export const prerender = true;
 
@@ -151,7 +152,8 @@ const flowers = [
     </div>
   </nav>
 
-  <article data-pagefind-body data-pagefind-meta="kind:tool, description:Estimate how long your cut flowers will last based on flower type, room temperature, and care routine." data-pagefind-filter="kind:tool, tag:tool, tag:care, tag:vase life">
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Estimate how long your cut flowers will last based on flower type, room temperature, and care routine." tags={["tool","care","vase life"]} />
 
   <!-- Page header -->
   <div class="page-header">

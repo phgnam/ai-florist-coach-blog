@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { useTranslations, localePath } from '../../i18n/utils';
 import { getCollection } from 'astro:content';
+import { GLOSSARY_TERMS_VI } from '../../data/glossary-vi';
 
 export const prerender = true;
 
@@ -13,7 +14,9 @@ const posts = await getCollection(
   'posts',
   ({ data }: { data: { draft?: boolean; lang: string } }) => !data.draft && data.lang === lang,
 );
-const articleCount = posts.length;
+const TOOL_COUNT = 4;
+const GUIDE_COUNT = 1;
+const totalDocs = posts.length + GLOSSARY_TERMS_VI.length + TOOL_COUNT + GUIDE_COUNT;
 
 const tagCount = new Map<string, number>();
 for (const post of posts) {
@@ -94,7 +97,7 @@ const sectionLabels = {
     </div>
 
     <div id="page-search-initial" class="initial-hint">
-      <p>Bắt đầu gõ để tìm trong {articleCount} bài viết, từ điển, công cụ và hướng dẫn.</p>
+      <p>Bắt đầu gõ để tìm trong {totalDocs} bài viết, từ điển, công cụ và hướng dẫn.</p>
     </div>
 
   </div>
@@ -359,7 +362,10 @@ const sectionLabels = {
       runQuery(input!.value);
     }
 
-    async function getResults(query: string): Promise<PagefindResultData[]> {
+    async function getResults(
+      query: string,
+      token: number,
+    ): Promise<PagefindResultData[] | null> {
       const trimmed = query.trim();
       if (!pagefind) return [];
 
@@ -370,14 +376,18 @@ const sectionLabels = {
       const searchTerm = trimmed.length < 2 ? null : trimmed;
       if (searchTerm === null && !activeTag) return [];
 
-      const token = ++lastSearchToken;
-      const search = await pagefind.search(searchTerm, filters ? { filters } : undefined);
-      if (token !== lastSearchToken) return [];
+      try {
+        const search = await pagefind.search(searchTerm, filters ? { filters } : undefined);
+        if (token !== lastSearchToken) return null;
 
-      const top = search.results.slice(0, 24);
-      const hits = await Promise.all(top.map((r) => r.data()));
-      if (token !== lastSearchToken) return [];
-      return hits;
+        const top = search.results.slice(0, 24);
+        const hits = await Promise.all(top.map((r) => r.data()));
+        if (token !== lastSearchToken) return null;
+        return hits;
+      } catch {
+        if (token !== lastSearchToken) return null;
+        return [];
+      }
     }
 
     function render(hits: PagefindResultData[], query: string) {
@@ -446,7 +456,10 @@ const sectionLabels = {
         if (emptyMsg) emptyMsg.textContent = 'Search index unavailable in dev — run `npm run build`.';
         return;
       }
-      const hits = await getResults(query);
+      const token = ++lastSearchToken;
+      const hits = await getResults(query, token);
+      // Drop result if a newer search has started in the meantime.
+      if (hits === null || token !== lastSearchToken) return;
       render(hits, query);
       const trimmed = query.trim();
       const url = new URL(window.location.href);

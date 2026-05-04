@@ -1,0 +1,36 @@
+---
+/**
+ * Emits hidden `<span>` elements that carry Pagefind metadata + filter values
+ * for the surrounding `data-pagefind-body` element.
+ *
+ * Pagefind only parses ONE literal `key:value` pair per `data-pagefind-meta`
+ * / `data-pagefind-filter` attribute, so multiple meta or filter entries must
+ * live on separate elements. This component renders one `<span>` per entry.
+ *
+ * Usage:
+ *   <article data-pagefind-body>
+ *     <PagefindMeta kind="article" description={desc} image={url} tags={tags} />
+ *     ... content ...
+ *   </article>
+ */
+export interface Props {
+  kind: 'article' | 'glossary' | 'tool' | 'guide';
+  description?: string | null;
+  image?: string | null;
+  imageAlt?: string | null;
+  tags?: string[];
+}
+
+const { kind, description, image, imageAlt, tags = [] } = Astro.props;
+
+/** Pagefind uses comma to separate multiple values for one filter, so strip
+ *  commas (and newlines) from any literal we emit. */
+const clean = (s: string) => s.replace(/[,\n]/g, ' ').trim();
+---
+
+<span hidden data-pagefind-meta={`kind:${kind}`}></span>
+{description && <span hidden data-pagefind-meta={`description:${clean(description)}`}></span>}
+{image && <span hidden data-pagefind-meta={`image:${image}`}></span>}
+{imageAlt && <span hidden data-pagefind-meta={`image_alt:${clean(imageAlt)}`}></span>}
+<span hidden data-pagefind-filter={`kind:${kind}`}></span>
+{tags.map((tag) => <span hidden data-pagefind-filter={`tag:${tag}`}></span>)}

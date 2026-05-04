@@ -1,12 +1,12 @@
 # Vườn Hoa — AI Florist Coach Blog
 
-Static blog about flowers built with [Astro](https://astro.build), MDX, TailwindCSS v4, and [Pagefind](https://pagefind.app/) for static-site search across articles, the flower glossary, tools, and guides. Companion site to the AI Florist Coach app.
+Static blog about flowers built with [Astro](https://astro.build), MDX, TailwindCSS v3, and [Pagefind](https://pagefind.app/) for static-site search across articles, the flower glossary, tools, and guides. Companion site to the AI Florist Coach app.
 
 ## Stack
 
 - Astro 6 (static output)
 - MDX (`@astrojs/mdx`) for rich post authoring
-- TailwindCSS v4 via the official Vite plugin (`@tailwindcss/vite`) + `@tailwindcss/typography`
+- TailwindCSS v3 via PostCSS (`postcss.config.cjs` + `tailwind.config.cjs`) with `@tailwindcss/typography`
 - `@astrojs/sitemap` — `/sitemap-index.xml`
 - `@astrojs/rss` — `/rss.xml`
 - Pagefind — static-site search; index is generated at build time into `/pagefind/` and lazy-loaded by the modal + `/search` pages
@@ -35,7 +35,7 @@ blog/
 ├── src/
 │   ├── consts.ts          # Site title, description, Giscus config
 │   ├── content.config.ts  # `posts` collection schema (Zod)
-│   ├── styles/global.css  # Tailwind v4 entry + theme tokens
+│   ├── styles/global.css  # Tailwind v3 entry (@tailwind base/components/utilities) + theme tokens
 │   ├── layouts/
 │   │   ├── BaseLayout.astro     # HTML shell + SEO + Header/Footer
 │   │   └── BlogPostLayout.astro # Legacy article shell (unused)

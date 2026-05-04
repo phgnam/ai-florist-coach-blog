@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
 
 export const prerender = true;
 
@@ -199,7 +200,8 @@ const articleSchema = {
     </div>
   </nav>
 
-  <article data-pagefind-body data-pagefind-meta="kind:guide, description:Hướng dẫn chọn hoa cho đám cưới sinh nhật kỷ niệm lễ tốt nghiệp tang lễ và các dịp khác." data-pagefind-filter="kind:guide, tag:hướng dẫn, tag:dịp lễ, tag:cưới, tag:kỷ niệm, tag:sinh nhật">
+  <article data-pagefind-body>
+  <PagefindMeta kind="guide" description="Hướng dẫn chọn hoa cho đám cưới sinh nhật kỷ niệm lễ tốt nghiệp tang lễ và các dịp khác." tags={["hướng dẫn","dịp lễ","cưới","kỷ niệm","sinh nhật"]} />
 
   <!-- Hero -->
   <div class="page-hero">

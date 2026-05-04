@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
 import { GLOSSARY_TERMS_VI, getVITermBySlug } from '../../../data/glossary-vi';
 import { GLOSSARY_TERMS } from '../../../data/glossary';
 
@@ -60,11 +61,6 @@ const faqSchema = {
 };
 
 const tagValues = term.colors.map((c) => c.toLowerCase());
-const pagefindFilter = ['kind:glossary', ...tagValues.map((t) => `tag:${t}`)].join(', ');
-const pagefindMeta = [
-  'kind:glossary',
-  term.summary ? `description:${term.summary.replace(/[,\n]/g, ' ')}` : null,
-].filter(Boolean).join(', ');
 ---
 <BaseLayout
   lang={lang}
@@ -88,7 +84,8 @@ const pagefindMeta = [
     </div>
   </nav>
 
-  <article data-pagefind-body data-pagefind-meta={pagefindMeta} data-pagefind-filter={pagefindFilter}>
+  <article data-pagefind-body>
+  <PagefindMeta kind="glossary" description={term.summary} tags={tagValues} />
   <div class="term-header">
     <div class="max-w-6xl mx-auto px-6 py-20" style="position:relative;z-index:2">
       <div class="term-header-content">

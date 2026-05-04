@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
 
 export const prerender = true;
 
@@ -88,7 +89,8 @@ const currentMonth = new Date().getMonth();
     </div>
   </nav>
 
-  <article data-pagefind-body data-pagefind-meta="kind:tool, description:Khám phá hoa nào nở rộ mỗi tháng trong năm — cẩm nang cho người tổ chức đám cưới và sự kiện." data-pagefind-filter="kind:tool, tag:công cụ, tag:mùa vụ, tag:kế hoạch">
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Khám phá hoa nào nở rộ mỗi tháng trong năm — cẩm nang cho người tổ chức đám cưới và sự kiện." tags={["công cụ","mùa vụ","kế hoạch"]} />
 
   <div class="page-header">
     <div class="max-w-6xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">

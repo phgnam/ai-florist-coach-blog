@@ -6,6 +6,7 @@ import TagList from '../../../components/TagList.astro';
 import Giscus from '../../../components/Giscus.astro';
 import RelatedPosts from '../../../components/RelatedPosts.astro';
 import AuthorBox from '../../../components/AuthorBox.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
 import { useTranslations } from '../../../i18n/utils';
 
 export const prerender = true;
@@ -52,13 +53,6 @@ const breadcrumbs = [
   { name: title, url: `${siteUrl}/vi/posts/${post.id}` },
 ];
 
-const pagefindFilter = ['kind:article', ...tags.map((t: string) => `tag:${t}`)].join(', ');
-const pagefindMeta = [
-  'kind:article',
-  description ? `description:${description.replace(/[,\n]/g, ' ')}` : null,
-  ogImage ? `image:${ogImage}` : null,
-  heroAlt ? `image_alt:${heroAlt.replace(/[,\n]/g, ' ')}` : null,
-].filter(Boolean).join(', ');
 ---
 <BaseLayout
   lang={lang}
@@ -109,7 +103,8 @@ const pagefindMeta = [
 
   <div id="reading-progress"></div>
 
-  <article data-pagefind-body data-pagefind-meta={pagefindMeta} data-pagefind-filter={pagefindFilter}>
+  <article data-pagefind-body>
+  <PagefindMeta kind="article" description={description} image={ogImage} imageAlt={heroAlt} tags={tags} />
   <div class="post-hero">
     {heroImage ? (
       <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="post-hero-img" />

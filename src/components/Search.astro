@@ -404,8 +404,10 @@ const sectionLabels = {
         } catch {
           popularTags = [];
         }
+        // Only mark as loaded once pagefind itself is available, so a
+        // transient load failure doesn't permanently disable search.
+        loaded = true;
       }
-      loaded = true;
     }
 
     function renderResults(hits: PagefindResultData[], query: string) {
@@ -508,14 +510,20 @@ const sectionLabels = {
         return;
       }
       const token = ++lastSearchToken;
-      const search = await pagefind.search(trimmed);
-      // Drop stale results if a newer search has started.
-      if (token !== lastSearchToken) return;
-      const top = search.results.slice(0, 12);
-      const hits = await Promise.all(top.map((r) => r.data()));
-      if (token !== lastSearchToken) return;
-      renderResults(hits, trimmed);
-      trackSearchDebounced(trimmed, lang, search.results.length);
+      try {
+        const search = await pagefind.search(trimmed);
+        // Drop stale results if a newer search has started.
+        if (token !== lastSearchToken) return;
+        const top = search.results.slice(0, 12);
+        const hits = await Promise.all(top.map((r) => r.data()));
+        if (token !== lastSearchToken) return;
+        renderResults(hits, trimmed);
+        trackSearchDebounced(trimmed, lang, search.results.length);
+      } catch {
+        if (token !== lastSearchToken) return;
+        emptyMsg!.textContent = 'Search failed — please try again.';
+        emptyEl!.classList.remove('hidden');
+      }
     }
 
     function setActive(idx: number) {

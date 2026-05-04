@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
 
 export const prerender = true;
 
@@ -122,7 +123,8 @@ const faqSchema = {
     </div>
   </nav>
 
-  <article data-pagefind-body data-pagefind-meta="kind:tool, description:Tính toán số bông hoa cho mọi loại lẵng và bó hoa kèm bảng chi phí buôn lẻ chi tiết." data-pagefind-filter="kind:tool, tag:công cụ, tag:ngân sách, tag:kinh doanh">
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Tính toán số bông hoa cho mọi loại lẵng và bó hoa kèm bảng chi phí buôn lẻ chi tiết." tags={["công cụ","ngân sách","kinh doanh"]} />
 
   <div class="page-header">
     <div class="max-w-5xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">

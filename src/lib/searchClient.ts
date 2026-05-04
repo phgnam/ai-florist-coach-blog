@@ -115,16 +115,20 @@ let pagefindPromise: Promise<PagefindModule | null> | null = null;
  */
 export function loadPagefind(): Promise<PagefindModule | null> {
   if (pagefindPromise) return pagefindPromise;
-  pagefindPromise = (async () => {
+  const promise = (async () => {
     try {
       const url = `${window.location.origin}/pagefind/pagefind.js`;
       const mod = (await import(/* @vite-ignore */ url)) as unknown as PagefindModule;
       await mod.options({ excerptLength: 28 });
       return mod;
     } catch {
+      // Clear cache on failure so the next call retries (e.g. user opened
+      // search before the deferred /pagefind/pagefind.js script was reachable).
+      if (pagefindPromise === promise) pagefindPromise = null;
       return null;
     }
   })();
+  pagefindPromise = promise;
   return pagefindPromise;
 }
 

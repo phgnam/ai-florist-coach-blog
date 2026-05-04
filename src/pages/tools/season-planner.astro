@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../components/PagefindMeta.astro';
 
 export const prerender = true;
 
@@ -112,7 +113,8 @@ const breadcrumbSchema = {
     </div>
   </nav>
 
-  <article data-pagefind-body data-pagefind-meta="kind:tool, description:Discover which flowers are in peak bloom every month of the year — essential for wedding and event planners." data-pagefind-filter="kind:tool, tag:tool, tag:season, tag:planning">
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Discover which flowers are in peak bloom every month of the year — essential for wedding and event planners." tags={["tool","season","planning"]} />
 
   <!-- Page header -->
   <div class="page-header">
