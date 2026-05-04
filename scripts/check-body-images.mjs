@@ -75,20 +75,82 @@ function frontmatterValue(frontmatter, key) {
 const BODY_IMAGE_RE = /<figure\b|<img\b|<Image\b|!\[[^\]]*\]\(/i;
 
 const offenders = [];
+const duplicateOffenders = [];
 const checked = [];
+
+const seenImages = new Map(); // url -> filepath
+
+function getBaseUrl(urlStr) {
+  try {
+    if (urlStr.startsWith('http')) {
+      const u = new URL(urlStr);
+      return u.origin + u.pathname;
+    }
+  } catch (e) {}
+  return urlStr.split('?')[0];
+}
+
+function extractImageUrls(frontmatter, body) {
+  const urls = [];
+  
+  const hero = frontmatterValue(frontmatter, 'heroImage');
+  if (hero) urls.push(hero);
+
+  const srcRegex = /<img[^>]+src=["']([^"']+)["']/gi;
+  let match;
+  while ((match = srcRegex.exec(body)) !== null) {
+    urls.push(match[1]);
+  }
+  
+  const imageRegex = /<Image[^>]+src=["']([^"']+)["']/gi;
+  while ((match = imageRegex.exec(body)) !== null) {
+    urls.push(match[1]);
+  }
+
+  const mdRegex = /!\[[^\]]*\]\(([^)]+)\)/g;
+  while ((match = mdRegex.exec(body)) !== null) {
+    urls.push(match[1]);
+  }
+
+  return urls;
+}
 
 for (const file of walk(postsDir)) {
   const src = readFileSync(file, 'utf8');
   const { frontmatter, body } = splitFrontmatter(src);
   const draft = frontmatterValue(frontmatter, 'draft') === 'true';
   if (draft) continue;
-  checked.push(file);
+  
+  const relPath = relative(repoRoot, file);
+  checked.push(relPath);
+  
   if (!BODY_IMAGE_RE.test(body)) {
-    offenders.push(relative(repoRoot, file));
+    offenders.push(relPath);
+  }
+
+  const extractedUrls = extractImageUrls(frontmatter, body);
+  for (const urlStr of extractedUrls) {
+    const baseUrl = getBaseUrl(urlStr);
+    if (!baseUrl) continue;
+    
+    if (seenImages.has(baseUrl)) {
+      if (seenImages.get(baseUrl) !== relPath) {
+        duplicateOffenders.push({
+          file: relPath,
+          duplicateUrl: baseUrl,
+          firstFile: seenImages.get(baseUrl)
+        });
+      }
+    } else {
+      seenImages.set(baseUrl, relPath);
+    }
   }
 }
 
+let hasError = false;
+
 if (offenders.length > 0) {
+  hasError = true;
   console.error(
     '\n✖ Body-image rule violated (docs/seo-aeo-playbook.md §4):',
   );
@@ -101,12 +163,31 @@ if (offenders.length > 0) {
   console.error('  frontmatter alone does NOT satisfy this rule.\n');
   console.error('Offending files:');
   for (const f of offenders) console.error(`  - ${f}`);
+}
+
+if (duplicateOffenders.length > 0) {
+  console.warn(
+    '\n⚠ Unique image rule violated (docs/seo-aeo-playbook.md §4):',
+  );
+  console.warn(
+    '  Images used in articles must be unique. You cannot reuse the same image URL',
+  );
+  console.warn('  across different articles.\n');
+  console.warn('Offending files:');
+  for (const { file, duplicateUrl, firstFile } of duplicateOffenders) {
+    console.warn(`  - ${file}`);
+    console.warn(`    Reuses: ${duplicateUrl}`);
+    console.warn(`    First seen in: ${firstFile}`);
+  }
+}
+
+if (hasError) {
   console.error(
-    `\n${offenders.length} file(s) failing, ${checked.length} checked.\n`,
+    `\nFailed. ${checked.length} file(s) checked.\n`,
   );
   process.exit(1);
 }
 
 console.log(
-  `✓ Body-image rule OK — ${checked.length} published post(s) checked.`,
+  `\n✓ Body-image rule OK. ${checked.length} published post(s) checked.`,
 );

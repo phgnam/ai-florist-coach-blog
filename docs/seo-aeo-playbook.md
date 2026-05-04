@@ -61,9 +61,10 @@ AI engines read schema to decide who to cite. No schema = no citation.
 - **`heroImage` in the frontmatter alone does NOT satisfy this rule.** The hero is rendered above the article body by the layout; the body-image requirement is *in addition to* `heroImage`, not instead of it. An article that ships with `heroImage` but zero body-image markers will fail the `npm run check:body-images` guard wired into `npm run build` and CI.
 - The body image must carry a descriptive `alt` attribute (not a filename), so it works for screen readers and counts toward `ImageObject` discovery.
 - `heroImage` itself is **recommended but optional**. Setting it powers the in-page hero, Open Graph (`og:image`) share card, Twitter card, and `BlogPosting.image` field, so prefer it whenever a strong cover image is available. When you do set `heroImage`, you must also set a descriptive `heroAlt`.
-- "Impressive" means: editorial-quality, well-lit, on-topic, free-to-use or properly licensed. Avoid stock-photo clichés, AI-slop close-ups, and images already used as another article's hero.
+- "Impressive" means: editorial-quality, well-lit, on-topic, free-to-use or properly licensed. Avoid stock-photo clichés and AI-slop close-ups.
+- **Unique Images Required**: The image URLs used in an article (both body images and `heroImage`) MUST NOT duplicate images already used in any other article. If an image URL is already in use, you must find another image.
 - Performance: any image you commit through Astro's `image()` schema must be ≤ 250 KB delivered (WebP/AVIF) and sized for a 1600px-wide render. Inline `<figure>` images sourced from a CDN (e.g. Unsplash with `?w=800&q=75&auto=format`) should hit the same effective ceiling at the rendered width.
-- **Enforcement.** `scripts/check-body-images.mjs` scans every published `src/content/posts/*.mdx` for body-image markers and exits non-zero if any post has none. It runs as `prebuild`, so `npm run build` (locally and in Vercel) will fail before deploy if this rule is violated. Run it directly with `npm run check:body-images`.
+- **Enforcement.** `scripts/check-body-images.mjs` scans every published `src/content/posts/*.mdx` for body-image markers and enforces unique images. It exits non-zero if any post has none or has duplicates. It runs as `prebuild`, so `npm run build` (locally and in Vercel) will fail before deploy if this rule is violated. Run it directly with `npm run check:body-images`.
 
 ## 5. Weekly Growth Loop (Mandatory Cadence)
 
