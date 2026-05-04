@@ -6,9 +6,28 @@ export const apricotBlossom: GlossaryTerm = {
   name: 'Apricot Blossom (Hoa Mai)',
   emoji: '🌼',
   title: 'Apricot Blossom (Hoa Mai) — Vietnamese Tết Symbol & Care Guide',
-  metaDescription: 'Apricot blossom guide: the yellow Tết flower of southern Vietnam, why it must bloom on Lunar New Year\'s morning, branch conditioning tips, and care. From Vườn Hoa.',
-  summary: 'Apricot blossom — hoa mai (Ochna integerrima or yellow apricot) — is the iconic golden five-petalled flower of southern Vietnamese Tết. Every Lunar New Year, families across the south time and prune their mai branches so they burst into bloom on the morning of Mồng Một (the first day of Tết) — a flower-timed pulse that synchronises tens of millions of homes.',
-  meaning: 'Hoa mai is the south Vietnamese symbol of Tết, prosperity, and fresh-year good fortune. The five golden petals correspond to the five Confucian virtues (Nhân — humaneness, Lễ — ritual, Nghĩa — righteousness, Trí — wisdom, Tín — trustworthiness). A mai tree blooming on the dawn of Mồng Một is read as a year of golden fortune ahead; one that fails to bloom is a year of caution. Yellow is the imperial colour, and the bright gold of a fully open mai branch is associated specifically with wealth, harvest, and authority. Outside Tết season, the flower is rarely used — its meaning is tightly bound to the new year transition.',
+  metaDescription:
+    'Apricot blossom guide: the yellow Tết flower of southern Vietnam, why it ' +
+    'must bloom on Lunar New Year\'s morning, branch conditioning tips, and ' +
+    'care. From Vườn Hoa.',
+  summary:
+    'Apricot blossom — hoa mai (Ochna integerrima or yellow apricot) — is the ' +
+    'iconic golden five-petalled flower of southern Vietnamese Tết. Every ' +
+    'Lunar New Year, families across the south time and prune their mai ' +
+    'branches so they burst into bloom on the morning of Mồng Một (the first ' +
+    'day of Tết) — a flower-timed pulse that synchronises tens of millions of ' +
+    'homes.',
+  meaning:
+    'Hoa mai is the south Vietnamese symbol of Tết, prosperity, and ' +
+    'fresh-year good fortune. The five golden petals correspond to the five ' +
+    'Confucian virtues (Nhân — humaneness, Lễ — ritual, Nghĩa — ' +
+    'righteousness, Trí — wisdom, Tín — trustworthiness). A mai tree blooming ' +
+    'on the dawn of Mồng Một is read as a year of golden fortune ahead; one ' +
+    'that fails to bloom is a year of caution. Yellow is the imperial colour, ' +
+    'and the bright gold of a fully open mai branch is associated ' +
+    'specifically with wealth, harvest, and authority. Outside Tết season, ' +
+    'the flower is rarely used — its meaning is tightly bound to the new year ' +
+    'transition.',
   bloomSeason: 'Late January to February (timed to Lunar New Year). Cultivators prune leaves around 15 days before Tết to force synchronised flowering on the new-year morning.',
   careLevel: 'Advanced',
   careTips: [
@@ -25,7 +44,13 @@ export const apricotBlossom: GlossaryTerm = {
     { name: 'Mai Trắng (White Apricot, Prunus mume)', description: 'A different species from East Asia — pure white blossoms; less common in Vietnam, popular in Chinese and Japanese ink painting.' },
   ],
   bestFor: ['Tết Nguyên Đán (south Vietnamese Lunar New Year)', 'Pre-new-year home decoration', 'Ancestor altars during Tết', 'Photography and Tết editorial styling', 'Cultural and heritage installations'],
-  interestingFact: 'A single old mai tree in southern Vietnam can sell for tens of thousands of US dollars at Tết — the most famous specimens, with carefully shaped trunks and dense canopies, are rented (not sold) to wealthy families for the new year holiday and returned to the grower a week later. The most expensive recorded mai rental was a 100-year-old specimen in Bến Tre that fetched 3 billion VND (~$120,000) for a single Tết season.',
+  interestingFact:
+    'A single old mai tree in southern Vietnam can sell for tens of thousands ' +
+    'of US dollars at Tết — the most famous specimens, with carefully shaped ' +
+    'trunks and dense canopies, are rented (not sold) to wealthy families for ' +
+    'the new year holiday and returned to the grower a week later. The most ' +
+    'expensive recorded mai rental was a 100-year-old specimen in Bến Tre ' +
+    'that fetched 3 billion VND (~$120,000) for a single Tết season.',
   colors: ['Yellow (gold)', 'Deep Yellow', 'White (P. mume)', 'Bicolor (Tứ Quý)'],
   lifespan: '7–14 days for cut branches in a warm room',
 

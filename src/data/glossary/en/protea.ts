@@ -6,9 +6,27 @@ export const protea: GlossaryTerm = {
   name: 'Protea',
   emoji: '🌺',
   title: 'Protea — Meaning, South African Origin & Care for Florists',
-  metaDescription: 'Protea guide: South African national flower, the king and pincushion varieties, ancient lineage, and why these dramatic blooms work as both fresh and dried floristry. From Vườn Hoa.',
-  summary: 'Proteas (genus Protea) are the most iconic flowers of South Africa\'s Cape Floral Kingdom and the country\'s national flower. Their sculptural, almost prehistoric appearance — a large central cone surrounded by stiff bracts — makes them one of the most distinctive and dramatic florals in modern design, and they have a 300-million-year evolutionary lineage that predates the dinosaurs.',
-  meaning: 'Proteas symbolise change, transformation, courage, and diversity — the genus is named after the Greek god Proteus, who could change his shape at will, in reference to the extraordinary diversity of forms within the family. In South Africa the King Protea (P. cynaroides) is a national emblem of resilience and uniqueness — the country\'s rugby team is nicknamed the Springboks but its cricket team is the Proteas. White proteas convey stillness and contemplation, pink ones grace and femininity, red ones courage, and the dramatic black-tipped "Black Beard" forms are read as symbols of hidden strength.',
+  metaDescription:
+    'Protea guide: South African national flower, the king and pincushion ' +
+    'varieties, ancient lineage, and why these dramatic blooms work as both ' +
+    'fresh and dried floristry. From Vườn Hoa.',
+  summary:
+    'Proteas (genus Protea) are the most iconic flowers of South Africa\'s ' +
+    'Cape Floral Kingdom and the country\'s national flower. Their sculptural, ' +
+    'almost prehistoric appearance — a large central cone surrounded by stiff ' +
+    'bracts — makes them one of the most distinctive and dramatic florals in ' +
+    'modern design, and they have a 300-million-year evolutionary lineage ' +
+    'that predates the dinosaurs.',
+  meaning:
+    'Proteas symbolise change, transformation, courage, and diversity — the ' +
+    'genus is named after the Greek god Proteus, who could change his shape ' +
+    'at will, in reference to the extraordinary diversity of forms within the ' +
+    'family. In South Africa the King Protea (P. cynaroides) is a national ' +
+    'emblem of resilience and uniqueness — the country\'s rugby team is ' +
+    'nicknamed the Springboks but its cricket team is the Proteas. White ' +
+    'proteas convey stillness and contemplation, pink ones grace and ' +
+    'femininity, red ones courage, and the dramatic black-tipped "Black ' +
+    'Beard" forms are read as symbols of hidden strength.',
   bloomSeason: 'Late autumn through winter and into early spring (May–September in the Southern Hemisphere; imported November–April into Northern markets).',
   careLevel: 'Easy',
   careTips: [
@@ -25,7 +43,14 @@ export const protea: GlossaryTerm = {
     { name: 'Pink Ice', description: 'Mid-sized commercial workhorse with classic pink bracts and silvery-grey backs — the variety most commonly available in international wholesale markets.' },
   ],
   bestFor: ['Modern textural weddings', 'Tropical and exotic-themed events', 'Long-lasting hotel and reception arrangements', 'Permanent dried-floristry installations', 'Statement single-stem displays'],
-  interestingFact: 'The Cape Floral Kingdom — the smallest of the world\'s six floral kingdoms but home to over 9,000 plant species, including 360 protea species — is the only floral kingdom contained entirely within a single country (South Africa). Many proteas have evolved specifically for fynbos wildfires: their seed cones only open and release seed after exposure to extreme heat, meaning the species literally requires periodic destruction to reproduce.',
+  interestingFact:
+    'The Cape Floral Kingdom — the smallest of the world\'s six floral ' +
+    'kingdoms but home to over 9,000 plant species, including 360 protea ' +
+    'species — is the only floral kingdom contained entirely within a single ' +
+    'country (South Africa). Many proteas have evolved specifically for ' +
+    'fynbos wildfires: their seed cones only open and release seed after ' +
+    'exposure to extreme heat, meaning the species literally requires ' +
+    'periodic destruction to reproduce.',
   colors: ['Pink', 'Red', 'White', 'Cream', 'Orange', 'Yellow', 'Burgundy', 'Bicolor'],
   lifespan: '14–21 days fresh; indefinite as dried flowers',
 

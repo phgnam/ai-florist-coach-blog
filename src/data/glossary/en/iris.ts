@@ -6,9 +6,23 @@ export const iris: GlossaryTerm = {
   name: 'Iris',
   emoji: '💜',
   title: 'Iris Flower — Meaning, Types & Florist Care Guide',
-  metaDescription: 'Iris guide: the meaning of purple, blue, and yellow irises, Bearded vs Dutch varieties, how to condition iris stems, and when irises are in season. From Vườn Hoa.',
-  summary: 'The iris is named after the Greek goddess of the rainbow, reflecting the extraordinary range of colours available in its 300+ species. The fleur-de-lis symbol — central to French heraldry — depicts a stylised iris.',
-  meaning: 'Irises symbolise wisdom, hope, trust, and courage. In ancient Egypt, the iris was carved on the sceptres of kings as a symbol of royal power. In Greece, irises were planted on women\'s graves so that the goddess Iris could guide their souls to the afterlife. Purple irises represent wisdom and respect — they are often used at funerals in Eastern Europe. Blue irises convey faith and hope. Yellow irises express passion. White irises symbolise purity.',
+  metaDescription:
+    'Iris guide: the meaning of purple, blue, and yellow irises, Bearded vs ' +
+    'Dutch varieties, how to condition iris stems, and when irises are in ' +
+    'season. From Vườn Hoa.',
+  summary:
+    'The iris is named after the Greek goddess of the rainbow, reflecting the ' +
+    'extraordinary range of colours available in its 300+ species. The ' +
+    'fleur-de-lis symbol — central to French heraldry — depicts a stylised ' +
+    'iris.',
+  meaning:
+    'Irises symbolise wisdom, hope, trust, and courage. In ancient Egypt, the ' +
+    'iris was carved on the sceptres of kings as a symbol of royal power. In ' +
+    'Greece, irises were planted on women\'s graves so that the goddess Iris ' +
+    'could guide their souls to the afterlife. Purple irises represent wisdom ' +
+    'and respect — they are often used at funerals in Eastern Europe. Blue ' +
+    'irises convey faith and hope. Yellow irises express passion. White ' +
+    'irises symbolise purity.',
   bloomSeason: 'Spring (March–May for bearded varieties). Dutch irises are available commercially from November through June.',
   careLevel: 'Easy',
   careTips: [
@@ -25,7 +39,12 @@ export const iris: GlossaryTerm = {
     { name: 'Japanese Iris', description: 'Flat, wide flowers in deep purple or white; dramatic and architectural.' },
   ],
   bestFor: ['Spring weddings', 'Easter arrangements', 'Mother\'s Day', 'Memorial tributes', 'Blue-themed events'],
-  interestingFact: 'The three petals that stand upright on an iris (the standards) and the three that fall outward (the falls) have been interpreted in Christian tradition as representing faith, wisdom, and valour — an interpretation that gave rise to the fleur-de-lis as a royal and religious symbol used by French kings for over 1,200 years.',
+  interestingFact:
+    'The three petals that stand upright on an iris (the standards) and the ' +
+    'three that fall outward (the falls) have been interpreted in Christian ' +
+    'tradition as representing faith, wisdom, and valour — an interpretation ' +
+    'that gave rise to the fleur-de-lis as a royal and religious symbol used ' +
+    'by French kings for over 1,200 years.',
   colors: ['Purple', 'Blue', 'White', 'Yellow', 'Orange', 'Pink', 'Bicolor'],
   lifespan: '5–10 days as successive buds open',
 

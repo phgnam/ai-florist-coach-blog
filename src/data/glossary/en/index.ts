@@ -50,7 +50,7 @@ import { stock } from './stock';
 import { waterLily } from './water-lily';
 import { delphinium } from './delphinium';
 
-export const allTermsEn: GlossaryTerm[] = [
+export const GLOSSARY_TERMS: GlossaryTerm[] = [
   rose,
   lily,
   peony,
@@ -102,3 +102,9 @@ export const allTermsEn: GlossaryTerm[] = [
   waterLily,
   delphinium,
 ];
+
+export function getTermBySlug(slug: string): GlossaryTerm | undefined {
+  return GLOSSARY_TERMS.find((t) => t.slug === slug);
+}
+
+export const allTermsEn = GLOSSARY_TERMS;

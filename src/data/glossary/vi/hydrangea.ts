@@ -6,9 +6,20 @@ export const hydrangea: GlossaryTermVI = {
   name: 'Hoa Cẩm Tú Cầu',
   emoji: '💐',
   title: 'Hoa Cẩm Tú Cầu — Ý Nghĩa, Màu Sắc & Cách Hồi Phục Hoa Héo',
-  metaDescription: 'Hướng dẫn hoa cẩm tú cầu cho florist: cách hồi phục khi héo, tại sao màu thay đổi theo pH đất, các giống tốt nhất. Từ Vườn Hoa.',
-  summary: 'Hoa cẩm tú cầu là những cây bụi hoa lớn được florist yêu thích vì khả năng tạo khối lớn ấn tượng trong cắm hoa. Bản chất thay đổi màu của chúng khiến chúng hấp dẫn về mặt thực vật học.',
-  meaning: 'Hoa cẩm tú cầu mang ý nghĩa khác nhau theo màu. Cẩm tú cầu xanh truyền đạt lời xin lỗi chân thành, sự hối tiếc và thấu hiểu. Cẩm tú cầu hồng thể hiện cảm xúc chân thành từ tâm. Cẩm tú cầu trắng biểu hiện sự thuần khiết và uyển chuyển. Tím biểu hiện mong muốn hiểu sâu về ai đó. Ở Nhật Bản, cẩm tú cầu (ajisai) gắn với lời xin lỗi, cảm xúc chân thành và vẻ đẹp mùa mưa.',
+  metaDescription:
+    'Hướng dẫn hoa cẩm tú cầu cho florist: cách hồi phục khi héo, tại sao màu ' +
+    'thay đổi theo pH đất, các giống tốt nhất. Từ Vườn Hoa.',
+  summary:
+    'Hoa cẩm tú cầu là những cây bụi hoa lớn được florist yêu thích vì khả ' +
+    'năng tạo khối lớn ấn tượng trong cắm hoa. Bản chất thay đổi màu của ' +
+    'chúng khiến chúng hấp dẫn về mặt thực vật học.',
+  meaning:
+    'Hoa cẩm tú cầu mang ý nghĩa khác nhau theo màu. Cẩm tú cầu xanh truyền ' +
+    'đạt lời xin lỗi chân thành, sự hối tiếc và thấu hiểu. Cẩm tú cầu hồng ' +
+    'thể hiện cảm xúc chân thành từ tâm. Cẩm tú cầu trắng biểu hiện sự thuần ' +
+    'khiết và uyển chuyển. Tím biểu hiện mong muốn hiểu sâu về ai đó. Ở Nhật ' +
+    'Bản, cẩm tú cầu (ajisai) gắn với lời xin lỗi, cảm xúc chân thành và vẻ ' +
+    'đẹp mùa mưa.',
   bloomSeason: 'Đầu hè đến thu (tháng 6–9). Một số giống cho đợt nở thứ hai vào cuối hè.',
   careLevel: 'Trung bình',
   careTips: [
@@ -25,7 +36,11 @@ export const hydrangea: GlossaryTermVI = {
     { name: 'Paniculata (Limelight)', description: 'Đầu hoa hình nón phơi khô đẹp — chuyển từ trắng sang xanh lá sang hồng khi trưởng thành.' },
   ],
   bestFor: ['Trung tâm bàn đám cưới', 'Cắm hoa khối lớn', 'Làm vòng hoa khô', 'Sự kiện rustic và cottage'],
-  interestingFact: 'Màu của hoa cẩm tú cầu thay đổi theo pH đất — đất axit (pH dưới 6) tạo hoa xanh, đất kiềm (pH trên 7) tạo hoa hồng. Thêm vôi làm hoa hồng hơn; thêm lưu huỳnh làm hoa xanh hơn. Các giống trắng không thể thay đổi màu về mặt di truyền.',
+  interestingFact:
+    'Màu của hoa cẩm tú cầu thay đổi theo pH đất — đất axit (pH dưới 6) tạo ' +
+    'hoa xanh, đất kiềm (pH trên 7) tạo hoa hồng. Thêm vôi làm hoa hồng hơn; ' +
+    'thêm lưu huỳnh làm hoa xanh hơn. Các giống trắng không thể thay đổi màu ' +
+    'về mặt di truyền.',
   colors: ['Xanh', 'Hồng', 'Trắng', 'Tím', 'Xanh lá', 'Đỏ thẫm', 'Nhiều màu'],
   lifespan: '5–10 ngày tươi; 1–2 tuần khi sấy khô và bảo quản',
 

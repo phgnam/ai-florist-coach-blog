@@ -6,9 +6,20 @@ export const iris: GlossaryTermVI = {
   name: 'Hoa Diên Vĩ',
   emoji: '💜',
   title: 'Hoa Diên Vĩ — Ý Nghĩa, Các Giống & Hướng Dẫn Florist',
-  metaDescription: 'Hướng dẫn hoa diên vĩ: ý nghĩa màu tím, xanh và vàng, các giống Bearded vs Dutch, cách sơ chế. Từ Vườn Hoa.',
-  summary: 'Hoa diên vĩ được đặt tên theo nữ thần cầu vồng Hy Lạp, phản ánh phạm vi màu sắc phi thường trong hơn 300 loài. Biểu tượng fleur-de-lis — trọng tâm của huy hiệu Pháp — mô tả một hoa diên vĩ cách điệu.',
-  meaning: 'Hoa diên vĩ tượng trưng cho sự khôn ngoan, hy vọng, tin tưởng và dũng cảm. Ở Ai Cập cổ đại, hoa diên vĩ được khắc trên vương trượng của vua như biểu tượng quyền lực hoàng gia. Ở Hy Lạp, hoa diên vĩ được trồng trên mộ phụ nữ để nữ thần Iris dẫn dắt linh hồn họ lên thiên đàng. Diên vĩ tím đại diện cho sự khôn ngoan và tôn trọng. Diên vĩ xanh truyền đạt đức tin và hy vọng. Diên vĩ vàng thể hiện đam mê.',
+  metaDescription:
+    'Hướng dẫn hoa diên vĩ: ý nghĩa màu tím, xanh và vàng, các giống Bearded ' +
+    'vs Dutch, cách sơ chế. Từ Vườn Hoa.',
+  summary:
+    'Hoa diên vĩ được đặt tên theo nữ thần cầu vồng Hy Lạp, phản ánh phạm vi ' +
+    'màu sắc phi thường trong hơn 300 loài. Biểu tượng fleur-de-lis — trọng ' +
+    'tâm của huy hiệu Pháp — mô tả một hoa diên vĩ cách điệu.',
+  meaning:
+    'Hoa diên vĩ tượng trưng cho sự khôn ngoan, hy vọng, tin tưởng và dũng ' +
+    'cảm. Ở Ai Cập cổ đại, hoa diên vĩ được khắc trên vương trượng của vua ' +
+    'như biểu tượng quyền lực hoàng gia. Ở Hy Lạp, hoa diên vĩ được trồng ' +
+    'trên mộ phụ nữ để nữ thần Iris dẫn dắt linh hồn họ lên thiên đàng. Diên ' +
+    'vĩ tím đại diện cho sự khôn ngoan và tôn trọng. Diên vĩ xanh truyền đạt ' +
+    'đức tin và hy vọng. Diên vĩ vàng thể hiện đam mê.',
   bloomSeason: 'Mùa xuân (tháng 3–5 cho giống có râu). Iris Hà Lan có thể mua thương mại từ tháng 11 đến tháng 6.',
   careLevel: 'Dễ',
   careTips: [
@@ -25,7 +36,10 @@ export const iris: GlossaryTermVI = {
     { name: 'Iris Nhật Bản (Japanese Iris)', description: 'Hoa phẳng, rộng màu tím đậm hoặc trắng; kịch tính và kiến trúc.' },
   ],
   bestFor: ['Đám cưới mùa xuân', 'Cắm hoa lễ Phục Sinh', 'Ngày của Mẹ', 'Tang lễ', 'Sự kiện chủ đề xanh/tím'],
-  interestingFact: 'Ba cánh đứng trên hoa diên vĩ và ba cánh rủ xuống được diễn giải trong truyền thống Kitô giáo là đức tin, sự khôn ngoan và lòng dũng cảm — dẫn đến biểu tượng fleur-de-lis được các vua Pháp sử dụng hơn 1.200 năm.',
+  interestingFact:
+    'Ba cánh đứng trên hoa diên vĩ và ba cánh rủ xuống được diễn giải trong ' +
+    'truyền thống Kitô giáo là đức tin, sự khôn ngoan và lòng dũng cảm — dẫn ' +
+    'đến biểu tượng fleur-de-lis được các vua Pháp sử dụng hơn 1.200 năm.',
   colors: ['Tím', 'Xanh', 'Trắng', 'Vàng', 'Cam', 'Hồng', 'Hai màu'],
   lifespan: '5–10 ngày khi các nụ kế tiếp nở',
 

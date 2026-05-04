@@ -6,9 +6,21 @@ export const hydrangea: GlossaryTerm = {
   name: 'Hydrangea',
   emoji: '💐',
   title: 'Hydrangea — Meaning, Colors & How to Revive Wilted Stems',
-  metaDescription: 'Hydrangea guide for florists: how to revive wilting, why colors change with soil pH, best varieties for bouquets, and care tips. From Vườn Hoa.',
-  summary: 'Hydrangeas are large, mophead or lacecap flowering shrubs beloved by florists for their ability to add dramatic volume to arrangements. Their colour-changing nature makes them botanically fascinating.',
-  meaning: 'Hydrangeas carry varied symbolism depending on colour. Blue hydrangeas communicate sincere apologies, regret, and understanding. Pink hydrangeas express genuine heartfelt emotion. White hydrangeas signify purity and grace. Purple hydrangeas represent the desire to deeply understand someone. In Japan, hydrangeas (ajisai) are associated with apology, heartfelt emotion, and the beauty of rainy season — they bloom during tsuyu (the rainy season).',
+  metaDescription:
+    'Hydrangea guide for florists: how to revive wilting, why colors change ' +
+    'with soil pH, best varieties for bouquets, and care tips. From Vườn Hoa.',
+  summary:
+    'Hydrangeas are large, mophead or lacecap flowering shrubs beloved by ' +
+    'florists for their ability to add dramatic volume to arrangements. Their ' +
+    'colour-changing nature makes them botanically fascinating.',
+  meaning:
+    'Hydrangeas carry varied symbolism depending on colour. Blue hydrangeas ' +
+    'communicate sincere apologies, regret, and understanding. Pink ' +
+    'hydrangeas express genuine heartfelt emotion. White hydrangeas signify ' +
+    'purity and grace. Purple hydrangeas represent the desire to deeply ' +
+    'understand someone. In Japan, hydrangeas (ajisai) are associated with ' +
+    'apology, heartfelt emotion, and the beauty of rainy season — they bloom ' +
+    'during tsuyu (the rainy season).',
   bloomSeason: 'Early summer through autumn (June–September). Some cultivars offer a second flush in late summer.',
   careLevel: 'Moderate',
   careTips: [
@@ -25,7 +37,11 @@ export const hydrangea: GlossaryTerm = {
     { name: 'Paniculata (Limelight)', description: 'Cone-shaped heads that dry beautifully — transitions from white to green to pink as they mature.' },
   ],
   bestFor: ['Wedding centrepieces', 'Large volumetric arrangements', 'Dried wreath making', 'Rustic and cottage-style events', 'Blue/purple colour palettes'],
-  interestingFact: 'Hydrangea flowers change colour based on soil pH — acidic soil (pH below 6) produces blue flowers, while alkaline soil (pH above 7) produces pink. Adding garden lime makes them pinker; adding sulphur makes them bluer. White varieties are genetically incapable of this colour change.',
+  interestingFact:
+    'Hydrangea flowers change colour based on soil pH — acidic soil (pH below ' +
+    '6) produces blue flowers, while alkaline soil (pH above 7) produces ' +
+    'pink. Adding garden lime makes them pinker; adding sulphur makes them ' +
+    'bluer. White varieties are genetically incapable of this colour change.',
   colors: ['Blue', 'Pink', 'White', 'Purple', 'Green', 'Burgundy', 'Multicolor'],
   lifespan: '5–10 days fresh; 1–2 weeks when dried and preserved',
 

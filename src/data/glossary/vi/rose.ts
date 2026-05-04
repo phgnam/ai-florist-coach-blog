@@ -5,9 +5,20 @@ export const rose: GlossaryTermVI = {
   name: 'Hoa Hồng',
   emoji: '🌹',
   title: 'Hoa Hồng — Ý Nghĩa, Cách Chăm Sóc & Các Giống Phổ Biến',
-  metaDescription: 'Tìm hiểu tất cả về hoa hồng: ý nghĩa theo màu sắc, cách giữ hoa hồng tươi lâu, các giống phổ biến và mùa nở. Tổng hợp từ chuyên gia Vườn Hoa.',
-  summary: 'Hoa hồng là loài hoa được công nhận rộng rãi nhất thế giới, được trồng hơn 5.000 năm. Với hơn 300 loài và hàng chục nghìn giống cây trồng, hoa hồng thống trị thị trường hoa cắt toàn cầu.',
-  meaning: 'Hoa hồng đỏ tượng trưng cho tình yêu mãnh liệt và đam mê. Hoa hồng hồng truyền tải sự ngưỡng mộ và lòng biết ơn. Hoa hồng trắng biểu tượng cho sự thuần khiết và khởi đầu mới. Hoa hồng vàng biểu thị tình bạn và niềm vui. Hoa hồng cam thể hiện sự nhiệt huyết và say mê. Số lượng hoa hồng trong bó hoa mang ý nghĩa riêng: một bông tuyên bố "em là người duy nhất", mười hai bông bày tỏ tình cảm chân thành.',
+  metaDescription:
+    'Tìm hiểu tất cả về hoa hồng: ý nghĩa theo màu sắc, cách giữ hoa hồng ' +
+    'tươi lâu, các giống phổ biến và mùa nở. Tổng hợp từ chuyên gia Vườn Hoa.',
+  summary:
+    'Hoa hồng là loài hoa được công nhận rộng rãi nhất thế giới, được trồng ' +
+    'hơn 5.000 năm. Với hơn 300 loài và hàng chục nghìn giống cây trồng, hoa ' +
+    'hồng thống trị thị trường hoa cắt toàn cầu.',
+  meaning:
+    'Hoa hồng đỏ tượng trưng cho tình yêu mãnh liệt và đam mê. Hoa hồng hồng ' +
+    'truyền tải sự ngưỡng mộ và lòng biết ơn. Hoa hồng trắng biểu tượng cho ' +
+    'sự thuần khiết và khởi đầu mới. Hoa hồng vàng biểu thị tình bạn và niềm ' +
+    'vui. Hoa hồng cam thể hiện sự nhiệt huyết và say mê. Số lượng hoa hồng ' +
+    'trong bó hoa mang ý nghĩa riêng: một bông tuyên bố "em là người duy ' +
+    'nhất", mười hai bông bày tỏ tình cảm chân thành.',
   bloomSeason: 'Cuối xuân đến đầu thu (tháng 5–10 ở vùng khí hậu ôn đới). Một số giống hoa hồng lai hiện đại tái nở mỗi 6–8 tuần.',
   careLevel: 'Trung bình',
   careTips: [
@@ -24,7 +35,10 @@ export const rose: GlossaryTermVI = {
     { name: 'Hoa hồng kiểu ranunculus', description: 'Hình cầu với nhiều cánh xếp dày; phổ biến trong các sắp xếp sang trọng.' },
   ],
   bestFor: ['Ngày Lễ Tình Nhân', 'Đám cưới', 'Kỷ niệm', 'Tình yêu lãng mạn', 'Tang lễ'],
-  interestingFact: 'Một cánh hoa hồng chứa hơn 300 hợp chất thơm riêng biệt. Bông hoa hồng đắt nhất từng được bán — "Juliet" của David Austin — tốn 3 triệu bảng Anh để phát triển trong 15 năm.',
+  interestingFact:
+    'Một cánh hoa hồng chứa hơn 300 hợp chất thơm riêng biệt. Bông hoa hồng ' +
+    'đắt nhất từng được bán — "Juliet" của David Austin — tốn 3 triệu bảng ' +
+    'Anh để phát triển trong 15 năm.',
   colors: ['Đỏ', 'Hồng', 'Trắng', 'Vàng', 'Cam', 'Tím nhạt', 'Đào', 'Hai màu'],
   lifespan: '5–12 ngày trong bình với sự chăm sóc đúng cách',
 

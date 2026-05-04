@@ -6,9 +6,19 @@ export const peony: GlossaryTerm = {
   name: 'Peony',
   emoji: '🌸',
   title: 'Peony — Meaning, Season & How to Care for Cut Peonies',
-  metaDescription: 'The florist\'s guide to peonies: when they bloom, how to open tight buds, vase life tips, and what peonies symbolise. From Vườn Hoa.',
-  summary: 'Peonies are among the most coveted flowers in the world, known for their billowing, multi-layered blooms and sweet fragrance. Their brief seasonal availability makes them especially prized.',
-  meaning: 'Peonies symbolise romance, prosperity, good luck, and a happy marriage — deeply embedded in Chinese culture where they are called the "king of flowers." In Western traditions, they represent bashfulness and compassion. Pink peonies are the most popular and convey romance and love. White peonies signify purity and are a wedding staple.',
+  metaDescription:
+    'The florist\'s guide to peonies: when they bloom, how to open tight buds, ' +
+    'vase life tips, and what peonies symbolise. From Vườn Hoa.',
+  summary:
+    'Peonies are among the most coveted flowers in the world, known for their ' +
+    'billowing, multi-layered blooms and sweet fragrance. Their brief ' +
+    'seasonal availability makes them especially prized.',
+  meaning:
+    'Peonies symbolise romance, prosperity, good luck, and a happy marriage — ' +
+    'deeply embedded in Chinese culture where they are called the "king of ' +
+    'flowers." In Western traditions, they represent bashfulness and ' +
+    'compassion. Pink peonies are the most popular and convey romance and ' +
+    'love. White peonies signify purity and are a wedding staple.',
   bloomSeason: 'Late spring to early summer (May–June). The season is notoriously brief — only 3–5 weeks depending on climate.',
   careLevel: 'Moderate',
   careTips: [
@@ -25,7 +35,10 @@ export const peony: GlossaryTerm = {
     { name: 'Duchesse de Nemours', description: 'Pure white double blooms with a hint of cream at the centre; classic for bridal work.' },
   ],
   bestFor: ['Weddings', 'Bridal bouquets', 'Mother\'s Day', 'Anniversary gifts', 'Spring celebrations'],
-  interestingFact: 'Peonies can live for over 100 years in garden settings. Some plants in Chinese temple gardens are reported to be over 200 years old and still blooming.',
+  interestingFact:
+    'Peonies can live for over 100 years in garden settings. Some plants in ' +
+    'Chinese temple gardens are reported to be over 200 years old and still ' +
+    'blooming.',
   colors: ['Pink', 'White', 'Red', 'Coral', 'Yellow', 'Purple', 'Burgundy'],
   lifespan: '5–10 days; buy in bud stage for maximum enjoyment',
 

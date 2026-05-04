@@ -6,9 +6,25 @@ export const callaLily: GlossaryTerm = {
   name: 'Calla Lily',
   emoji: '🌸',
   title: 'Calla Lily — Meaning, Wedding Use & Care Guide',
-  metaDescription: 'Calla lily guide: why the trumpet is technically a leaf not a flower, Art Deco wedding history, mini vs. giant varieties, and how to keep the stems straight. From Vườn Hoa.',
-  summary: 'Calla lilies (Zantedeschia) are not true lilies but South African aroids whose iconic "trumpet" is actually a single curled leaf (the spathe) wrapped around a yellow flower spike (the spadix). Their sculptural, almost architectural form has made them an icon of Art Deco design and modern minimalist weddings.',
-  meaning: 'Calla lilies symbolise magnificent beauty, sophistication, and rebirth — the latter from their long association with Easter celebrations of the resurrection. White callas convey purity and innocence (the wedding standard), purple callas charm and admiration, yellow callas gratitude, and dark "Black Star" callas dramatic mystery and elegance. The flower\'s name comes from the Greek "kallos" meaning beauty, and its fame as a high-society flower was cemented when Diego Rivera and Georgia O\'Keeffe both made it a recurring subject in their 20th-century paintings.',
+  metaDescription:
+    'Calla lily guide: why the trumpet is technically a leaf not a flower, ' +
+    'Art Deco wedding history, mini vs. giant varieties, and how to keep the ' +
+    'stems straight. From Vườn Hoa.',
+  summary:
+    'Calla lilies (Zantedeschia) are not true lilies but South African aroids ' +
+    'whose iconic "trumpet" is actually a single curled leaf (the spathe) ' +
+    'wrapped around a yellow flower spike (the spadix). Their sculptural, ' +
+    'almost architectural form has made them an icon of Art Deco design and ' +
+    'modern minimalist weddings.',
+  meaning:
+    'Calla lilies symbolise magnificent beauty, sophistication, and rebirth — ' +
+    'the latter from their long association with Easter celebrations of the ' +
+    'resurrection. White callas convey purity and innocence (the wedding ' +
+    'standard), purple callas charm and admiration, yellow callas gratitude, ' +
+    'and dark "Black Star" callas dramatic mystery and elegance. The flower\'s ' +
+    'name comes from the Greek "kallos" meaning beauty, and its fame as a ' +
+    'high-society flower was cemented when Diego Rivera and Georgia O\'Keeffe ' +
+    'both made it a recurring subject in their 20th-century paintings.',
   bloomSeason: 'Late spring through summer (April–August) for outdoor field-grown. Greenhouse production yields year-round availability for weddings.',
   careLevel: 'Easy',
   careTips: [
@@ -25,7 +41,14 @@ export const callaLily: GlossaryTerm = {
     { name: 'Black Star', description: 'Near-black deep-burgundy calla; one of the most sought-after blooms for moody, dramatic, and gothic weddings.' },
   ],
   bestFor: ['Modern minimalist weddings', 'Art Deco–themed events', 'Easter church arrangements', 'High-fashion editorial styling', 'Sympathy and funeral tributes'],
-  interestingFact: 'The calla lily is the official funeral flower of Iran, where it carries a sombre formal weight equivalent to white roses or chrysanthemums in much of Europe. In total contrast, in 1920s and 30s American weddings the calla became the exclusive bridal flower of the Hollywood elite — Joan Crawford, Katharine Hepburn, and Bette Davis all carried single-stem calla bouquets on screen and in life, fixing it permanently in Western wedding iconography.',
+  interestingFact:
+    'The calla lily is the official funeral flower of Iran, where it carries ' +
+    'a sombre formal weight equivalent to white roses or chrysanthemums in ' +
+    'much of Europe. In total contrast, in 1920s and 30s American weddings ' +
+    'the calla became the exclusive bridal flower of the Hollywood elite — ' +
+    'Joan Crawford, Katharine Hepburn, and Bette Davis all carried ' +
+    'single-stem calla bouquets on screen and in life, fixing it permanently ' +
+    'in Western wedding iconography.',
   colors: ['White', 'Pink', 'Yellow', 'Orange', 'Purple', 'Burgundy', 'Black', 'Bicolor'],
   lifespan: '7–14 days — among the longest-lasting cut flowers',
 

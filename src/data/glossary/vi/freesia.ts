@@ -6,9 +6,20 @@ export const freesia: GlossaryTermVI = {
   name: 'Hoa Freesia',
   emoji: '🌸',
   title: 'Hoa Freesia — Hương Thơm, Ý Nghĩa & Hướng Dẫn Florist',
-  metaDescription: 'Hướng dẫn hoa freesia: tại sao freesia là lựa chọn hương thơm cho đám cưới, cách mở nụ hoa, tuổi thọ bình. Từ Vườn Hoa.',
-  summary: 'Hoa freesia có nguồn gốc từ vùng Cape Floristic của Nam Phi và được đánh giá cao hơn hầu hết hoa cắt vì hương thơm đặc biệt. Một cành duy nhất có thể tỏa hương khắp căn phòng.',
-  meaning: 'Hoa freesia đại diện cho sự trong sáng, chu đáo và lòng tin. Chúng là một trong những loài hoa được yêu cầu nhiều nhất cho bó hoa tình bạn vì truyền đạt tình cảm chân thành mà không có nghĩa lãng mạn. Hoa freesia trắng tượng trưng cho sự trong sáng và thuần khiết. Freesia vàng đại diện cho niềm vui. Nhận freesia được coi là thông điệp tin tưởng từ người tặng.',
+  metaDescription:
+    'Hướng dẫn hoa freesia: tại sao freesia là lựa chọn hương thơm cho đám ' +
+    'cưới, cách mở nụ hoa, tuổi thọ bình. Từ Vườn Hoa.',
+  summary:
+    'Hoa freesia có nguồn gốc từ vùng Cape Floristic của Nam Phi và được đánh ' +
+    'giá cao hơn hầu hết hoa cắt vì hương thơm đặc biệt. Một cành duy nhất có ' +
+    'thể tỏa hương khắp căn phòng.',
+  meaning:
+    'Hoa freesia đại diện cho sự trong sáng, chu đáo và lòng tin. Chúng là ' +
+    'một trong những loài hoa được yêu cầu nhiều nhất cho bó hoa tình bạn vì ' +
+    'truyền đạt tình cảm chân thành mà không có nghĩa lãng mạn. Hoa freesia ' +
+    'trắng tượng trưng cho sự trong sáng và thuần khiết. Freesia vàng đại ' +
+    'diện cho niềm vui. Nhận freesia được coi là thông điệp tin tưởng từ ' +
+    'người tặng.',
   bloomSeason: 'Đông và xuân (tháng 1–5). Sản xuất Nam Bán Cầu mở rộng khả năng có quanh năm.',
   careLevel: 'Dễ',
   careTips: [
@@ -25,7 +36,12 @@ export const freesia: GlossaryTermVI = {
     { name: 'Honeymoon', description: 'Giống hoa kép trắng thuần — một trong những giống được yêu cầu nhiều nhất cho đám cưới.' },
   ],
   bestFor: ['Bó hoa cô dâu', 'Quà tặng bạn bè', 'Cắm bàn thơm', 'Lễ hội mùa xuân', 'Corsage'],
-  interestingFact: 'Hương thơm freesia là một trong những hương thơm phức tạp nhất trong thế giới thực vật, chứa hơn 200 hợp chất thơm riêng biệt. Đây là hương thơm hoa được tái tạo nhiều nhất trong ngành nước hoa và xuất hiện trong nhiều loại nước hoa thương mại hơn bất kỳ loài hoa nào ngoài hoa hồng và hoa nhài.',
+  interestingFact:
+    'Hương thơm freesia là một trong những hương thơm phức tạp nhất trong thế ' +
+    'giới thực vật, chứa hơn 200 hợp chất thơm riêng biệt. Đây là hương thơm ' +
+    'hoa được tái tạo nhiều nhất trong ngành nước hoa và xuất hiện trong ' +
+    'nhiều loại nước hoa thương mại hơn bất kỳ loài hoa nào ngoài hoa hồng và ' +
+    'hoa nhài.',
   colors: ['Trắng', 'Vàng', 'Hồng', 'Đỏ', 'Tím', 'Cam', 'Hai màu'],
   lifespan: '7–14 ngày khi nụ hoa nở dần',
 

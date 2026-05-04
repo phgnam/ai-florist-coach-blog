@@ -6,9 +6,19 @@ export const dahlia: GlossaryTermVI = {
   name: 'Hoa Thược Dược',
   emoji: '🌸',
   title: 'Hoa Thược Dược — Ý Nghĩa, Các Giống & Hướng Dẫn Florist',
-  metaDescription: 'Hướng dẫn hoa thược dược: ý nghĩa, các giống từ café au lait đến dinner plate, cách sơ chế và tính theo mùa. Từ Vườn Hoa.',
-  summary: 'Hoa thược dược là chi thực vật có củ có nguồn gốc từ Mexico. Với hơn 57 loài và 20.000+ giống, chúng cung cấp sự đa dạng về hình dạng, màu sắc và kích thước nhiều hơn hầu hết loài hoa khác.',
-  meaning: 'Hoa thược dược tượng trưng cho phẩm giá, sự thanh lịch, sức mạnh nội tâm và cam kết với các giá trị của mình. Chúng gắn với việc nổi bật giữa đám đông. Trong ngôn ngữ hoa Victoria, thược dược truyền đạt sự hào nhoáng và bất ổn, nhưng nghề florist hiện đại đã tái định nghĩa chúng là biểu tượng của sức mạnh sáng tạo và sự đa dạng.',
+  metaDescription:
+    'Hướng dẫn hoa thược dược: ý nghĩa, các giống từ café au lait đến dinner ' +
+    'plate, cách sơ chế và tính theo mùa. Từ Vườn Hoa.',
+  summary:
+    'Hoa thược dược là chi thực vật có củ có nguồn gốc từ Mexico. Với hơn 57 ' +
+    'loài và 20.000+ giống, chúng cung cấp sự đa dạng về hình dạng, màu sắc ' +
+    'và kích thước nhiều hơn hầu hết loài hoa khác.',
+  meaning:
+    'Hoa thược dược tượng trưng cho phẩm giá, sự thanh lịch, sức mạnh nội tâm ' +
+    'và cam kết với các giá trị của mình. Chúng gắn với việc nổi bật giữa đám ' +
+    'đông. Trong ngôn ngữ hoa Victoria, thược dược truyền đạt sự hào nhoáng ' +
+    'và bất ổn, nhưng nghề florist hiện đại đã tái định nghĩa chúng là biểu ' +
+    'tượng của sức mạnh sáng tạo và sự đa dạng.',
   bloomSeason: 'Cuối hè đến sương giá đầu tiên (tháng 7–10). Đỉnh điểm là tháng 8–9 — trung tâm của mùa thược dược.',
   careLevel: 'Trung bình',
   careTips: [
@@ -25,7 +35,11 @@ export const dahlia: GlossaryTermVI = {
     { name: 'Thược dược Xương rồng (Cactus)', description: 'Cánh nhọn, cuộn ra ngoài như nhím biển — rất kết cấu.' },
   ],
   bestFor: ['Đám cưới cuối hè', 'Sự kiện mùa thu', 'Bó hoa cô dâu', 'Bông hoa thân thiện với nhiếp ảnh'],
-  interestingFact: 'Hoa thược dược được tuyên bố là quốc hoa Mexico năm 1963. Người Aztec dùng thược dược làm thực phẩm và vận chuyển nước qua cuống rỗng như đường ống nguyên thủy. Từ "dahlia" vinh danh nhà thực vật học Thụy Điển Anders Dahl.',
+  interestingFact:
+    'Hoa thược dược được tuyên bố là quốc hoa Mexico năm 1963. Người Aztec ' +
+    'dùng thược dược làm thực phẩm và vận chuyển nước qua cuống rỗng như ' +
+    'đường ống nguyên thủy. Từ "dahlia" vinh danh nhà thực vật học Thụy Điển ' +
+    'Anders Dahl.',
   colors: ['Hồng', 'Đỏ', 'Cam', 'Vàng', 'Trắng', 'Tím', 'Đỏ thẫm', 'Đào', 'Hai màu'],
   lifespan: '4–8 ngày; tuổi thọ bình ngắn được bù đắp bằng vẻ đẹp phi thường',
 

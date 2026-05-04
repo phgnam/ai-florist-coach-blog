@@ -6,9 +6,21 @@ export const carnation: GlossaryTermVI = {
   name: 'Hoa Cẩm Chướng',
   emoji: '🌺',
   title: 'Hoa Cẩm Chướng — Ý Nghĩa Theo Màu, Các Loại & Hướng Dẫn Chăm Sóc',
-  metaDescription: 'Hướng dẫn đầy đủ về hoa cẩm chướng: ý nghĩa màu sắc, cách giữ cẩm chướng tươi 3+ tuần, loại spray vs tiêu chuẩn. Từ Vườn Hoa.',
-  summary: 'Hoa cẩm chướng (Dianthus caryophyllus) là một trong những loài hoa được trồng lâu đời nhất thế giới, với lịch sử hơn 2.000 năm. Dù bị coi nhẹ là hoa phụ, cẩm chướng chất lượng cao sánh ngang hoa cao cấp về hiệu suất và độ bền.',
-  meaning: 'Ý nghĩa hoa cẩm chướng thay đổi đáng kể theo màu sắc. Cẩm chướng đỏ tượng trưng cho sự ngưỡng mộ và tình yêu sâu sắc. Cẩm chướng hồng đại diện cho tình yêu vô bờ bến của mẹ — bó hoa Ngày của Mẹ đầu tiên dùng cẩm chướng hồng cho mẹ còn sống và trắng cho mẹ đã khuất. Cẩm chướng trắng truyền đạt tình yêu thuần khiết và may mắn. Cẩm chướng vàng thể hiện sự thất vọng.',
+  metaDescription:
+    'Hướng dẫn đầy đủ về hoa cẩm chướng: ý nghĩa màu sắc, cách giữ cẩm chướng ' +
+    'tươi 3+ tuần, loại spray vs tiêu chuẩn. Từ Vườn Hoa.',
+  summary:
+    'Hoa cẩm chướng (Dianthus caryophyllus) là một trong những loài hoa được ' +
+    'trồng lâu đời nhất thế giới, với lịch sử hơn 2.000 năm. Dù bị coi nhẹ là ' +
+    'hoa phụ, cẩm chướng chất lượng cao sánh ngang hoa cao cấp về hiệu suất ' +
+    'và độ bền.',
+  meaning:
+    'Ý nghĩa hoa cẩm chướng thay đổi đáng kể theo màu sắc. Cẩm chướng đỏ ' +
+    'tượng trưng cho sự ngưỡng mộ và tình yêu sâu sắc. Cẩm chướng hồng đại ' +
+    'diện cho tình yêu vô bờ bến của mẹ — bó hoa Ngày của Mẹ đầu tiên dùng ' +
+    'cẩm chướng hồng cho mẹ còn sống và trắng cho mẹ đã khuất. Cẩm chướng ' +
+    'trắng truyền đạt tình yêu thuần khiết và may mắn. Cẩm chướng vàng thể ' +
+    'hiện sự thất vọng.',
   bloomSeason: 'Có quanh năm làm hoa cắt nhờ sản xuất nhà kính toàn cầu.',
   careLevel: 'Dễ',
   careTips: [
@@ -25,7 +37,12 @@ export const carnation: GlossaryTermVI = {
     { name: 'Moonaquette', description: 'Cánh hoa xếp nếp và gợn sóng sâu trong tông màu pastel — phổ biến trong đám cưới đương đại.' },
   ],
   bestFor: ['Ngày của Mẹ', 'Cắm bàn bền lâu', 'Corsage và cài áo', 'Sự kiện tiết kiệm ngân sách', 'Lắp đặt hoa'],
-  interestingFact: 'Hoa cẩm chướng là một trong những loài hoa được ghi chép nhiều nhất trong lịch sử nghệ thuật. Botticelli dùng chúng trong "Primavera"; Van Eyck đưa vào "Bức tranh Arnolfini". Chúng phổ biến đến mức các nhà nghiên cứu nghệ thuật dùng sự xuất hiện của chúng để xác định niên đại tác phẩm.',
+  interestingFact:
+    'Hoa cẩm chướng là một trong những loài hoa được ghi chép nhiều nhất ' +
+    'trong lịch sử nghệ thuật. Botticelli dùng chúng trong "Primavera"; Van ' +
+    'Eyck đưa vào "Bức tranh Arnolfini". Chúng phổ biến đến mức các nhà ' +
+    'nghiên cứu nghệ thuật dùng sự xuất hiện của chúng để xác định niên đại ' +
+    'tác phẩm.',
   colors: ['Đỏ', 'Hồng', 'Trắng', 'Vàng', 'Cam', 'Tím', 'Xanh lá', 'Vân'],
   lifespan: '2–4 tuần với sự chăm sóc đúng cách — trong số những hoa cắt sống lâu nhất',
 

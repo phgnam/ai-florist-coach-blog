@@ -6,9 +6,27 @@ export const stock: GlossaryTermVI = {
   name: 'Hoa Tử La Lan (Stock)',
   emoji: '💐',
   title: 'Hoa Tử La Lan (Stock / Matthiola) — Ý Nghĩa, Hương Thơm & Chăm Sóc Florist Cottage',
-  metaDescription: 'Hướng dẫn hoa tử la lan: hoa dại Địa Trung Hải, vì sao đây là một trong những hoa cắt thơm nhất, biểu tượng "vẻ đẹp lâu dài" và chăm sóc dạng cuống. Từ Vườn Hoa.',
-  summary: 'Hoa tử la lan (Matthiola incana) là cây lưỡng niên Địa Trung Hải với cuống cao dày của hoa thơm bốn cánh trong các màu pastel dịu. Là một trong những hoa cắt thơm mạnh nhất — hương ngọt, giống đinh hương, hơi cay — và là cây cottage cổ điển có lịch sử trồng từ Hy Lạp và La Mã cổ đại.',
-  meaning: 'Tử la lan tượng trưng cho vẻ đẹp lâu dài, sự hài lòng trong tình cảm và một cuộc sống hạnh phúc — thời gian nở dài và hương mạnh đều góp phần vào ý nghĩa. Trong florography Victoria, "stock" cụ thể biểu thị các mối ràng buộc tình cảm và là loài hoa "tình cảm" yêu thích cho bó hoa giữa các bạn nữ. Trong floristry Ý và Hy Lạp hiện đại, gắn với tình yêu gia đình dồi dào và đời sống nhà. Trong floristry cưới Anh, tử la lan là loài hoa biểu tượng "hương vườn quê"; trong floristry Việt Nam "hoa tử la lan" ngày càng được dùng trong đám cưới mùa đông nơi hương của nó tỏa khắp phòng mát đẹp tuyệt. Tử la lan trắng truyền tải tưởng niệm, hồng tình cảm lãng mạn, tím sự sang trọng và vàng năng lượng vui vẻ.',
+  metaDescription:
+    'Hướng dẫn hoa tử la lan: hoa dại Địa Trung Hải, vì sao đây là một trong ' +
+    'những hoa cắt thơm nhất, biểu tượng "vẻ đẹp lâu dài" và chăm sóc dạng ' +
+    'cuống. Từ Vườn Hoa.',
+  summary:
+    'Hoa tử la lan (Matthiola incana) là cây lưỡng niên Địa Trung Hải với ' +
+    'cuống cao dày của hoa thơm bốn cánh trong các màu pastel dịu. Là một ' +
+    'trong những hoa cắt thơm mạnh nhất — hương ngọt, giống đinh hương, hơi ' +
+    'cay — và là cây cottage cổ điển có lịch sử trồng từ Hy Lạp và La Mã cổ ' +
+    'đại.',
+  meaning:
+    'Tử la lan tượng trưng cho vẻ đẹp lâu dài, sự hài lòng trong tình cảm và ' +
+    'một cuộc sống hạnh phúc — thời gian nở dài và hương mạnh đều góp phần ' +
+    'vào ý nghĩa. Trong florography Victoria, "stock" cụ thể biểu thị các mối ' +
+    'ràng buộc tình cảm và là loài hoa "tình cảm" yêu thích cho bó hoa giữa ' +
+    'các bạn nữ. Trong floristry Ý và Hy Lạp hiện đại, gắn với tình yêu gia ' +
+    'đình dồi dào và đời sống nhà. Trong floristry cưới Anh, tử la lan là ' +
+    'loài hoa biểu tượng "hương vườn quê"; trong floristry Việt Nam "hoa tử ' +
+    'la lan" ngày càng được dùng trong đám cưới mùa đông nơi hương của nó tỏa ' +
+    'khắp phòng mát đẹp tuyệt. Tử la lan trắng truyền tải tưởng niệm, hồng ' +
+    'tình cảm lãng mạn, tím sự sang trọng và vàng năng lượng vui vẻ.',
   bloomSeason: 'Cuối đông đến xuân (tháng 2–5); quanh năm dưới sản xuất nhà kính thương mại.',
   careLevel: 'Trung bình',
   careTips: [
@@ -25,7 +43,15 @@ export const stock: GlossaryTermVI = {
     { name: 'Matthiola \'Katz\' series', description: 'Giống ba bông hiện đại với cuống cực dày; được ưa chuộng cho trung tâm bàn cưới nhỏ gọn.' },
   ],
   bestFor: ['Đám cưới cottage và vườn Anh', 'Cắm hoa thơm mùa đông và đầu xuân', 'Quà Ngày của Mẹ và tình cảm', 'Cắm hoa bệnh viện bền lâu (hương đọc là an ủi)', 'Sự kiện chủ đề Địa Trung Hải'],
-  interestingFact: 'Tử la lan là một trong những hoa cắt duy nhất nơi cường độ hương tương quan trực tiếp với số cánh hoa — các giống đơn cánh (4 cánh) thơm hơn rõ rệt so với giống kép (10–15 cánh), mặc dù dạng kép trông phong phú hơn về thị giác. Các nhà lai tạo thương mại từ những năm 1990 đã rõ ràng lai tạo cho dạng "đơn + thơm" cho ngành nước hoa trong khi giữ dạng "kép + đẹp" cho floristry thị giác. Có nghĩa tử la lan đẹp nhất và tử la lan thơm nhất thường là các giống khác nhau bán cho thị trường khác nhau — và một florist thực thụ sẽ kiểm tra cả hai trước khi mua.',
+  interestingFact:
+    'Tử la lan là một trong những hoa cắt duy nhất nơi cường độ hương tương ' +
+    'quan trực tiếp với số cánh hoa — các giống đơn cánh (4 cánh) thơm hơn rõ ' +
+    'rệt so với giống kép (10–15 cánh), mặc dù dạng kép trông phong phú hơn ' +
+    'về thị giác. Các nhà lai tạo thương mại từ những năm 1990 đã rõ ràng lai ' +
+    'tạo cho dạng "đơn + thơm" cho ngành nước hoa trong khi giữ dạng "kép + ' +
+    'đẹp" cho floristry thị giác. Có nghĩa tử la lan đẹp nhất và tử la lan ' +
+    'thơm nhất thường là các giống khác nhau bán cho thị trường khác nhau — ' +
+    'và một florist thực thụ sẽ kiểm tra cả hai trước khi mua.',
   colors: ['Trắng', 'Hồng', 'Tím', 'Hoa cà', 'Kem', 'Vàng nhạt', 'Hồng cánh sen'],
   lifespan: '7–10 ngày với thay nước hàng ngày và lá đã tỉa',
 

@@ -6,9 +6,21 @@ export const tulip: GlossaryTerm = {
   name: 'Tulip',
   emoji: '🌷',
   title: 'Tulip — Meaning by Color, Care Tips & Varieties',
-  metaDescription: 'Tulip guide for florists: color symbolism, why tulips keep growing in the vase, care tips, and the best varieties for arrangements. From Vườn Hoa.',
-  summary: 'Tulips are one of the most widely grown cut flowers globally, with over 3,000 cultivars registered. Native to Central Asia, they were the obsession of 17th-century "Tulip Mania" in Holland.',
-  meaning: 'Red tulips are a declaration of deep, enduring love. Yellow tulips represent cheerful thoughts and sunshine. White tulips convey forgiveness and respect. Purple tulips symbolise royalty and admiration. Variegated (multicolored) tulips traditionally expressed "beautiful eyes." A bouquet of mixed tulips is a versatile gift that communicates warmth without romantic overtones.',
+  metaDescription:
+    'Tulip guide for florists: color symbolism, why tulips keep growing in ' +
+    'the vase, care tips, and the best varieties for arrangements. From Vườn ' +
+    'Hoa.',
+  summary:
+    'Tulips are one of the most widely grown cut flowers globally, with over ' +
+    '3,000 cultivars registered. Native to Central Asia, they were the ' +
+    'obsession of 17th-century "Tulip Mania" in Holland.',
+  meaning:
+    'Red tulips are a declaration of deep, enduring love. Yellow tulips ' +
+    'represent cheerful thoughts and sunshine. White tulips convey ' +
+    'forgiveness and respect. Purple tulips symbolise royalty and admiration. ' +
+    'Variegated (multicolored) tulips traditionally expressed "beautiful ' +
+    'eyes." A bouquet of mixed tulips is a versatile gift that communicates ' +
+    'warmth without romantic overtones.',
   bloomSeason: 'Spring (March–May in Northern Hemisphere). Different varieties bloom early, mid, or late season — skilled florists use this to extend the season.',
   careLevel: 'Easy',
   careTips: [
@@ -25,7 +37,10 @@ export const tulip: GlossaryTerm = {
     { name: 'Double Late (Peony Tulip)', description: 'Multi-petalled blooms that closely resemble peonies; excellent for luxury bouquets.' },
   ],
   bestFor: ['Spring weddings', 'Easter', 'Get-well bouquets', 'Corporate flowers', 'International Women\'s Day'],
-  interestingFact: 'During "Tulipomania" in 1637 Holland, a single Semper Augustus tulip bulb sold for 10,000 guilders — the price of a comfortable Amsterdam house. It remains one of history\'s first financial bubbles.',
+  interestingFact:
+    'During "Tulipomania" in 1637 Holland, a single Semper Augustus tulip ' +
+    'bulb sold for 10,000 guilders — the price of a comfortable Amsterdam ' +
+    'house. It remains one of history\'s first financial bubbles.',
   colors: ['Red', 'Yellow', 'Pink', 'White', 'Purple', 'Orange', 'Black', 'Multicolor'],
   lifespan: '5–10 days; keep cool for longevity',
 

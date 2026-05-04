@@ -5,9 +5,21 @@ export const rose: GlossaryTerm = {
   name: 'Rose',
   emoji: '🌹',
   title: 'Rose — Meaning, Care Guide & Varieties',
-  metaDescription: 'Everything about roses: symbolism by color, how to keep cut roses fresh longer, popular varieties, and when they bloom. From florist experts at Vườn Hoa.',
-  summary: 'The rose is the world\'s most recognised flower, cultivated for over 5,000 years. With more than 300 species and tens of thousands of cultivars, it dominates the global cut-flower market.',
-  meaning: 'Red roses symbolise passionate love and desire. Pink roses convey admiration and gratitude. White roses stand for purity and new beginnings. Yellow roses signal friendship and joy. Orange roses express enthusiasm and fascination. The number of roses in a bouquet carries its own meaning: a single stem declares "you are the one", a dozen expresses heartfelt affection.',
+  metaDescription:
+    'Everything about roses: symbolism by color, how to keep cut roses fresh ' +
+    'longer, popular varieties, and when they bloom. From florist experts at ' +
+    'Vườn Hoa.',
+  summary:
+    'The rose is the world\'s most recognised flower, cultivated for over ' +
+    '5,000 years. With more than 300 species and tens of thousands of ' +
+    'cultivars, it dominates the global cut-flower market.',
+  meaning:
+    'Red roses symbolise passionate love and desire. Pink roses convey ' +
+    'admiration and gratitude. White roses stand for purity and new ' +
+    'beginnings. Yellow roses signal friendship and joy. Orange roses express ' +
+    'enthusiasm and fascination. The number of roses in a bouquet carries its ' +
+    'own meaning: a single stem declares "you are the one", a dozen expresses ' +
+    'heartfelt affection.',
   bloomSeason: 'Late spring through autumn (May–October in temperate climates). Some modern hybrid teas rebloom every 6–8 weeks.',
   careLevel: 'Moderate',
   careTips: [
@@ -24,7 +36,10 @@ export const rose: GlossaryTerm = {
     { name: 'Ranunculus-style Rose', description: 'Densely petalled globe shape; popular in editorial and luxury arrangements.' },
   ],
   bestFor: ['Valentine\'s Day', 'Weddings', 'Anniversaries', 'Romantic gestures', 'Funeral tributes'],
-  interestingFact: 'A single rose petal contains over 300 separate aromatic compounds. The most expensive rose ever sold — the "Juliet" by David Austin — cost £3 million to develop over 15 years.',
+  interestingFact:
+    'A single rose petal contains over 300 separate aromatic compounds. The ' +
+    'most expensive rose ever sold — the "Juliet" by David Austin — cost £3 ' +
+    'million to develop over 15 years.',
   colors: ['Red', 'Pink', 'White', 'Yellow', 'Orange', 'Lavender', 'Peach', 'Bicolor'],
   lifespan: '5–12 days in a vase with proper care',
 

@@ -6,9 +6,19 @@ export const lily: GlossaryTermVI = {
   name: 'Hoa Ly',
   emoji: '🌷',
   title: 'Hoa Ly — Ý Nghĩa, Các Giống & Hướng Dẫn Chăm Sóc',
-  metaDescription: 'Hướng dẫn đầy đủ về hoa ly: ý nghĩa theo màu sắc, cách loại bỏ phấn hoa, mẹo kéo dài tuổi thọ trong bình. Từ chuyên gia Vườn Hoa.',
-  summary: 'Hoa ly là loài hoa hình loa kèn thuộc chi Lilium, có nguồn gốc từ vùng ôn đới Bắc bán cầu. Bông hoa to và hương thơm nồng nàn khiến chúng là mặt hàng chủ lực trong nghề florist chuyên nghiệp.',
-  meaning: 'Hoa ly trắng tượng trưng cho sự thuần khiết, trong sáng và tái sinh — thường dùng trong đám tang và lễ Phục Sinh. Hoa ly hồng thể hiện sự thịnh vượng và dư dật. Hoa ly cam truyền tải sự tự tin và niềm tự hào. Hoa ly hổ biểu tượng cho sự giàu có và tích cực. Trong văn hóa Trung Hoa, hoa ly gắn với "100 năm tình yêu", phổ biến trong đám cưới.',
+  metaDescription:
+    'Hướng dẫn đầy đủ về hoa ly: ý nghĩa theo màu sắc, cách loại bỏ phấn hoa, ' +
+    'mẹo kéo dài tuổi thọ trong bình. Từ chuyên gia Vườn Hoa.',
+  summary:
+    'Hoa ly là loài hoa hình loa kèn thuộc chi Lilium, có nguồn gốc từ vùng ' +
+    'ôn đới Bắc bán cầu. Bông hoa to và hương thơm nồng nàn khiến chúng là ' +
+    'mặt hàng chủ lực trong nghề florist chuyên nghiệp.',
+  meaning:
+    'Hoa ly trắng tượng trưng cho sự thuần khiết, trong sáng và tái sinh — ' +
+    'thường dùng trong đám tang và lễ Phục Sinh. Hoa ly hồng thể hiện sự ' +
+    'thịnh vượng và dư dật. Hoa ly cam truyền tải sự tự tin và niềm tự hào. ' +
+    'Hoa ly hổ biểu tượng cho sự giàu có và tích cực. Trong văn hóa Trung ' +
+    'Hoa, hoa ly gắn với "100 năm tình yêu", phổ biến trong đám cưới.',
   bloomSeason: 'Đầu hè đến đầu thu (tháng 6–9). Hoa ly phương Đông nở muộn hơn hoa ly châu Á.',
   careLevel: 'Dễ',
   careTips: [
@@ -25,7 +35,10 @@ export const lily: GlossaryTermVI = {
     { name: 'Stargazer', description: 'Giống Phương Đông nổi tiếng nhất — hồng đậm với viền trắng và đốm đỏ thẫm.' },
   ],
   bestFor: ['Đám tang', 'Sắp xếp lễ Phục Sinh', 'Trung tâm bàn đám cưới', 'Trưng bày doanh nghiệp', 'Ngày của Mẹ'],
-  interestingFact: 'Hoa ly là một trong những loài hoa được trồng lâu đời nhất, được miêu tả trên tranh bích họa Minoan từ năm 1500 TCN. Hoa ly Madonna (Lilium candidum) được coi là thiêng liêng trong Hy Lạp cổ đại.',
+  interestingFact:
+    'Hoa ly là một trong những loài hoa được trồng lâu đời nhất, được miêu tả ' +
+    'trên tranh bích họa Minoan từ năm 1500 TCN. Hoa ly Madonna (Lilium ' +
+    'candidum) được coi là thiêng liêng trong Hy Lạp cổ đại.',
   colors: ['Trắng', 'Hồng', 'Đỏ', 'Cam', 'Vàng', 'Tím', 'Hai màu'],
   lifespan: '7–14 ngày trong bình; nụ hoa tiếp tục nở sau khi cắt',
 

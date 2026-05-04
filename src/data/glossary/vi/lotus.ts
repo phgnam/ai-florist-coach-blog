@@ -6,9 +6,25 @@ export const lotus: GlossaryTermVI = {
   name: 'Hoa Sen',
   emoji: '🪷',
   title: 'Hoa Sen — Ý Nghĩa, Biểu Tượng & Hướng Dẫn Chăm Sóc',
-  metaDescription: 'Hướng dẫn hoa sen: ý nghĩa thiêng liêng trong văn hóa Việt Nam, Phật giáo và Hindu giáo, lý do sen vươn lên trong sạch từ bùn lầy, cách bảo quản và mùa thu hoạch. Từ Vườn Hoa.',
-  summary: 'Hoa sen (Nelumbo nucifera) là quốc hoa không chính thức của Việt Nam và là một trong những loài hoa mang ý nghĩa tâm linh sâu sắc nhất châu Á. Sen vươn lên từ làn nước ao bùn trên cuống dài để nở những bông hoa hình chén lớn — một kỳ tích thực vật của những cánh hoa thanh khiết bừng nở từ bùn lầy.',
-  meaning: 'Trong văn hóa Việt Nam, hoa sen tượng trưng cho sự thuần khiết, kiên cường và phẩm chất cao quý không bị hoàn cảnh khó khăn làm vấy bẩn — được đúc kết trong câu ca dao "gần bùn mà chẳng hôi tanh mùi bùn". Trong Phật giáo, sen là tòa giác ngộ, và tám cánh tương ứng với Bát Chánh Đạo. Trong tín ngưỡng Hindu, sen gắn với nữ thần Lakshmi (thịnh vượng) và thần Brahma. Sen trắng biểu thị sự thuần khiết tâm linh, sen hồng (dạng linh thiêng nhất) là chính Đức Phật, sen xanh là trí tuệ, và sen đỏ là trái tim và lòng từ bi.',
+  metaDescription:
+    'Hướng dẫn hoa sen: ý nghĩa thiêng liêng trong văn hóa Việt Nam, Phật ' +
+    'giáo và Hindu giáo, lý do sen vươn lên trong sạch từ bùn lầy, cách bảo ' +
+    'quản và mùa thu hoạch. Từ Vườn Hoa.',
+  summary:
+    'Hoa sen (Nelumbo nucifera) là quốc hoa không chính thức của Việt Nam và ' +
+    'là một trong những loài hoa mang ý nghĩa tâm linh sâu sắc nhất châu Á. ' +
+    'Sen vươn lên từ làn nước ao bùn trên cuống dài để nở những bông hoa hình ' +
+    'chén lớn — một kỳ tích thực vật của những cánh hoa thanh khiết bừng nở ' +
+    'từ bùn lầy.',
+  meaning:
+    'Trong văn hóa Việt Nam, hoa sen tượng trưng cho sự thuần khiết, kiên ' +
+    'cường và phẩm chất cao quý không bị hoàn cảnh khó khăn làm vấy bẩn — ' +
+    'được đúc kết trong câu ca dao "gần bùn mà chẳng hôi tanh mùi bùn". Trong ' +
+    'Phật giáo, sen là tòa giác ngộ, và tám cánh tương ứng với Bát Chánh Đạo. ' +
+    'Trong tín ngưỡng Hindu, sen gắn với nữ thần Lakshmi (thịnh vượng) và ' +
+    'thần Brahma. Sen trắng biểu thị sự thuần khiết tâm linh, sen hồng (dạng ' +
+    'linh thiêng nhất) là chính Đức Phật, sen xanh là trí tuệ, và sen đỏ là ' +
+    'trái tim và lòng từ bi.',
   bloomSeason: 'Cuối xuân đến đầu thu (tháng 5–9). Mùa thu hoạch sen Việt Nam đỉnh cao là tháng 6–8 ở Đồng bằng sông Hồng và vùng Đồng Tháp Mười.',
   careLevel: 'Khó',
   careTips: [
@@ -25,7 +41,12 @@ export const lotus: GlossaryTermVI = {
     { name: 'Sen Mỹ (Nelumbo lutea)', description: 'Bản địa Bắc Mỹ màu vàng nhạt — bông nhỏ hơn một chút, chịu lạnh tốt hơn ở khí hậu mát.' },
   ],
   bestFor: ['Bàn thờ Phật và lễ cúng chùa', 'Sự kiện văn hóa Việt Nam (Vu Lan, Tết)', 'Cắm hoa trung tâm lễ cưới', 'Lắp đặt spa và thiền', 'Trà đạo và styling biên tập'],
-  interestingFact: 'Hạt sen thuộc loại bền bỉ nhất Trái Đất: một hạt sen 1.300 năm tuổi được tìm thấy ở đáy hồ khô ở Liêu Ninh, Trung Quốc, đã nảy mầm thành công năm 1995 — biến sen thành hạt giống còn sống lâu nhất từng được ghi nhận. Hoa sen còn tự điều chỉnh nhiệt độ, giữ ở 30–35°C ngay cả khi không khí xuống 10°C, để thu hút bọ cánh cứng máu lạnh thụ phấn.',
+  interestingFact:
+    'Hạt sen thuộc loại bền bỉ nhất Trái Đất: một hạt sen 1.300 năm tuổi được ' +
+    'tìm thấy ở đáy hồ khô ở Liêu Ninh, Trung Quốc, đã nảy mầm thành công năm ' +
+    '1995 — biến sen thành hạt giống còn sống lâu nhất từng được ghi nhận. ' +
+    'Hoa sen còn tự điều chỉnh nhiệt độ, giữ ở 30–35°C ngay cả khi không khí ' +
+    'xuống 10°C, để thu hút bọ cánh cứng máu lạnh thụ phấn.',
   colors: ['Hồng', 'Trắng', 'Kem', 'Vàng', 'Đỏ'],
   lifespan: '3–7 ngày cho hoa cắt; đài sen bền vĩnh viễn ở dạng hoa khô',
 

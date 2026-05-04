@@ -6,9 +6,20 @@ export const sunflower: GlossaryTermVI = {
   name: 'Hoa Hướng Dương',
   emoji: '🌻',
   title: 'Hoa Hướng Dương — Ý Nghĩa, Chăm Sóc & Các Giống',
-  metaDescription: 'Hướng dẫn florist về hoa hướng dương: ý nghĩa, cách giữ chúng thẳng đứng trong cắm hoa, các giống tốt nhất. Từ Vườn Hoa.',
-  summary: 'Hoa hướng dương có nguồn gốc từ châu Mỹ và được người bản địa trồng hơn 4.500 năm trước. Kích thước ấn tượng và màu sắc ấm áp khiến chúng là loài hoa tạo điểm nhấn trong bất kỳ sắp xếp nào.',
-  meaning: 'Hoa hướng dương toàn cầu tượng trưng cho hạnh phúc, sự lạc quan và lòng trung thành — bản năng quay theo mặt trời (hướng quang) tạo ra ý nghĩa về sự ngưỡng mộ và kiên định. Chúng gắn với tuổi thọ trong một số nền văn hóa Á Đông. Trong ngôn ngữ hoa, hoa hướng dương truyền thông điệp "mắt anh chỉ nhìn thấy em". Chúng là quốc hoa của Ukraine, tượng trưng cho hòa bình.',
+  metaDescription:
+    'Hướng dẫn florist về hoa hướng dương: ý nghĩa, cách giữ chúng thẳng đứng ' +
+    'trong cắm hoa, các giống tốt nhất. Từ Vườn Hoa.',
+  summary:
+    'Hoa hướng dương có nguồn gốc từ châu Mỹ và được người bản địa trồng hơn ' +
+    '4.500 năm trước. Kích thước ấn tượng và màu sắc ấm áp khiến chúng là ' +
+    'loài hoa tạo điểm nhấn trong bất kỳ sắp xếp nào.',
+  meaning:
+    'Hoa hướng dương toàn cầu tượng trưng cho hạnh phúc, sự lạc quan và lòng ' +
+    'trung thành — bản năng quay theo mặt trời (hướng quang) tạo ra ý nghĩa ' +
+    'về sự ngưỡng mộ và kiên định. Chúng gắn với tuổi thọ trong một số nền ' +
+    'văn hóa Á Đông. Trong ngôn ngữ hoa, hoa hướng dương truyền thông điệp ' +
+    '"mắt anh chỉ nhìn thấy em". Chúng là quốc hoa của Ukraine, tượng trưng ' +
+    'cho hòa bình.',
   bloomSeason: 'Hè đến đầu thu (tháng 7–9). Sản xuất nhà kính thương mại đảm bảo có quanh năm.',
   careLevel: 'Dễ',
   careTips: [
@@ -25,7 +36,11 @@ export const sunflower: GlossaryTermVI = {
     { name: 'Moulin Rouge', description: 'Cánh hoa đỏ đậm với tâm tối — lựa thay thế kịch tính cho màu vàng.' },
   ],
   bestFor: ['Bó hoa vui vẻ', 'Đám cưới phong cách rustic', 'Trang trí thu hoạch/mùa thu', 'Sắp xếp chúc mừng'],
-  interestingFact: 'Nụ hoa hướng dương non thực sự quay theo mặt trời từ đông sang tây mỗi ngày (hướng quang). Tuy nhiên, khi trưởng thành, chúng dừng chuyển động và vĩnh viễn hướng về phía đông — khiến chúng ấm hơn vào buổi sáng và thu hút nhiều côn trùng thụ phấn hơn.',
+  interestingFact:
+    'Nụ hoa hướng dương non thực sự quay theo mặt trời từ đông sang tây mỗi ' +
+    'ngày (hướng quang). Tuy nhiên, khi trưởng thành, chúng dừng chuyển động ' +
+    'và vĩnh viễn hướng về phía đông — khiến chúng ấm hơn vào buổi sáng và ' +
+    'thu hút nhiều côn trùng thụ phấn hơn.',
   colors: ['Vàng', 'Cam', 'Đỏ Bordeaux', 'Đỏ', 'Kem', 'Hai màu'],
   lifespan: '6–12 ngày khi thay nước hàng ngày',
 

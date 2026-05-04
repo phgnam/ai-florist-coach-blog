@@ -6,9 +6,22 @@ export const marigold: GlossaryTerm = {
   name: 'Marigold',
   emoji: '🌼',
   title: 'Marigold — Meaning, Uses & Why Florists Love Them',
-  metaDescription: 'Marigold guide: Día de Muertos symbolism, sacred uses across cultures, how to use marigolds in modern floristry, and care tips. From Vườn Hoa.',
-  summary: 'Marigolds (Tagetes) are native to the Americas but have been adopted as sacred flowers across Asia and used in everything from garlands to garlands to garden pesticides. They are among the most culturally significant flowers in the world.',
-  meaning: 'Marigolds carry profound cultural meanings. In Mexican culture, they are the flower of the dead (cempasúchil) — their intense orange and yellow blooms guide spirits home during Día de Muertos. In Hindu tradition, marigold garlands (genda phool) are essential at every festival, wedding, and puja — orange represents auspiciousness and devotion. In Victorian floristry, marigolds represented grief and jealousy. Today in modern floristry they communicate warmth, creativity, and vibrancy.',
+  metaDescription:
+    'Marigold guide: Día de Muertos symbolism, sacred uses across cultures, ' +
+    'how to use marigolds in modern floristry, and care tips. From Vườn Hoa.',
+  summary:
+    'Marigolds (Tagetes) are native to the Americas but have been adopted as ' +
+    'sacred flowers across Asia and used in everything from garlands to ' +
+    'garlands to garden pesticides. They are among the most culturally ' +
+    'significant flowers in the world.',
+  meaning:
+    'Marigolds carry profound cultural meanings. In Mexican culture, they are ' +
+    'the flower of the dead (cempasúchil) — their intense orange and yellow ' +
+    'blooms guide spirits home during Día de Muertos. In Hindu tradition, ' +
+    'marigold garlands (genda phool) are essential at every festival, ' +
+    'wedding, and puja — orange represents auspiciousness and devotion. In ' +
+    'Victorian floristry, marigolds represented grief and jealousy. Today in ' +
+    'modern floristry they communicate warmth, creativity, and vibrancy.',
   bloomSeason: 'Summer through frost (June–October). Marigolds bloom prolifically and continuously throughout summer.',
   careLevel: 'Easy',
   careTips: [
@@ -25,7 +38,11 @@ export const marigold: GlossaryTerm = {
     { name: 'Crackerjack Mix', description: 'Tall African type in a mix of orange, yellow, and gold — perfect for seasonal massed work.' },
   ],
   bestFor: ['Día de Muertos installations', 'Indian wedding garlands', 'Autumn and harvest arrangements', 'Budget massed colour work', 'Edible flower arrangements'],
-  interestingFact: 'The Indian marigold export industry is worth over $100 million annually. During major festivals like Diwali, the demand for marigold garlands is so enormous that the price of a kilogram of marigold flowers in Indian markets can triple in a single week.',
+  interestingFact:
+    'The Indian marigold export industry is worth over $100 million annually. ' +
+    'During major festivals like Diwali, the demand for marigold garlands is ' +
+    'so enormous that the price of a kilogram of marigold flowers in Indian ' +
+    'markets can triple in a single week.',
   colors: ['Orange', 'Yellow', 'Gold', 'Cream', 'Bicolor (orange/red)'],
   lifespan: '7–14 days — among the most resilient cut flowers',
 

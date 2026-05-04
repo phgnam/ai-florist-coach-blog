@@ -6,9 +6,30 @@ export const hibiscus: GlossaryTerm = {
   name: 'Hibiscus',
   emoji: '🌺',
   title: 'Hibiscus — Tropical Symbolism, Hawaiian Lei & Care Guide',
-  metaDescription: 'Hibiscus guide: Malaysia\'s national flower, Hawaii state flower, Vietnamese dâm bụt as a hedge plant, Hindu Kali association, and care for one-day blooms. From Vườn Hoa.',
-  summary: 'Hibiscus is a genus of over 200 species, with the large-flowered tropical Hibiscus rosa-sinensis as the florist standard. Five wide silky petals surround a long staminal column, in colours from pure white to deep crimson. It is the national flower of Malaysia and South Korea, the state flower of Hawaii, and in Vietnam (where it is called dâm bụt) it has been the rural-village hedge flower for centuries.',
-  meaning: 'Hibiscus carries strong but very different meanings across cultures. In Hawaii, a hibiscus worn behind the right ear means the wearer is single, behind the left ear taken — and the flower is welcoming, romantic, and tropical. In Hinduism, the red hibiscus is sacred to the goddess Kali and to Ganesha — offered at temples in immense quantities. In Korea, the mugunghwa hibiscus is the national flower and symbolises eternity and resilience (it appears in the Korean national anthem). In Malaysian culture (bunga raya), the five petals represent the five principles of the national philosophy, Rukun Negara. In Vietnam, dâm bụt is a humble village flower — children eat the sweet base of the petals, and traditional Vietnamese Buddhist medicine uses the leaves and flowers in cooling teas.',
+  metaDescription:
+    'Hibiscus guide: Malaysia\'s national flower, Hawaii state flower, ' +
+    'Vietnamese dâm bụt as a hedge plant, Hindu Kali association, and care ' +
+    'for one-day blooms. From Vườn Hoa.',
+  summary:
+    'Hibiscus is a genus of over 200 species, with the large-flowered ' +
+    'tropical Hibiscus rosa-sinensis as the florist standard. Five wide silky ' +
+    'petals surround a long staminal column, in colours from pure white to ' +
+    'deep crimson. It is the national flower of Malaysia and South Korea, the ' +
+    'state flower of Hawaii, and in Vietnam (where it is called dâm bụt) it ' +
+    'has been the rural-village hedge flower for centuries.',
+  meaning:
+    'Hibiscus carries strong but very different meanings across cultures. In ' +
+    'Hawaii, a hibiscus worn behind the right ear means the wearer is single, ' +
+    'behind the left ear taken — and the flower is welcoming, romantic, and ' +
+    'tropical. In Hinduism, the red hibiscus is sacred to the goddess Kali ' +
+    'and to Ganesha — offered at temples in immense quantities. In Korea, the ' +
+    'mugunghwa hibiscus is the national flower and symbolises eternity and ' +
+    'resilience (it appears in the Korean national anthem). In Malaysian ' +
+    'culture (bunga raya), the five petals represent the five principles of ' +
+    'the national philosophy, Rukun Negara. In Vietnam, dâm bụt is a humble ' +
+    'village flower — children eat the sweet base of the petals, and ' +
+    'traditional Vietnamese Buddhist medicine uses the leaves and flowers in ' +
+    'cooling teas.',
   bloomSeason: 'Year-round in tropical climates; peak summer in subtropical regions (May–October).',
   careLevel: 'Advanced',
   careTips: [
@@ -25,7 +46,15 @@ export const hibiscus: GlossaryTerm = {
     { name: 'Hibiscus moscheutos (Hardy/Swamp Hibiscus)', description: 'North American native with massive 30 cm dinner-plate flowers; popular in modern garden floristry but extremely brief-lived as cut flowers.' },
   ],
   bestFor: ['Hawaiian leis and tropical resort styling', 'Hindu temple offerings (Kali, Ganesha)', 'Floating water-bowl centerpieces', 'Bridal hair flowers (one-day only)', 'Vietnamese village and natural-aesthetic installations'],
-  interestingFact: 'A hibiscus flower contains roughly 20% of its weight in water and survives only because of constant rehydration through the stem. Once cut, it relies on its existing internal water and lasts about 8 hours from picking. This means every hibiscus you have ever seen in a hotel cocktail garnish, a Hindu temple offering, or a Hawaiian lei was picked that same morning — there is genuinely no way to extend its life without freeze-drying, and it is one of the few flowers that has resisted every commercial vase-life-extension chemical ever tested.',
+  interestingFact:
+    'A hibiscus flower contains roughly 20% of its weight in water and ' +
+    'survives only because of constant rehydration through the stem. Once ' +
+    'cut, it relies on its existing internal water and lasts about 8 hours ' +
+    'from picking. This means every hibiscus you have ever seen in a hotel ' +
+    'cocktail garnish, a Hindu temple offering, or a Hawaiian lei was picked ' +
+    'that same morning — there is genuinely no way to extend its life without ' +
+    'freeze-drying, and it is one of the few flowers that has resisted every ' +
+    'commercial vase-life-extension chemical ever tested.',
   colors: ['Red', 'Pink', 'Yellow', 'Orange', 'White', 'Peach', 'Bicolor'],
   lifespan: '8–12 hours for fresh blooms; buds may be timed for next-day display',
 

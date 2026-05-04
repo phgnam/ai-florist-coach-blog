@@ -6,9 +6,21 @@ export const sunflower: GlossaryTerm = {
   name: 'Sunflower',
   emoji: '🌻',
   title: 'Sunflower — Meaning, Care & Varieties for Florists',
-  metaDescription: 'Florist guide to sunflowers: symbolism, how to keep them upright in arrangements, best varieties, and seasonal availability. Expert tips from Vườn Hoa.',
-  summary: 'Sunflowers are native to the Americas and were cultivated by Indigenous peoples over 4,500 years ago. Their commanding size and warm colour make them a statement flower in any arrangement.',
-  meaning: 'Sunflowers universally symbolise happiness, optimism, and loyalty — their nature of tracking the sun (heliotropism) gave rise to meanings of adoration and steadfastness. They are associated with long life in some Asian cultures. In the language of flowers, a sunflower communicates "my eyes are only for you." They are the national flower of Ukraine, symbolising peace and solidarity.',
+  metaDescription:
+    'Florist guide to sunflowers: symbolism, how to keep them upright in ' +
+    'arrangements, best varieties, and seasonal availability. Expert tips ' +
+    'from Vườn Hoa.',
+  summary:
+    'Sunflowers are native to the Americas and were cultivated by Indigenous ' +
+    'peoples over 4,500 years ago. Their commanding size and warm colour make ' +
+    'them a statement flower in any arrangement.',
+  meaning:
+    'Sunflowers universally symbolise happiness, optimism, and loyalty — ' +
+    'their nature of tracking the sun (heliotropism) gave rise to meanings of ' +
+    'adoration and steadfastness. They are associated with long life in some ' +
+    'Asian cultures. In the language of flowers, a sunflower communicates "my ' +
+    'eyes are only for you." They are the national flower of Ukraine, ' +
+    'symbolising peace and solidarity.',
   bloomSeason: 'Summer to early autumn (July–September). Commercial greenhouse production means year-round availability.',
   careLevel: 'Easy',
   careTips: [
@@ -25,7 +37,11 @@ export const sunflower: GlossaryTerm = {
     { name: 'Moulin Rouge', description: 'Deep burgundy-red petals with a dark centre — the dramatic alternative to yellow.' },
   ],
   bestFor: ['Cheerful gift bouquets', 'Rustic weddings', 'Sunflower wedding season', 'Get-well arrangements', 'Harvest/autumn decor'],
-  interestingFact: 'Young sunflower buds genuinely track the sun from east to west daily (heliotropism). Once mature, however, they stop moving and permanently face east — which warms them up faster in the morning and attracts more pollinators.',
+  interestingFact:
+    'Young sunflower buds genuinely track the sun from east to west daily ' +
+    '(heliotropism). Once mature, however, they stop moving and permanently ' +
+    'face east — which warms them up faster in the morning and attracts more ' +
+    'pollinators.',
   colors: ['Yellow', 'Orange', 'Burgundy', 'Red', 'Cream', 'Bicolor'],
   lifespan: '6–12 days with daily water changes',
 

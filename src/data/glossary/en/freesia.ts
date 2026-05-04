@@ -6,9 +6,21 @@ export const freesia: GlossaryTerm = {
   name: 'Freesia',
   emoji: '🌸',
   title: 'Freesia — Fragrance, Meaning & Florist Care Guide',
-  metaDescription: 'Complete freesia guide: why freesias are the fragrance choice for weddings, how to open buds, single vs double varieties, and vase life tips. From Vườn Hoa.',
-  summary: 'Freesias are native to the Cape Floristic Region of South Africa and are prized above almost all other cut flowers for their exceptional fragrance. A single stem can scent an entire room.',
-  meaning: 'Freesias represent innocence, thoughtfulness, and trust. They are one of the most requested flowers for friendship bouquets because they communicate genuine affection without romantic overtones. White freesias symbolise innocence and purity. Yellow freesias represent joyfulness. Pink and red freesias express passion. In the language of flowers, receiving freesias is considered a message of trust from the giver.',
+  metaDescription:
+    'Complete freesia guide: why freesias are the fragrance choice for ' +
+    'weddings, how to open buds, single vs double varieties, and vase life ' +
+    'tips. From Vườn Hoa.',
+  summary:
+    'Freesias are native to the Cape Floristic Region of South Africa and are ' +
+    'prized above almost all other cut flowers for their exceptional ' +
+    'fragrance. A single stem can scent an entire room.',
+  meaning:
+    'Freesias represent innocence, thoughtfulness, and trust. They are one of ' +
+    'the most requested flowers for friendship bouquets because they ' +
+    'communicate genuine affection without romantic overtones. White freesias ' +
+    'symbolise innocence and purity. Yellow freesias represent joyfulness. ' +
+    'Pink and red freesias express passion. In the language of flowers, ' +
+    'receiving freesias is considered a message of trust from the giver.',
   bloomSeason: 'Winter and spring (January–May). Southern Hemisphere production extends availability year-round.',
   careLevel: 'Easy',
   careTips: [
@@ -25,7 +37,11 @@ export const freesia: GlossaryTerm = {
     { name: 'Honeymoon', description: 'Pure white double-flowered variety — one of the most requested for bridal work.' },
   ],
   bestFor: ['Bridal bouquets', 'Friendship gifts', 'Fragrant table arrangements', 'Spring celebrations', 'Corsages'],
-  interestingFact: 'Freesia fragrance is one of the most complex in the botanical world, containing over 200 individual aromatic compounds. It is the most replicated floral fragrance in the perfume industry and is found in more commercial fragrances than any other flower except rose and jasmine.',
+  interestingFact:
+    'Freesia fragrance is one of the most complex in the botanical world, ' +
+    'containing over 200 individual aromatic compounds. It is the most ' +
+    'replicated floral fragrance in the perfume industry and is found in more ' +
+    'commercial fragrances than any other flower except rose and jasmine.',
   colors: ['White', 'Yellow', 'Pink', 'Red', 'Purple', 'Orange', 'Bicolor'],
   lifespan: '7–14 days as buds open progressively',
 
