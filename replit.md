@@ -1,6 +1,6 @@
 # Vườn Hoa — AI Florist Coach Blog
 
-Static blog about flowers built with Astro 6, MDX, TailwindCSS v3, and Pagefind for client-side search.
+Static blog about flowers built with Astro 6, MDX, TailwindCSS v4, and Pagefind for static-site search.
 
 ## Stack
 
@@ -9,14 +9,14 @@ Static blog about flowers built with Astro 6, MDX, TailwindCSS v3, and Pagefind 
 - **TailwindCSS v3** via PostCSS + `@tailwindcss/typography`
 - **`@astrojs/sitemap`** — `/sitemap-index.xml`
 - **`@astrojs/rss`** — `/rss.xml`
-- **Pagefind** — static, client-side search index built from `dist/`
+- **Pagefind** — static-site search index built from `.vercel/output/static/`
 - **Giscus** — opt-in GitHub Discussions–based comments
 
 ## Running the Project
 
 ```bash
 npm run dev        # Dev server on port 5000 (0.0.0.0)
-npm run build      # astro build && pagefind --site dist
+npm run build      # astro build && pagefind --site .vercel/output/static
 npm run build:astro    # Astro build only
 npm run build:search   # Re-run Pagefind index against existing dist/
 npm run preview    # Serve dist/ locally

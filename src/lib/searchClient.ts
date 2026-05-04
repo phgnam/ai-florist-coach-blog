@@ -1,50 +1,16 @@
-import type { FuseResult, IFuseOptions } from 'fuse.js';
-import type { SearchDoc, SearchKind } from './searchIndex';
+/**
+ * Lightweight client-side helpers shared by the header search modal and the
+ * dedicated `/search` pages. The actual search engine is Pagefind, loaded
+ * lazily from `/pagefind/pagefind.js` once the user opens search.
+ */
 
 const RECENT_KEY = 'vh:recent-searches';
 const RECENT_MAX = 5;
 
-/** Strip diacritics so "hoa hong" matches "hoa hồng". */
-export function normalizeDiacritics(s: string): string {
-  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-}
+/** Order kinds appear in grouped results. */
+export const GROUP_ORDER = ['article', 'glossary', 'tool', 'guide'] as const;
+export type SearchKind = (typeof GROUP_ORDER)[number];
 
-export interface IndexedDoc extends SearchDoc {
-  _norm: {
-    title: string;
-    description: string;
-    body: string;
-    tags: string[];
-  };
-}
-
-export function indexDocs(docs: SearchDoc[]): IndexedDoc[] {
-  return docs.map((d) => ({
-    ...d,
-    _norm: {
-      title: normalizeDiacritics(d.title),
-      description: normalizeDiacritics(d.description),
-      body: normalizeDiacritics(d.body),
-      tags: d.tags.map((t) => normalizeDiacritics(t)),
-    },
-  }));
-}
-
-export const fuseOptions: IFuseOptions<IndexedDoc> = {
-  keys: [
-    { name: '_norm.title', weight: 2.2 },
-    { name: '_norm.description', weight: 1.0 },
-    { name: '_norm.tags', weight: 0.8 },
-    { name: '_norm.body', weight: 0.4 },
-  ],
-  threshold: 0.34,
-  ignoreLocation: true,
-  includeScore: true,
-  includeMatches: true,
-  minMatchCharLength: 2,
-};
-
-/** Escape HTML entities so user content can't break out of a snippet. */
 export function escapeHtml(s: string): string {
   return s
     .replace(/&/g, '&amp;')
@@ -52,74 +18,6 @@ export function escapeHtml(s: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
-}
-
-/**
- * Find the first occurrence of any query token inside the body, slice ±90
- * chars around it, and wrap matches in `<mark>` for highlighting.
- *
- * Returns null if neither the query nor any token is found.
- */
-export function buildSnippet(
-  body: string,
-  query: string,
-  radius = 90
-): string | null {
-  if (!body || !query.trim()) return null;
-  const normBody = normalizeDiacritics(body);
-  const tokens = normalizeDiacritics(query).split(/\s+/).filter(Boolean);
-  if (tokens.length === 0) return null;
-
-  let bestIdx = -1;
-  let bestToken = '';
-  for (const token of tokens) {
-    const idx = normBody.indexOf(token);
-    if (idx !== -1 && (bestIdx === -1 || idx < bestIdx)) {
-      bestIdx = idx;
-      bestToken = token;
-    }
-  }
-  if (bestIdx === -1) return null;
-
-  const start = Math.max(0, bestIdx - radius);
-  const end = Math.min(body.length, bestIdx + bestToken.length + radius);
-  let snippet = body.slice(start, end);
-  if (start > 0) snippet = '…' + snippet;
-  if (end < body.length) snippet = snippet + '…';
-
-  const escaped = escapeHtml(snippet);
-  let highlighted = escaped;
-  for (const token of tokens) {
-    if (!token) continue;
-    const re = new RegExp(buildAccentInsensitiveRegexSrc(token), 'gi');
-    highlighted = highlighted.replace(re, (m) => `<mark>${m}</mark>`);
-  }
-  return highlighted;
-}
-
-/**
- * Build a regex source that matches a normalized (diacritic-stripped) query
- * token against text that may still contain diacritics. We do this by
- * replacing each ASCII letter in the token with a class containing the letter
- * and any common Vietnamese-accented variants.
- */
-function buildAccentInsensitiveRegexSrc(normToken: string): string {
-  const variants: Record<string, string> = {
-    a: 'aàáảãạăằắẳẵặâầấẩẫậ',
-    e: 'eèéẻẽẹêềếểễệ',
-    i: 'iìíỉĩị',
-    o: 'oòóỏõọôồốổỗộơờớởỡợ',
-    u: 'uùúủũụưừứửữự',
-    y: 'yỳýỷỹỵ',
-    d: 'dđ',
-  };
-  return [...normToken]
-    .map((ch) => {
-      if (variants[ch]) return `[${variants[ch]}${variants[ch].toUpperCase()}]`;
-      if (/[a-z0-9]/i.test(ch)) return ch;
-      return ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    })
-    .join('');
 }
 
 export function loadRecentSearches(): string[] {
@@ -150,28 +48,6 @@ export function saveRecentSearch(query: string): void {
   }
 }
 
-export const GROUP_ORDER: SearchKind[] = ['article', 'glossary', 'tool', 'guide'];
-
-export interface GroupedHits {
-  kind: SearchKind;
-  hits: FuseResult<IndexedDoc>[];
-}
-
-export function groupHits(
-  hits: FuseResult<IndexedDoc>[]
-): GroupedHits[] {
-  const buckets = new Map<SearchKind, FuseResult<IndexedDoc>[]>();
-  for (const h of hits) {
-    const k = h.item.kind;
-    if (!buckets.has(k)) buckets.set(k, []);
-    buckets.get(k)!.push(h);
-  }
-  return GROUP_ORDER.flatMap((k) => {
-    const arr = buckets.get(k);
-    return arr && arr.length ? [{ kind: k, hits: arr }] : [];
-  });
-}
-
 let analyticsTimer: ReturnType<typeof setTimeout> | null = null;
 /**
  * Debounced search-analytics hook. Records the *final* query a user paused on
@@ -197,4 +73,83 @@ export function trackSearchDebounced(
       });
     }
   }, 700);
+}
+
+/** Result shape returned by `pagefind.search().results[i].data()`. */
+export interface PagefindResultData {
+  url: string;
+  raw_url?: string;
+  excerpt: string;
+  meta: Record<string, string>;
+  filters: Record<string, string[]>;
+  word_count: number;
+  sub_results?: Array<{ title: string; url: string; excerpt: string }>;
+  anchors?: Array<{ element: string; id: string; text: string; location: number }>;
+  content: string;
+}
+
+/** Minimal subset of the Pagefind module surface we use. */
+export interface PagefindModule {
+  options(opts: Record<string, unknown>): Promise<void>;
+  init(): Promise<void>;
+  /** Pass `null` as the query to list every document matching `filters`. */
+  search(
+    query: string | null,
+    options?: { filters?: Record<string, string | string[]> }
+  ): Promise<{
+    results: Array<{ id: string; data(): Promise<PagefindResultData> }>;
+    filters: Record<string, Record<string, number>>;
+    totalFilters: Record<string, Record<string, number>>;
+  }>;
+  filters(): Promise<Record<string, Record<string, number>>>;
+}
+
+let pagefindPromise: Promise<PagefindModule | null> | null = null;
+
+/**
+ * Lazy-load the Pagefind runtime. Returns null if it can't be loaded
+ * (e.g. running `astro dev` where the index hasn't been built yet).
+ *
+ * The path is built at runtime so the bundler doesn't try to resolve
+ * `/pagefind/pagefind.js` (which only exists in the deployed site).
+ */
+export function loadPagefind(): Promise<PagefindModule | null> {
+  if (pagefindPromise) return pagefindPromise;
+  pagefindPromise = (async () => {
+    try {
+      const url = `${window.location.origin}/pagefind/pagefind.js`;
+      const mod = (await import(/* @vite-ignore */ url)) as unknown as PagefindModule;
+      await mod.options({ excerptLength: 28 });
+      return mod;
+    } catch {
+      return null;
+    }
+  })();
+  return pagefindPromise;
+}
+
+/** Pull the kind out of a result's meta, defaulting to article. */
+export function resultKind(data: PagefindResultData): SearchKind {
+  const k = data.meta.kind as SearchKind | undefined;
+  if (k && (GROUP_ORDER as readonly string[]).includes(k)) return k;
+  return 'article';
+}
+
+/** Sorted bucket of (kind -> hits) using {@link GROUP_ORDER}. */
+export interface GroupedPagefindResults {
+  kind: SearchKind;
+  hits: PagefindResultData[];
+}
+
+export function groupResultsByKind(hits: PagefindResultData[]): GroupedPagefindResults[] {
+  const buckets = new Map<SearchKind, PagefindResultData[]>();
+  for (const h of hits) {
+    const k = resultKind(h);
+    if (!buckets.has(k)) buckets.set(k, []);
+    buckets.get(k)!.push(h);
+  }
+  return GROUP_ORDER.flatMap((k) => {
+    const arr = buckets.get(k);
+    return arr && arr.length ? [{ kind: k, hits: arr }] : [];
+  });
 }

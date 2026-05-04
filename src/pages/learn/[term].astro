@@ -80,6 +80,13 @@ const faqSchema = {
 };
 
 const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6);
+
+const tagValues = term.colors.map((c) => c.toLowerCase());
+const pagefindFilter = ['kind:glossary', ...tagValues.map((t) => `tag:${t}`)].join(', ');
+const pagefindMeta = [
+  'kind:glossary',
+  term.summary ? `description:${term.summary.replace(/[,\n]/g, ' ')}` : null,
+].filter(Boolean).join(', ');
 ---
 <BaseLayout
   lang={lang}
@@ -92,7 +99,7 @@ const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
 
   <!-- Breadcrumb nav -->
-  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
     <div class="max-w-4xl mx-auto px-6 py-4">
       <ol class="breadcrumb-list">
         <li><a href="/">Home</a></li>
@@ -104,6 +111,7 @@ const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6
     </div>
   </nav>
 
+  <article data-pagefind-body data-pagefind-meta={pagefindMeta} data-pagefind-filter={pagefindFilter}>
   <!-- Hero -->
   <div class="term-hero">
     <div class="max-w-4xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
@@ -229,7 +237,7 @@ const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6
       <div class="section-divider"></div>
 
       <!-- Related terms -->
-      <section class="content-section">
+      <section class="content-section" data-pagefind-ignore>
         <h2 class="section-heading">
           <span class="heading-icon">🌺</span>
           Explore More Flowers
@@ -245,13 +253,14 @@ const relatedTerms = GLOSSARY_TERMS.filter(t => t.slug !== term.slug).slice(0, 6
         </div>
       </section>
 
-      <div class="back-link-wrap">
+      <div class="back-link-wrap" data-pagefind-ignore>
         <a href="/learn/" class="back-link">← Back to Flower Glossary</a>
         <a href="/posts" class="posts-link">Read Floristry Articles →</a>
       </div>
 
     </div>
   </div>
+  </article>
 </BaseLayout>
 
 <style>

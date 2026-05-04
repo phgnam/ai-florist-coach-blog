@@ -51,6 +51,14 @@ const breadcrumbs = [
   { name: 'Bài viết', url: `${siteUrl}/vi/posts` },
   { name: title, url: `${siteUrl}/vi/posts/${post.id}` },
 ];
+
+const pagefindFilter = ['kind:article', ...tags.map((t: string) => `tag:${t}`)].join(', ');
+const pagefindMeta = [
+  'kind:article',
+  description ? `description:${description.replace(/[,\n]/g, ' ')}` : null,
+  ogImage ? `image:${ogImage}` : null,
+  heroAlt ? `image_alt:${heroAlt.replace(/[,\n]/g, ' ')}` : null,
+].filter(Boolean).join(', ');
 ---
 <BaseLayout
   lang={lang}
@@ -101,19 +109,20 @@ const breadcrumbs = [
 
   <div id="reading-progress"></div>
 
+  <article data-pagefind-body data-pagefind-meta={pagefindMeta} data-pagefind-filter={pagefindFilter}>
   <div class="post-hero">
     {heroImage ? (
       <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="post-hero-img" />
     ) : (
       <div class="post-hero-placeholder"></div>
     )}
-    <div class="post-hero-overlay"></div>
+    <div class="post-hero-overlay" data-pagefind-ignore></div>
     <div class="post-hero-content max-w-4xl mx-auto px-6">
       <div class="fade-up fade-up-1">
         {tags.length > 0 && <span class="post-category">{tags[0]}</span>}
       </div>
       <h1 class="post-hero-title fade-up fade-up-2">{title}</h1>
-      <div class="post-hero-meta fade-up fade-up-3">
+      <div class="post-hero-meta fade-up fade-up-3" data-pagefind-ignore>
         <span class="post-author">✍ {author}</span>
         <span class="post-dot">·</span>
         <FormattedDate date={pubDate} lang={lang} />
@@ -129,7 +138,7 @@ const breadcrumbs = [
     </div>
   </div>
 
-  <aside id="toc-sidebar" aria-label="Mục lục">
+  <aside id="toc-sidebar" aria-label="Mục lục" data-pagefind-ignore>
     <p class="toc-title">Mục lục</p>
     <nav id="toc-nav"></nav>
   </aside>
@@ -137,15 +146,15 @@ const breadcrumbs = [
   <div class="post-content-wrap">
     <div class="post-content max-w-4xl mx-auto px-6 py-14">
       {tags.length > 0 && (
-        <div class="mb-10 fade-up fade-up-1">
+        <div class="mb-10 fade-up fade-up-1" data-pagefind-ignore>
           <TagList tags={tags} />
         </div>
       )}
       <div class="prose prose-lg fade-up fade-up-2">
         <Content />
       </div>
-      <div class="post-divider my-16 fade-up fade-up-3"></div>
-      <div class="share-box fade-up fade-up-4">
+      <div class="post-divider my-16 fade-up fade-up-3" data-pagefind-ignore></div>
+      <div class="share-box fade-up fade-up-4" data-pagefind-ignore>
         <p class="share-text">{t('post.share')}</p>
         <div class="share-tags">
           {tags.map((tag: string) => <span class="share-tag">#{tag}</span>)}
@@ -157,22 +166,25 @@ const breadcrumbs = [
         </div>
       </div>
 
-      <AuthorBox author={author} lang={lang} />
+      <div data-pagefind-ignore>
+        <AuthorBox author={author} lang={lang} />
 
-      <RelatedPosts
-        currentId={post.id}
-        currentTags={tags}
-        allPosts={allPosts}
-        lang={lang}
-        postBasePath="/vi/posts"
-      />
+        <RelatedPosts
+          currentId={post.id}
+          currentTags={tags}
+          allPosts={allPosts}
+          lang={lang}
+          postBasePath="/vi/posts"
+        />
 
-      <section class="mt-16">
-        <h2 class="comments-title">{t('post.comments')}</h2>
-        <Giscus />
-      </section>
+        <section class="mt-16">
+          <h2 class="comments-title">{t('post.comments')}</h2>
+          <Giscus />
+        </section>
+      </div>
     </div>
   </div>
+  </article>
 </BaseLayout>
 
 <style>

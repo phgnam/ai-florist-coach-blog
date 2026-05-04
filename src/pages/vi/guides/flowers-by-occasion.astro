@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 
+export const prerender = true;
+
 const lang = 'vi' as const;
 const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
 
@@ -188,7 +190,7 @@ const articleSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} slot="head" />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
 
-  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
     <div class="max-w-6xl mx-auto px-6 py-4">
       <ol class="breadcrumb-list">
         <li><a href="/vi/">Trang chủ</a></li><li aria-hidden="true">›</li>
@@ -196,6 +198,8 @@ const articleSchema = {
       </ol>
     </div>
   </nav>
+
+  <article data-pagefind-body data-pagefind-meta="kind:guide, description:Hướng dẫn chọn hoa cho đám cưới sinh nhật kỷ niệm lễ tốt nghiệp tang lễ và các dịp khác." data-pagefind-filter="kind:guide, tag:hướng dẫn, tag:dịp lễ, tag:cưới, tag:kỷ niệm, tag:sinh nhật">
 
   <!-- Hero -->
   <div class="page-hero">
@@ -319,6 +323,7 @@ const articleSchema = {
 
     </div>
   </div>
+  </article>
 </BaseLayout>
 
 <style>

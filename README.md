@@ -1,6 +1,6 @@
 # Vườn Hoa — AI Florist Coach Blog
 
-Static blog about flowers built with [Astro](https://astro.build), MDX, TailwindCSS v4, and [Fuse.js](https://www.fusejs.io/) for client-side fuzzy search across articles, the flower glossary, tools, and guides. Companion site to the AI Florist Coach app.
+Static blog about flowers built with [Astro](https://astro.build), MDX, TailwindCSS v4, and [Pagefind](https://pagefind.app/) for static-site search across articles, the flower glossary, tools, and guides. Companion site to the AI Florist Coach app.
 
 ## Stack
 
@@ -9,7 +9,7 @@ Static blog about flowers built with [Astro](https://astro.build), MDX, Tailwind
 - TailwindCSS v4 via the official Vite plugin (`@tailwindcss/vite`) + `@tailwindcss/typography`
 - `@astrojs/sitemap` — `/sitemap-index.xml`
 - `@astrojs/rss` — `/rss.xml`
-- Fuse.js — client-side fuzzy search over a prerendered JSON index (`/search.en.json`, `/search.vi.json`)
+- Pagefind — static-site search; index is generated at build time into `/pagefind/` and lazy-loaded by the modal + `/search` pages
 - Giscus — opt-in GitHub Discussions–based comments
 
 ## Scripts
@@ -17,13 +17,15 @@ Static blog about flowers built with [Astro](https://astro.build), MDX, Tailwind
 ```bash
 npm install        # install once
 
-npm run dev        # Astro dev server on http://localhost:4321
-npm run build      # astro build && pagefind --site dist (Pagefind is kept for /pagefind/ download artefacts only)
+npm run dev        # Astro dev server on http://localhost:5000 (search index is unavailable in dev)
+npm run build      # astro build && pagefind --site .vercel/output/static
 npm run build:astro    # Astro build only
-npm run preview    # serve dist/ locally
+npm run build:search   # rerun pagefind on an existing build
+npm run preview        # astro preview (no Pagefind index)
+npm run preview:static # static server over .vercel/output/static (search works here)
 ```
 
-The site uses Fuse.js fuzzy search. The search index is prerendered at build time into per-locale JSON files (`/search.en.json`, `/search.vi.json`), so search works in production and on `npm run preview`. The `<Search />` modal lazy-loads `fuse.js` and the matching language index only when first opened, so the homepage payload stays small.
+The site uses Pagefind static-site search. The index is built from rendered HTML during `npm run build` and ends up at `.vercel/output/static/pagefind/`. The `<Search />` modal lazy-loads `/pagefind/pagefind.js` only on first open; since the index does not exist on `astro dev`, run `npm run build && npm run preview:static` to exercise search locally.
 
 ## Project layout
 
@@ -36,13 +38,13 @@ blog/
 │   ├── styles/global.css  # Tailwind v4 entry + theme tokens
 │   ├── layouts/
 │   │   ├── BaseLayout.astro     # HTML shell + SEO + Header/Footer
-│   │   └── BlogPostLayout.astro # Article shell + JSON-LD + Giscus
+│   │   └── BlogPostLayout.astro # Legacy article shell (unused)
 │   ├── components/
 │   │   ├── Header.astro / Footer.astro
 │   │   ├── PostCard.astro / TagList.astro / FormattedDate.astro
 │   │   ├── FlowerGallery.astro  # Use inside MDX posts
 │   │   ├── SEO.astro            # Meta + OG + Twitter + JSON-LD
-│   │   ├── Search.astro         # Fuse.js-powered ⌘K modal + mobile trigger
+│   │   ├── Search.astro         # Pagefind-powered ⌘K modal + mobile trigger
 │   │   └── Giscus.astro         # Comments (gated on consts.ts placeholders)
 │   ├── pages/
 │   │   ├── index.astro          # Hero + featured + recent + tag cloud
@@ -120,26 +122,32 @@ Giscus is included but disabled until you provide IDs. The `<Giscus />` componen
 - `llms.txt` at site root for AEO (LLM crawlers).
 - Performance budget: PageSpeed desktop ≥ 95, mobile LCP ≤ 1.0s target.
 
-## Search (Fuse.js)
+## Search (Pagefind)
 
-`Search.astro` renders a header `<dialog>` (also reachable from a mobile-nav button and the dedicated `/search` and `/vi/search` pages). It lazy-loads Fuse.js + `/search.<lang>.json` only when the user first opens search, so the homepage payload stays small. ⌘/Ctrl+K opens it from anywhere; ↑/↓/Enter navigate results; Esc closes.
+`Search.astro` renders a header `<dialog>` (also reachable from a mobile-nav button and the dedicated `/search` and `/vi/search` pages). It lazy-loads `/pagefind/pagefind.js` only when the user first opens search, so the homepage payload stays small. ⌘/Ctrl+K opens it from anywhere; ↑/↓/Enter navigate results; Esc closes.
 
-Index shape (per locale, prerendered at build time by `src/lib/searchIndex.ts`):
+The Pagefind index is built from the rendered HTML during `npm run build`. Each indexable page wraps its main content in:
 
-```ts
-{
-  kind: 'article' | 'glossary' | 'tool' | 'guide';
-  title: string;
-  description: string;
-  body: string;     // stripped MDX, capped at ~4000 chars per doc
-  tags: string[];
-  url: string;
-  slug: string;
-  lang: 'en' | 'vi';
-}
+```html
+<article
+  data-pagefind-body
+  data-pagefind-meta="kind:article, description:..., image:..."
+  data-pagefind-filter="kind:article, tag:hoa-hong, tag:cham-soc"
+>
 ```
 
-Results are grouped in the UI as **Articles / Glossary / Tools / Guides**, with snippet highlighting around the match. Vietnamese queries are diacritic-insensitive (`hoa hong` → `hoa hồng`). Recent searches are persisted to `localStorage`, and search events fire to Vercel Analytics (debounced) for tuning relevance.
+Non-content UI (breadcrumbs, share box, related posts, comments) is annotated with `data-pagefind-ignore` so it stays out of the index. Pagefind auto-detects `<h1>` for the title.
 
-The legacy `pagefind --site dist` step still runs as part of `npm run build` for backward-compat artefacts in `/pagefind/`, but the live UI no longer uses it.
+Indexable surfaces:
+
+- `src/pages/posts/[...slug].astro` and `src/pages/vi/posts/[...slug].astro` — articles
+- `src/pages/learn/[term].astro` and `src/pages/vi/learn/[term].astro` — glossary terms
+- `src/pages/tools/*.astro` and `src/pages/vi/tools/*.astro` — the four tool pages
+- `src/pages/guides/flowers-by-occasion.astro` and its Vietnamese sibling — guides
+
+Results are grouped in the UI as **Articles / Glossary / Tools / Guides** by the `kind` meta value. Tag filtering on the dedicated `/search` and `/vi/search` pages uses the `tag` Pagefind filter. Pagefind auto-segments per language using the `lang` attribute on the rendered `<html>`, so EN queries hit only EN docs and VI queries hit only VI docs without any extra plumbing.
+
+Recent searches are persisted to `localStorage`, and search events fire to Vercel Analytics (debounced) for tuning relevance.
+
+> Pagefind only runs against built HTML, so search is **unavailable** under `npm run dev` / `npm run preview`. Use `npm run build && npm run preview:static` to exercise search locally.
 # ai-florist-coach-blog

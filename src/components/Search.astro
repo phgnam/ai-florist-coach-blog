@@ -350,18 +350,15 @@ const sectionLabels = {
 
 <script>
   import {
-    indexDocs,
-    fuseOptions,
-    buildSnippet,
     escapeHtml,
     loadRecentSearches,
     saveRecentSearch,
-    groupHits,
     trackSearchDebounced,
-    type IndexedDoc,
+    loadPagefind,
+    groupResultsByKind,
+    type PagefindModule,
+    type PagefindResultData,
   } from '../lib/searchClient';
-  import type { SearchDoc } from '../lib/searchIndex';
-  import type { default as FuseType } from 'fuse.js';
 
   const dialog = document.getElementById('search-dialog') as HTMLDialogElement | null;
   const input = document.getElementById('search-input') as HTMLInputElement | null;
@@ -386,43 +383,32 @@ const sectionLabels = {
       guide: dialog.dataset.sectionGuide ?? 'Guides',
     };
 
-    let fuse: FuseType<IndexedDoc> | null = null;
-    let docs: IndexedDoc[] = [];
+    let pagefind: PagefindModule | null = null;
     let popularTags: string[] = [];
     let loaded = false;
     let activeIndex = -1;
-    let lastResults: ReturnType<typeof renderResults> | null = null;
     let resultLinks: HTMLAnchorElement[] = [];
+    let lastSearchToken = 0;
 
     async function loadIndex() {
       if (loaded) return;
-      try {
-        const res = await fetch(`/search.${lang}.json`);
-        const raw: SearchDoc[] = await res.json();
-        docs = indexDocs(raw);
-      } catch {
-        docs = [];
-      }
-
-      const { default: Fuse } = await import('fuse.js');
-      fuse = new Fuse(docs, fuseOptions);
-
-      const tagCount = new Map<string, number>();
-      for (const d of docs) {
-        if (d.kind !== 'article') continue;
-        for (const tag of d.tags) {
-          tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
+      pagefind = await loadPagefind();
+      if (pagefind) {
+        try {
+          const filterCounts = await pagefind.filters();
+          const tagCounts = filterCounts.tag ?? {};
+          popularTags = Object.entries(tagCounts)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 8)
+            .map(([tag]) => tag);
+        } catch {
+          popularTags = [];
         }
       }
-      popularTags = [...tagCount.entries()]
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 8)
-        .map(([t]) => t);
-
       loaded = true;
     }
 
-    function renderResults(hits: ReturnType<NonNullable<typeof fuse>['search']> | null, query: string) {
+    function renderResults(hits: PagefindResultData[], query: string) {
       activeIndex = -1;
       resultLinks = [];
 
@@ -436,37 +422,36 @@ const sectionLabels = {
           emptyEl!.classList.add('hidden');
           metaEl!.textContent = '';
         }
-        return null;
+        return;
       }
 
       emptyEl!.classList.add('hidden');
       metaEl!.textContent = `${hits.length} ${resultsText}`;
 
-      const grouped = groupHits(hits);
+      const grouped = groupResultsByKind(hits);
       resultsEl!.innerHTML = grouped
         .map((g, gi) => {
           const items = g.hits
             .map((hit, i) => {
               const idx = grouped.slice(0, gi).reduce((sum, x) => sum + x.hits.length, 0) + i;
-              const item = hit.item;
-              const snippet = buildSnippet(item.body, query) ?? null;
-              const desc = snippet
-                ? `<div class="result-snippet">${snippet}</div>`
-                : item.description
-                  ? `<div class="result-desc">${escapeHtml(item.description)}</div>`
-                  : '';
-              const tags =
-                item.tags.length > 0
-                  ? `<div class="result-tags">${item.tags
-                      .slice(0, 4)
+              const title = hit.meta.title ?? hit.url;
+              const tags = (hit.filters.tag ?? []).slice(0, 4);
+              const tagsHtml =
+                tags.length > 0
+                  ? `<div class="result-tags">${tags
                       .map((tag) => `<span class="result-tag">${escapeHtml(tag)}</span>`)
                       .join('')}</div>`
                   : '';
+              const snippet = hit.excerpt
+                ? `<div class="result-snippet">${hit.excerpt}</div>`
+                : hit.meta.description
+                  ? `<div class="result-desc">${escapeHtml(hit.meta.description)}</div>`
+                  : '';
               return `
-                <a href="${item.url}" class="result-item" role="option" id="result-${idx}" data-idx="${idx}">
-                  <div class="result-title">${escapeHtml(item.title)}</div>
-                  ${desc}
-                  ${tags}
+                <a href="${hit.url}" class="result-item" role="option" id="result-${idx}" data-idx="${idx}">
+                  <div class="result-title">${escapeHtml(title)}</div>
+                  ${snippet}
+                  ${tagsHtml}
                 </a>`;
             })
             .join('');
@@ -479,7 +464,6 @@ const sectionLabels = {
         .join('');
 
       resultLinks = Array.from(resultsEl!.querySelectorAll<HTMLAnchorElement>('.result-item'));
-      return hits;
     }
 
     function renderSuggestions() {
@@ -509,19 +493,29 @@ const sectionLabels = {
       resultLinks = [];
     }
 
-    function doSearch(query: string) {
-      if (!fuse) return;
+    async function doSearch(query: string) {
       const trimmed = query.trim();
       if (trimmed.length < 2) {
         clearAll();
-        suggestionsEl!.innerHTML.length === 0 && renderSuggestions();
+        if (suggestionsEl!.innerHTML.length === 0) renderSuggestions();
         suggestionsEl!.style.display = '';
         return;
       }
       suggestionsEl!.style.display = 'none';
-      const hits = fuse.search(trimmed, { limit: 12 });
-      lastResults = renderResults(hits, trimmed);
-      trackSearchDebounced(trimmed, lang, hits.length);
+      if (!pagefind) {
+        emptyMsg!.textContent = 'Search index unavailable in dev — run `npm run build`.';
+        emptyEl!.classList.remove('hidden');
+        return;
+      }
+      const token = ++lastSearchToken;
+      const search = await pagefind.search(trimmed);
+      // Drop stale results if a newer search has started.
+      if (token !== lastSearchToken) return;
+      const top = search.results.slice(0, 12);
+      const hits = await Promise.all(top.map((r) => r.data()));
+      if (token !== lastSearchToken) return;
+      renderResults(hits, trimmed);
+      trackSearchDebounced(trimmed, lang, search.results.length);
     }
 
     function setActive(idx: number) {

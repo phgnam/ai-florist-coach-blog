@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+export const prerender = true;
+
 const lang = 'en' as const;
 const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
 
@@ -208,7 +210,7 @@ const softwareSchema = {
   <script type="application/ld+json" set:html={JSON.stringify(softwareSchema)} slot="head" />
   <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} slot="head" />
 
-  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
     <div class="max-w-6xl mx-auto px-6 py-4">
       <ol class="breadcrumb-list">
         <li><a href="/">Home</a></li><li aria-hidden="true">›</li>
@@ -217,6 +219,8 @@ const softwareSchema = {
       </ol>
     </div>
   </nav>
+
+  <article data-pagefind-body data-pagefind-meta="kind:tool, description:Pick any hero flower and get curated pairings — colour stories, style notes, and seasonal guides." data-pagefind-filter="kind:tool, tag:tool, tag:combinations, tag:arrangement">
 
   <div class="page-header">
     <div class="max-w-4xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
@@ -263,6 +267,7 @@ const softwareSchema = {
 
     </div>
   </div>
+  </article>
 </BaseLayout>
 
 <style>
