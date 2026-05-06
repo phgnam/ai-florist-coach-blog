@@ -1,0 +1,869 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
+
+export const prerender = true;
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/pet-safe-checker/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/pet-safe-checker/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/pet-safe-checker/` },
+];
+
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Công cụ', url: `${siteUrl}/vi/tools/` },
+  { name: 'Kiểm Tra Hoa An Toàn Cho Thú Cưng', url: `${siteUrl}/vi/tools/pet-safe-checker/` },
+];
+
+type Severity = 'safe' | 'mild' | 'severe' | 'lethal';
+
+interface PetStatus {
+  level: Severity;
+  symptoms?: string;
+  notes?: string;
+}
+
+interface FlowerEntry {
+  name: string;
+  scientific: string;
+  emoji: string;
+  glossarySlug: string | null;
+  cat: PetStatus;
+  dog: PetStatus;
+  horse: PetStatus;
+  toxicCompound: string | null;
+  aspcaUrl?: string;
+  aliases?: string[];
+  notes?: string;
+}
+
+// Dữ liệu dựa trên ASPCA Toxic and Non-Toxic Plants database và Pet Poison Helpline.
+// Mức độ rút gọn để tra nhanh:
+//   safe   — không độc theo ASPCA, không có dấu hiệu lâm sàng khi tiếp xúc thông thường
+//   mild   — kích ứng tiêu hóa / khoang miệng / da; thường tự khỏi
+//   severe — cần đưa thú đi gặp bác sĩ thú y; có triệu chứng toàn thân
+//   lethal — có thể tử vong, đặc biệt nếu không can thiệp kịp thời
+const FLOWERS: FlowerEntry[] = [
+  // ---------- AN TOÀN ----------
+  {
+    name: 'Hoa hồng', scientific: 'Rosa spp.', emoji: '🌹', glossarySlug: 'rose',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/rose',
+    aliases: ['hong', 'rose'],
+  },
+  {
+    name: 'Hướng dương', scientific: 'Helianthus annuus', emoji: '🌻', glossarySlug: 'sunflower',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/sunflower',
+    aliases: ['huong duong', 'sunflower'],
+  },
+  {
+    name: 'Mõm chó (Snapdragon)', scientific: 'Antirrhinum majus', emoji: '🌷', glossarySlug: 'snapdragon',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aliases: ['mom cho', 'snapdragon'],
+  },
+  {
+    name: 'Cúc đồng tiền (Gerbera)', scientific: 'Gerbera jamesonii', emoji: '🌼', glossarySlug: 'gerbera',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/gerbera-daisy',
+    aliases: ['cuc dong tien', 'gerbera'],
+  },
+  {
+    name: 'Lan hồ điệp / Địa lan', scientific: 'Phalaenopsis spp., Cymbidium spp.', emoji: '🌸', glossarySlug: 'orchid',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/phalaenopsis-orchid',
+    aliases: ['lan ho diep', 'dia lan', 'orchid', 'phalaenopsis'],
+  },
+  {
+    name: 'Cát tường (Lisianthus)', scientific: 'Eustoma grandiflorum', emoji: '💜', glossarySlug: 'lisianthus',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aliases: ['cat tuong', 'lisianthus', 'eustoma'],
+  },
+  {
+    name: 'Violet thân (Stock)', scientific: 'Matthiola incana', emoji: '🌸', glossarySlug: 'stock',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aliases: ['stock', 'matthiola'],
+  },
+  {
+    name: 'Salem khô (Statice)', scientific: 'Limonium sinuatum', emoji: '💜', glossarySlug: null,
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aliases: ['salem', 'statice', 'limonium'],
+  },
+  {
+    name: "Baby (Baby's Breath)", scientific: 'Gypsophila paniculata', emoji: '🤍', glossarySlug: null,
+    cat: { level: 'mild', symptoms: 'Kích ứng tiêu hóa nhẹ (nôn, tiêu chảy) nếu ăn phải.' },
+    dog: { level: 'mild', symptoms: 'Kích ứng tiêu hóa nhẹ (nôn, tiêu chảy) nếu ăn phải.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Gyposenin (saponin)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/babys-breath',
+    aliases: ['baby', 'gypsophila'],
+  },
+  {
+    name: 'Trà my (Camellia)', scientific: 'Camellia japonica', emoji: '🌸', glossarySlug: 'camellia',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/camellia',
+    aliases: ['tra my', 'camellia'],
+  },
+  {
+    name: 'Lan dạ hương Freesia', scientific: 'Freesia refracta', emoji: '🌼', glossarySlug: 'freesia',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    notes: 'Hoa cắt cành không độc. Củ có thể gây kích ứng tiêu hóa nhẹ nếu thú nuôi đào và nhai.',
+    aliases: ['freesia', 'lan da huong'],
+  },
+  {
+    name: 'Cúc kim tiền (Calendula)', scientific: 'Calendula officinalis', emoji: '🌼', glossarySlug: 'marigold',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    notes: 'Calendula không độc. Lưu ý: cúc vạn thọ Tagetes (Pháp/châu Phi) là chất kích ứng nhẹ — xem mục bên dưới.',
+    aliases: ['calendula', 'cuc kim tien'],
+  },
+  {
+    name: 'Mộc lan', scientific: 'Magnolia spp.', emoji: '🌸', glossarySlug: 'magnolia',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aliases: ['moc lan', 'magnolia'],
+  },
+
+  // ---------- NHẸ ----------
+  {
+    name: 'Cẩm chướng', scientific: 'Dianthus caryophyllus', emoji: '🌺', glossarySlug: 'carnation',
+    cat: { level: 'mild', symptoms: 'Kích ứng tiêu hóa nhẹ, viêm da khi tiếp xúc với nhựa.' },
+    dog: { level: 'mild', symptoms: 'Kích ứng tiêu hóa nhẹ, viêm da khi tiếp xúc với nhựa.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Saponin triterpenoid',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/carnation',
+    aliases: ['cam chuong', 'carnation'],
+  },
+  {
+    name: 'Hoa cúc (Chrysanthemum)', scientific: 'Chrysanthemum spp.', emoji: '🌼', glossarySlug: 'chrysanthemum',
+    cat: { level: 'mild', symptoms: 'Nôn, tiêu chảy, tăng tiết nước bọt, mất phối hợp, viêm da.' },
+    dog: { level: 'mild', symptoms: 'Nôn, tiêu chảy, tăng tiết nước bọt, mất phối hợp, viêm da.' },
+    horse: { level: 'mild', symptoms: 'Kích ứng tiêu hóa, mất thăng bằng.' },
+    toxicCompound: 'Sesquiterpene lactones, pyrethrins',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/chrysanthemum',
+    aliases: ['hoa cuc', 'cuc dai doa', 'chrysanthemum', 'mum'],
+  },
+  {
+    name: 'Cúc vạn thọ (Tagetes)', scientific: 'Tagetes spp.', emoji: '🌼', glossarySlug: null,
+    cat: { level: 'mild', symptoms: 'Kích ứng miệng/da nhẹ, đau bụng tiêu hóa.' },
+    dog: { level: 'mild', symptoms: 'Kích ứng miệng/da nhẹ, đau bụng tiêu hóa.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Tinh dầu Tagetes',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/marigold',
+    aliases: ['cuc van tho', 'tagetes', 'marigold'],
+  },
+  {
+    name: 'Diên vĩ (Iris)', scientific: 'Iris spp.', emoji: '💜', glossarySlug: 'iris',
+    cat: { level: 'mild', symptoms: 'Tăng tiết nước bọt, nôn, tiêu chảy. Phần thân rễ dưới đất là độc nhất.' },
+    dog: { level: 'mild', symptoms: 'Tăng tiết nước bọt, nôn, tiêu chảy. Phần thân rễ là độc nhất.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Pentacyclic terpenoid (irisin), iridin',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/iris',
+    aliases: ['dien vi', 'iris'],
+  },
+  {
+    name: 'Rum (Calla Lily)', scientific: 'Zantedeschia aethiopica', emoji: '🤍', glossarySlug: 'calla-lily',
+    cat: { level: 'mild', symptoms: 'Đau miệng dữ dội, tăng tiết nước bọt, sủi bọt, sưng miệng/lưỡi, nôn.' },
+    dog: { level: 'mild', symptoms: 'Đau miệng dữ dội, tăng tiết nước bọt, sủi bọt, sưng miệng/lưỡi, nôn.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Tinh thể oxalate canxi không tan',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/calla-lily',
+    notes: 'Mặc dù tên gọi có chữ "lily", calla lily KHÔNG phải hoa lily thật và không gây suy thận ở mèo. Dù vậy vẫn rất đau — để ngoài tầm với.',
+    aliases: ['rum', 'calla', 'calla lily'],
+  },
+  {
+    name: 'Hồng môn (Anthurium)', scientific: 'Anthurium spp.', emoji: '❤️', glossarySlug: null,
+    cat: { level: 'mild', symptoms: 'Kích ứng miệng, bỏng rát, tăng tiết nước bọt, khó nuốt, nôn.' },
+    dog: { level: 'mild', symptoms: 'Kích ứng miệng, bỏng rát, tăng tiết nước bọt, khó nuốt, nôn.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Tinh thể oxalate canxi không tan',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/flamingo-flower',
+    aliases: ['hong mon', 'anthurium'],
+  },
+  {
+    name: 'Mao lương (Ranunculus)', scientific: 'Ranunculus spp.', emoji: '🌸', glossarySlug: 'ranunculus',
+    cat: { level: 'mild', symptoms: 'Phồng rộp miệng, tăng tiết nước bọt, mất thăng bằng.' },
+    dog: { level: 'mild', symptoms: 'Phồng rộp miệng, tăng tiết nước bọt, mất thăng bằng.' },
+    horse: { level: 'severe', symptoms: 'Loét miệng và đường tiêu hóa nghiêm trọng; gia súc dễ bị nhất khi gặm trên đồng.' },
+    toxicCompound: 'Protoanemonin (sinh ra từ glycoside ranunculin khi nhựa bị dập)',
+    aliases: ['mao luong', 'ranunculus', 'buttercup'],
+  },
+  {
+    name: 'Hải quỳ (Anemone)', scientific: 'Anemone spp.', emoji: '🌸', glossarySlug: 'anemone',
+    cat: { level: 'mild', symptoms: 'Phồng rộp miệng, tăng tiết nước bọt, nôn.' },
+    dog: { level: 'mild', symptoms: 'Phồng rộp miệng, tăng tiết nước bọt, nôn.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Protoanemonin (cùng họ với ranunculus)',
+    aliases: ['hai quy', 'anemone'],
+  },
+  {
+    name: 'Đậu thơm (Sweet Pea)', scientific: 'Lathyrus odoratus', emoji: '🌸', glossarySlug: 'sweet-pea',
+    cat: { level: 'mild', symptoms: 'Yếu, lờ đờ, run, co giật khi ăn lượng lớn.' },
+    dog: { level: 'mild', symptoms: 'Yếu, lờ đờ, run, co giật khi ăn lượng lớn.' },
+    horse: { level: 'severe', symptoms: 'Bệnh lathyrism — tổn thương thần kinh, tê liệt khi ăn liên tục.' },
+    toxicCompound: 'Aminopropionitrile (đặc biệt trong hạt)',
+    notes: 'Hạt và quả là phần độc nhất. Hoa cắt cành cắm bình khá an toàn.',
+    aliases: ['dau thom', 'sweet pea', 'lathyrus'],
+  },
+  {
+    name: 'Thiên điểu (Bird of Paradise)', scientific: 'Strelitzia reginae', emoji: '🌺', glossarySlug: null,
+    cat: { level: 'mild', symptoms: 'Nôn, tiêu chảy, buồn ngủ; quả nang là phần độc nhất.' },
+    dog: { level: 'mild', symptoms: 'Nôn, tiêu chảy, buồn ngủ; quả nang là phần độc nhất.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Tannin, acid hydrocyanic (trong quả nang)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/bird-paradise',
+    aliases: ['thien dieu', 'bird of paradise', 'strelitzia'],
+  },
+  {
+    name: 'Đại (Plumeria/Frangipani)', scientific: 'Plumeria spp.', emoji: '🌸', glossarySlug: 'plumeria',
+    cat: { level: 'mild', symptoms: 'Nôn, tiêu chảy; nhựa có thể gây kích ứng da.' },
+    dog: { level: 'mild', symptoms: 'Nôn, tiêu chảy; nhựa có thể gây kích ứng da.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Plumericin (latex gây kích ứng)',
+    aliases: ['hoa dai', 'plumeria', 'frangipani', 'su'],
+  },
+  {
+    name: 'Mẫu đơn (Peony)', scientific: 'Paeonia officinalis', emoji: '🌸', glossarySlug: 'peony',
+    cat: { level: 'mild', symptoms: 'Nôn, tiêu chảy, mệt mỏi. Vỏ và rễ là phần độc nhất.' },
+    dog: { level: 'mild', symptoms: 'Nôn, tiêu chảy, mệt mỏi. Vỏ và rễ là phần độc nhất.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Paeonol',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/peony',
+    aliases: ['mau don', 'peony'],
+  },
+  {
+    name: 'Thanh anh (Alstroemeria)', scientific: 'Alstroemeria spp.', emoji: '🌸', glossarySlug: 'alstroemeria',
+    cat: { level: 'mild', symptoms: 'Kích ứng tiêu hóa nhẹ; nhựa có thể gây viêm da tiếp xúc (florist hay bị "ngứa alstroemeria").' },
+    dog: { level: 'mild', symptoms: 'Kích ứng tiêu hóa nhẹ; nhựa có thể gây viêm da tiếp xúc.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Tulipalin A (gây dị ứng)',
+    aliases: ['alstroemeria', 'thanh anh', 'peruvian lily', 'lily of incas'],
+    notes: 'Mặc dù có biệt danh "Peruvian lily", alstroemeria KHÔNG phải hoa lily thật và không gây suy thận ở mèo.',
+  },
+
+  // ---------- NẶNG ----------
+  {
+    name: 'Tulip', scientific: 'Tulipa spp.', emoji: '🌷', glossarySlug: 'tulip',
+    cat: { level: 'severe', symptoms: 'Nôn, tiêu chảy, tăng tiết nước bọt, lờ đờ; rối loạn nhịp tim và khó thở khi ăn nhiều.' },
+    dog: { level: 'severe', symptoms: 'Nôn, tiêu chảy, tăng tiết nước bọt, lờ đờ; dấu hiệu tim mạch khi ăn lượng lớn củ.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Tulipalin A & B (đậm đặc trong củ)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/tulip',
+    notes: 'Củ độc hơn nhiều so với hoa cắt, nhưng cuống và cánh hoa cắt cành vẫn có thể gây khó tiêu.',
+    aliases: ['tulip', 'tu-líp'],
+  },
+  {
+    name: 'Thủy tiên (Daffodil)', scientific: 'Narcissus spp.', emoji: '🌼', glossarySlug: 'daffodil',
+    cat: { level: 'severe', symptoms: 'Nôn dữ dội, tăng tiết nước bọt, đau bụng, rối loạn nhịp tim, hạ huyết áp, run rẩy.' },
+    dog: { level: 'severe', symptoms: 'Nôn dữ dội, tăng tiết nước bọt, đau bụng, rối loạn nhịp tim, hạ huyết áp, run rẩy.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Lycorine alkaloid (đậm đặc nhất ở củ)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/daffodil',
+    aliases: ['thuy tien', 'daffodil', 'narcissus', 'jonquil', 'paperwhite'],
+  },
+  {
+    name: 'Lan dạ hương (Hyacinth)', scientific: 'Hyacinthus orientalis', emoji: '💜', glossarySlug: 'hyacinth',
+    cat: { level: 'severe', symptoms: 'Nôn dữ dội, tăng tiết nước bọt, tiêu chảy (đôi khi có máu), lờ đờ, run.' },
+    dog: { level: 'severe', symptoms: 'Nôn dữ dội, tăng tiết nước bọt, tiêu chảy (đôi khi có máu), lờ đờ, run.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Alkaloid kiểu narcissus, oxalat',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hyacinth',
+    aliases: ['hyacinth', 'lan da huong'],
+  },
+  {
+    name: 'Cẩm tú cầu (Hydrangea)', scientific: 'Hydrangea spp.', emoji: '💙', glossarySlug: 'hydrangea',
+    cat: { level: 'severe', symptoms: 'Nôn, tiêu chảy, lờ đờ; giải phóng cyanide khi ăn lượng lớn.' },
+    dog: { level: 'severe', symptoms: 'Nôn, tiêu chảy, lờ đờ; giải phóng cyanide khi ăn lượng lớn.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Glycoside cyanogenic (giải phóng hydrogen cyanide khi nhai)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hydrangea',
+    aliases: ['cam tu cau', 'hydrangea'],
+  },
+  {
+    name: 'Hoa anh đào (Cherry Blossom)', scientific: 'Prunus serrulata', emoji: '🌸', glossarySlug: 'cherry-blossom',
+    cat: { level: 'severe', symptoms: 'Niêm mạc đỏ gạch, đồng tử giãn, thở gấp, sốc — ngộ độc cyanide khi ăn nhiều lá/hạt.' },
+    dog: { level: 'severe', symptoms: 'Niêm mạc đỏ gạch, đồng tử giãn, thở gấp, sốc — ngộ độc cyanide.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Glycoside cyanogenic (trong lá, cành, hạt — không có ở hoa)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cherry',
+    notes: 'Nguy cơ chủ yếu từ lá/cành/hạt, không phải từ hoa hồng phấn. Tuy vậy hãy coi cả cành là độc.',
+    aliases: ['anh dao', 'cherry blossom', 'sakura'],
+  },
+
+  // ---------- TỬ VONG ----------
+  {
+    name: 'Hoa lily thật (Lilium / Hemerocallis)', scientific: 'Lilium spp., Hemerocallis spp.', emoji: '🌺', glossarySlug: 'lily',
+    cat: { level: 'lethal', symptoms: 'Suy thận cấp trong vòng 24–72 giờ từ bất kỳ phần nào — cánh, lá, phấn, nước cắm. Lờ đờ, nôn, sau đó tắc tiểu.' },
+    dog: { level: 'mild', symptoms: 'Chỉ kích ứng tiêu hóa; chó KHÔNG bị độc tố thận giống như mèo.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Độc tố thận chưa xác định, tan trong nước (chỉ với mèo)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lilies',
+    notes: 'LOÀI HOA NGUY HIỂM NHẤT cho mèo trong tiệm hoa. Bao gồm Easter, Tiger, Asiatic, Stargazer, Oriental, daylily. Liếm phấn dính trên lông hoặc uống nước cắm hoa cũng có thể tử vong. Không bao giờ giao lily đến nhà có mèo.',
+    aliases: ['lily', 'easter lily', 'asiatic', 'tiger lily', 'stargazer', 'oriental', 'daylily', 'hoa loa ken', 'huong duong nuoc'],
+  },
+  {
+    name: 'Linh lan (Lily of the Valley)', scientific: 'Convallaria majalis', emoji: '🤍', glossarySlug: 'lily-of-the-valley',
+    cat: { level: 'lethal', symptoms: 'Nôn, nhịp tim chậm, rối loạn nhịp nghiêm trọng, co giật, tử vong nếu không can thiệp tim mạch tích cực.' },
+    dog: { level: 'lethal', symptoms: 'Nôn, nhịp tim chậm, rối loạn nhịp nghiêm trọng, co giật, tử vong nếu không can thiệp tim mạch tích cực.' },
+    horse: { level: 'lethal' },
+    toxicCompound: 'Cardiac glycoside (convallatoxin, convallarin) — cùng nhóm với digitalis',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lily-valley',
+    aliases: ['linh lan', 'lily of the valley', 'convallaria'],
+  },
+  {
+    name: 'Mao địa hoàng (Foxglove)', scientific: 'Digitalis purpurea', emoji: '💜', glossarySlug: null,
+    cat: { level: 'lethal', symptoms: 'Rối loạn nhịp tim, yếu, nôn, ngất, tử vong. Trong y học từng dùng làm thuốc tim — liều điều trị và liều tử vong rất gần nhau.' },
+    dog: { level: 'lethal', symptoms: 'Rối loạn nhịp tim, yếu, nôn, ngất, tử vong.' },
+    horse: { level: 'lethal' },
+    toxicCompound: 'Cardiac glycoside (digitoxin, digoxin)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/foxglove',
+    aliases: ['mao dia hoang', 'foxglove', 'digitalis'],
+  },
+  {
+    name: 'Trúc đào (Oleander)', scientific: 'Nerium oleander', emoji: '🌸', glossarySlug: null,
+    cat: { level: 'lethal', symptoms: 'Triệu chứng tiêu hóa nặng, rối loạn nhịp tim, hạ thân nhiệt, tử vong. Một trong những cây cảnh độc nhất.' },
+    dog: { level: 'lethal', symptoms: 'Triệu chứng tiêu hóa nặng, rối loạn nhịp tim, hạ thân nhiệt, tử vong.' },
+    horse: { level: 'lethal' },
+    toxicCompound: 'Cardiac glycoside (oleandrin, neriin)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/oleander',
+    notes: 'Mọi bộ phận đều cực độc, kể cả lá khô, khói khi đốt và nước cắm hoa. Nhiều florist từ chối làm việc với trúc đào.',
+    aliases: ['truc dao', 'oleander', 'nerium'],
+  },
+  {
+    name: 'Đỗ quyên (Azalea / Rhododendron)', scientific: 'Rhododendron spp.', emoji: '🌸', glossarySlug: null,
+    cat: { level: 'lethal', symptoms: 'Nôn, tăng tiết nước bọt, yếu, rối loạn nhịp tim nặng, hôn mê, tử vong.' },
+    dog: { level: 'lethal', symptoms: 'Nôn, tăng tiết nước bọt, yếu, rối loạn nhịp tim nặng, hôn mê, tử vong.' },
+    horse: { level: 'lethal' },
+    toxicCompound: 'Grayanotoxin',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/azalea',
+    aliases: ['do quyen', 'azalea', 'rhododendron'],
+  },
+];
+
+const SEVERITY_LABEL: Record<Severity, string> = {
+  safe: 'An toàn',
+  mild: 'Nhẹ',
+  severe: 'Nặng',
+  lethal: 'Tử vong',
+};
+
+const SEVERITY_ICON: Record<Severity, string> = {
+  safe: '✓',
+  mild: '⚠',
+  severe: '⛔',
+  lethal: '☠',
+};
+
+const generalFAQs = [
+  {
+    q: 'Loài hoa nào nguy hiểm nhất với mèo?',
+    a: 'Hoa lily thật (chi Lilium và Hemerocallis — Easter, Tiger, Asiatic, Stargazer, Oriental, daylily) là hoa nguy hiểm nhất cho mèo. Bất kỳ phần nào — cánh, lá, phấn dính trên lông, kể cả nước cắm trong bình — đều có thể gây suy thận tử vong trong 72 giờ. Các loài tử vong khác cho mèo gồm linh lan, mao địa hoàng, trúc đào và đỗ quyên.',
+  },
+  {
+    q: 'Hoa hồng có an toàn cho mèo và chó không?',
+    a: 'Có — hoa hồng (Rosa spp.) được ASPCA xếp là không độc. Cánh và cuống không gây ngộ độc cho chó hoặc mèo. Tuy nhiên gai có thể gây cắt, hóc hoặc thủng đường tiêu hóa, vì vậy nên dùng hoa hồng đã tỉa gai hoặc giống không gai trong nhà có thú cưng.',
+  },
+  {
+    q: 'Mèo của tôi vừa cắn cánh hoa lily — phải làm gì?',
+    a: 'Hãy coi đây là tình huống khẩn cấp. Gọi bác sĩ thú y ngay, hoặc liên hệ ASPCA Animal Poison Control (888) 426-4435 (Hoa Kỳ) hoặc Pet Poison Helpline (855) 764-7661. Đừng đợi triệu chứng — một khi suy thận đã bắt đầu, tiên lượng giảm mạnh. Mang theo cây hoặc ảnh chụp rõ khi đến khám.',
+  },
+  {
+    q: 'Hoa tulip có độc với chó không?',
+    a: 'Có — tulip chứa tulipalin A và B gây nôn, tăng tiết nước bọt và mệt mỏi ở chó. Củ độc hơn nhiều so với hoa cắt, nên những con chó hay đào vườn có nguy cơ cao nhất. Tulip cắt cành cắm bình rủi ro thấp hơn nhưng vẫn nên để xa tầm với.',
+  },
+  {
+    q: 'Bó hoa nào an toàn nhất để gửi đến nhà có mèo?',
+    a: 'Bó kết hợp hoa hồng, hướng dương, snapdragon, lisianthus (cát tường), gerbera, stock, statice, freesia, lan hồ điệp và lá xanh đơn giản như leatherleaf, ruscus (eucalyptus là chất kích ứng nhẹ — xem ghi chú). Luôn tránh MỌI loại lily thật (Lilium / Hemerocallis), kể cả một cành, trong nhà có mèo.',
+  },
+  {
+    q: 'Tinh dầu oải hương (lavender) có an toàn cho chó mèo không?',
+    a: 'Cây oải hương chỉ gây kích ứng tiêu hóa nhẹ nếu ăn phải, nhưng tinh dầu oải hương cô đặc độc hơn nhiều và là nguyên nhân của hầu hết các ca ngộ độc lavender — không bao giờ bôi tinh dầu trực tiếp lên thú cưng hoặc dùng máy khuếch tán trong phòng kín có mèo.',
+  },
+  {
+    q: 'Dữ liệu này lấy từ đâu?',
+    a: 'Mức độ trên công cụ này dựa vào ASPCA Toxic and Non-Toxic Plants database và Pet Poison Helpline. Đây là tham chiếu nhanh, không phải lời khuyên thú y — hãy luôn gọi bác sĩ hoặc tổng đài chống độc thú nuôi nếu thú cưng đã ăn phải. Liên kết tới ASPCA được dẫn ở mỗi mục khi có.',
+  },
+  {
+    q: 'Đặt hoa cao có ngăn được ngộ độc không?',
+    a: 'Hữu ích nhưng không tuyệt đối, đặc biệt với mèo — chúng nhảy và xô đổ đồ. Phấn rơi xuống bề mặt rồi dính vào lông và bị liếm sạch; nước đổ ra từ bình chứa độc tố lily; lá nhai rơi xuống sàn. Lựa chọn an toàn hoàn toàn cho nhà có mèo là không bao giờ mang lily thật vào nhà, và để hoa độc tính trung bình ở phòng mèo không vào được.',
+  },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Tham chiếu hoa an toàn cho thú cưng',
+  description: 'Danh sách các loài hoa florist phổ biến với mức độ độc tính cho mèo, chó và ngựa, dựa trên ASPCA database.',
+  url: `${siteUrl}/vi/tools/pet-safe-checker/`,
+  numberOfItems: FLOWERS.length,
+  itemListElement: FLOWERS.map((f, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: `${f.name} (${f.scientific})`,
+    item: {
+      '@type': 'Thing',
+      name: f.name,
+      alternateName: f.scientific,
+      description: `Mèo: ${SEVERITY_LABEL[f.cat.level]}. Chó: ${SEVERITY_LABEL[f.dog.level]}. Ngựa: ${SEVERITY_LABEL[f.horse.level]}.`,
+      url: f.glossarySlug ? `${siteUrl}/vi/learn/${f.glossarySlug}/` : (f.aspcaUrl ?? `${siteUrl}/vi/tools/pet-safe-checker/`),
+    },
+  })),
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: generalFAQs.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Kiểm Tra Hoa An Toàn Cho Thú Cưng — Hoa Nào Độc Với Mèo và Chó?"
+  description="Tra cứu loài hoa nào an toàn cho mèo, chó hoặc ngựa. Mức độ độc tính, triệu chứng và hợp chất gây độc cho 35+ loài hoa florist phổ biến, dựa trên ASPCA. Công cụ miễn phí từ Yor Flower."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/vi/">Trang chủ</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/vi/tools/">Công cụ</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">Kiểm Tra Hoa An Toàn Cho Thú Cưng</li>
+      </ol>
+    </div>
+  </nav>
+
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Kiểm tra hoa an toàn cho thú cưng. Tra cứu mức độ độc cho mèo, chó, ngựa của 35+ loài hoa, kèm triệu chứng và lựa chọn an toàn thay thế. Dựa trên ASPCA database." tags={["tool","pet-safe","toxicity","florist-safety"]} />
+
+  <div class="page-header">
+    <div class="max-w-6xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Công cụ florist miễn phí</p>
+      <h1 class="page-title">Kiểm Tra Hoa An Toàn Cho Thú Cưng</h1>
+      <p class="page-sub">Hoa này có độc với mèo, chó hay ngựa không? Tra cứu 35+ loài hoa florist phổ biến, xem mức độ độc theo từng loài thú và tìm lựa chọn an toàn thay thế.</p>
+      <a href="/tools/pet-safe-checker/" class="lang-switch-link">🇬🇧 View in English</a>
+    </div>
+  </div>
+
+  <aside class="emergency-banner" data-pagefind-ignore>
+    <div class="max-w-6xl mx-auto px-6 py-5">
+      <div class="emergency-grid">
+        <div class="emergency-text">
+          <p class="emergency-eyebrow">⚠ Nếu thú cưng đã ăn phải</p>
+          <p class="emergency-body">Gọi bác sĩ thú y ngay, hoặc một trong các tổng đài chống độc 24/7 dưới đây, <em>trước khi</em> đợi triệu chứng. Mang theo cây — hoặc ảnh chụp rõ — khi đến khám.</p>
+        </div>
+        <div class="emergency-numbers">
+          <a class="emergency-num" href="tel:+18884264435">
+            <span class="emergency-num-label">ASPCA Animal Poison Control (Hoa Kỳ)</span>
+            <span class="emergency-num-value">(888) 426-4435</span>
+          </a>
+          <a class="emergency-num" href="tel:+18557647661">
+            <span class="emergency-num-label">Pet Poison Helpline (Mỹ/Canada)</span>
+            <span class="emergency-num-value">(855) 764-7661</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="quick-answer">
+    <div class="max-w-6xl mx-auto px-6 py-8">
+      <p><strong>Trả lời nhanh:</strong> Loài hoa nguy hiểm nhất trong tiệm hoa là <strong>hoa lily thật</strong> (Lilium và Hemerocallis — Easter, Asiatic, Tiger, Stargazer, Oriental, daylily). Phấn dính trên lông hoặc nước cắm trong bình cũng có thể gây suy thận tử vong cho mèo trong 72 giờ. Các stem an toàn cho cả chó và mèo gồm <a href="/vi/learn/rose/">hoa hồng</a>, <a href="/vi/learn/sunflower/">hướng dương</a>, <a href="/vi/learn/snapdragon/">mõm chó</a>, <a href="/vi/learn/gerbera/">gerbera</a>, <a href="/vi/learn/lisianthus/">cát tường</a>, <a href="/vi/learn/orchid/">lan hồ điệp</a>, <a href="/vi/learn/stock/">stock</a> và statice.</p>
+    </div>
+  </section>
+
+  <div class="checker-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-10">
+
+      <div class="filter-bar">
+        <div class="filter-search">
+          <label for="flower-search" class="filter-label">Tìm tên hoa</label>
+          <input
+            type="search"
+            id="flower-search"
+            placeholder="vd: lily, hydrangea, gerbera…"
+            class="filter-input"
+            aria-describedby="filter-help"
+          />
+        </div>
+
+        <fieldset class="filter-group">
+          <legend class="filter-label">Chỉ hiện an toàn cho</legend>
+          <div class="filter-chips" role="group">
+            <button type="button" class="chip" data-filter-pet="all" aria-pressed="true">Mọi thú</button>
+            <button type="button" class="chip" data-filter-pet="cat" aria-pressed="false">🐱 Mèo</button>
+            <button type="button" class="chip" data-filter-pet="dog" aria-pressed="false">🐶 Chó</button>
+            <button type="button" class="chip" data-filter-pet="horse" aria-pressed="false">🐴 Ngựa</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="filter-group">
+          <legend class="filter-label">Mức độ</legend>
+          <div class="filter-chips" role="group">
+            <button type="button" class="chip" data-filter-sev="all" aria-pressed="true">Hiện tất cả</button>
+            <button type="button" class="chip chip-safe" data-filter-sev="safe" aria-pressed="false">✓ Chỉ an toàn</button>
+            <button type="button" class="chip chip-toxic" data-filter-sev="toxic" aria-pressed="false">⚠ Chỉ có độc</button>
+          </div>
+        </fieldset>
+      </div>
+      <p id="filter-help" class="filter-help">Đang hiện <span id="result-count">{FLOWERS.length}</span> trên {FLOWERS.length} loài hoa. Mức độ là tham chiếu nhanh, không phải lời khuyên thú y.</p>
+
+      <div class="severity-legend" role="region" aria-label="Chú thích mức độ">
+        <span class="legend-pill chip-safe">{SEVERITY_ICON.safe} An toàn — không độc theo ASPCA</span>
+        <span class="legend-pill chip-mild">{SEVERITY_ICON.mild} Nhẹ — kích ứng tiêu hóa / khoang miệng</span>
+        <span class="legend-pill chip-severe">{SEVERITY_ICON.severe} Nặng — cần đi khám thú y</span>
+        <span class="legend-pill chip-lethal">{SEVERITY_ICON.lethal} Tử vong — có thể gây chết</span>
+      </div>
+
+      <div class="flower-grid" id="flower-grid">
+        {FLOWERS.map((f) => (
+          <article
+            class="flower-card"
+            data-name={f.name.toLowerCase()}
+            data-aliases={(f.aliases ?? []).join(',').toLowerCase()}
+            data-cat={f.cat.level}
+            data-dog={f.dog.level}
+            data-horse={f.horse.level}
+          >
+            <header class="card-head">
+              <span class="card-emoji" aria-hidden="true">{f.emoji}</span>
+              <div class="card-title-wrap">
+                <h2 class="card-name">{f.name}</h2>
+                <p class="card-sci">{f.scientific}</p>
+              </div>
+            </header>
+
+            <div class="pet-row">
+              {(['cat', 'dog', 'horse'] as const).map((pet) => (
+                <div class={`pet-cell pet-cell-${f[pet].level}`}>
+                  <span class="pet-icon">{pet === 'cat' ? '🐱' : pet === 'dog' ? '🐶' : '🐴'}</span>
+                  <span class="pet-status">
+                    <span class="pet-status-icon">{SEVERITY_ICON[f[pet].level]}</span>
+                    <span class="pet-status-label">{SEVERITY_LABEL[f[pet].level]}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {(f.cat.symptoms || f.dog.symptoms || f.horse.symptoms) && (
+              <div class="card-section">
+                <h3 class="card-sub">Triệu chứng nếu ăn phải</h3>
+                <ul class="card-list">
+                  {f.cat.symptoms && <li><strong>Mèo:</strong> {f.cat.symptoms}</li>}
+                  {f.dog.symptoms && f.dog.symptoms !== f.cat.symptoms && <li><strong>Chó:</strong> {f.dog.symptoms}</li>}
+                  {f.dog.symptoms && f.dog.symptoms === f.cat.symptoms && <li><strong>Chó:</strong> Giống mèo phía trên.</li>}
+                  {f.horse.symptoms && <li><strong>Ngựa:</strong> {f.horse.symptoms}</li>}
+                </ul>
+              </div>
+            )}
+
+            {f.toxicCompound && (
+              <div class="card-section">
+                <h3 class="card-sub">Hợp chất gây độc</h3>
+                <p class="card-body">{f.toxicCompound}</p>
+              </div>
+            )}
+
+            {f.notes && (
+              <div class="card-section card-notes">
+                <h3 class="card-sub">Ghi chú florist</h3>
+                <p class="card-body">{f.notes}</p>
+              </div>
+            )}
+
+            <div class="card-links">
+              {f.glossarySlug && (
+                <a class="card-link" href={`/vi/learn/${f.glossarySlug}/`}>Xem hướng dẫn đầy đủ →</a>
+              )}
+              {f.aspcaUrl && (
+                <a class="card-link card-link-ext" href={f.aspcaUrl} target="_blank" rel="noopener noreferrer">Tham chiếu ASPCA ↗</a>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <p class="empty-state" id="empty-state" hidden>Không có loài hoa nào khớp bộ lọc. Thử từ khóa khác hoặc xóa bộ lọc.</p>
+    </div>
+  </div>
+
+  <section class="faq-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-16">
+      <h2 class="faq-title">Câu Hỏi Thường Gặp Về Hoa An Toàn Cho Thú Cưng</h2>
+      <div class="faq-list">
+        {generalFAQs.map((item, i) => (
+          <div class="faq-item" data-index={i}>
+            <button class="faq-q" aria-expanded="false">
+              <span>{item.q}</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>{item.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="tips-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="tips-title">Làm Sao Để Có Một Bó Hoa Thực Sự An Toàn Cho Thú Cưng?</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">🐱</div>
+          <h3 class="tip-head">Không bao giờ giao lily đến nhà có mèo</h3>
+          <p class="tip-body">Nếu bạn không biết người nhận có nuôi mèo hay không, mặc định bó không có lily. Độc tố thận trong lily không có "liều thấp an toàn" — chỉ phấn dính trên chân thôi cũng đủ. Hãy thay thế bằng cát tường, alstroemeria (KHÔNG phải lily thật), hoặc ranunculus theo phong cách phương Đông để giữ vẻ tương tự.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🐶</div>
+          <h3 class="tip-head">Cẩn thận với hoa từ củ</h3>
+          <p class="tip-body">Tulip, thủy tiên và lan dạ hương nguy hiểm nhất với chó hay đào vườn — củ độc hơn cuống cắt rất nhiều. Hoa cắt cắm bình ít rủi ro hơn nhưng vẫn nên đặt ở kệ cao hoặc treo nơi chó không kéo xuống được.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🌿</div>
+          <h3 class="tip-head">Đừng quên phần lá xanh</h3>
+          <p class="tip-body">Lá độn thường dễ với tới hơn chính bông hoa. Eucalyptus, ivy, leatherleaf, ruscus đều có độ độc khác nhau — eucalyptus là chất kích ứng tiêu hóa và thần kinh nhẹ cho chó/mèo. Trong nhà có thú cưng, ưu tiên lá an toàn như leatherleaf fern, parlor palm, hoặc boston fern.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">📞</div>
+          <h3 class="tip-head">Lưu sẵn các số này trong điện thoại</h3>
+          <p class="tip-body">ASPCA Animal Poison Control: (888) 426-4435 (có phí tư vấn). Pet Poison Helpline: (855) 764-7661 (có phí tư vấn). Cả hai chạy 24/7 và có đường dây trực tiếp đến bác sĩ thú y. Nhanh hơn nhiều việc tự tra triệu chứng khi thú cưng đã có dấu hiệu.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <div class="max-w-6xl mx-auto px-6 py-10">
+      <p><strong>Nguồn & miễn trừ:</strong> Mức độ độc dựa trên <a href="https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants" target="_blank" rel="noopener noreferrer">ASPCA Toxic and Non-Toxic Plants database</a> và <a href="https://www.petpoisonhelpline.com/poisons/" target="_blank" rel="noopener noreferrer">Pet Poison Helpline</a>. Trang này là tham chiếu nhanh cho florist và người tặng hoa, không phải lời khuyên thú y. Nếu thú cưng đã ăn phải hoa, hãy gọi bác sĩ thú y hoặc tổng đài chống độc ngay — đừng chờ một trang web đưa ra quyết định thay bạn.</p>
+    </div>
+  </section>
+
+  </article>
+</BaseLayout>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('#flower-grid');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.flower-card'));
+  const search = document.querySelector<HTMLInputElement>('#flower-search');
+  const counter = document.querySelector<HTMLElement>('#result-count');
+  const empty = document.querySelector<HTMLElement>('#empty-state');
+  const petChips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter-pet]'));
+  const sevChips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter-sev]'));
+
+  let activePet: 'all' | 'cat' | 'dog' | 'horse' = 'all';
+  let activeSev: 'all' | 'safe' | 'toxic' = 'all';
+  let activeQuery = '';
+
+  function applyFilters() {
+    let visible = 0;
+    const q = activeQuery.trim().toLowerCase();
+    cards.forEach(card => {
+      const name = card.dataset.name ?? '';
+      const aliases = card.dataset.aliases ?? '';
+      const matchesQuery = !q || name.includes(q) || aliases.includes(q);
+
+      const cat = card.dataset.cat ?? 'safe';
+      const dog = card.dataset.dog ?? 'safe';
+      const horse = card.dataset.horse ?? 'safe';
+
+      let matchesPet = true;
+      if (activePet === 'cat') matchesPet = cat === 'safe';
+      else if (activePet === 'dog') matchesPet = dog === 'safe';
+      else if (activePet === 'horse') matchesPet = horse === 'safe';
+
+      const allSafe = cat === 'safe' && dog === 'safe' && horse === 'safe';
+      const anyToxic = cat !== 'safe' || dog !== 'safe' || horse !== 'safe';
+      let matchesSev = true;
+      if (activeSev === 'safe') matchesSev = allSafe;
+      else if (activeSev === 'toxic') matchesSev = anyToxic;
+
+      const show = matchesQuery && matchesPet && matchesSev;
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+    if (counter) counter.textContent = String(visible);
+    if (empty) empty.hidden = visible !== 0;
+  }
+
+  search?.addEventListener('input', () => {
+    activeQuery = search.value;
+    applyFilters();
+  });
+
+  petChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      petChips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+      chip.setAttribute('aria-pressed', 'true');
+      activePet = (chip.dataset.filterPet ?? 'all') as typeof activePet;
+      applyFilters();
+    });
+  });
+
+  sevChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      sevChips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+      chip.setAttribute('aria-pressed', 'true');
+      activeSev = (chip.dataset.filterSev ?? 'all') as typeof activeSev;
+      applyFilters();
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      const answer = btn.nextElementSibling as HTMLElement | null;
+      if (answer) answer.hidden = expanded;
+      const icon = btn.querySelector('.faq-icon');
+      if (icon) icon.textContent = expanded ? '+' : '−';
+    });
+  });
+</script>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .breadcrumb-list a:hover { text-decoration:underline; }
+
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:620px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+
+  .emergency-banner { background:#FEF1EE; border-top:1px solid #F2D6CD; border-bottom:1px solid #F2D6CD; }
+  .emergency-grid { display:grid; grid-template-columns:1fr; gap:1rem; align-items:center; }
+  @media (min-width: 800px) { .emergency-grid { grid-template-columns:1.4fr 1fr; gap:2.4rem; } }
+  .emergency-eyebrow { font-family:'Jost',sans-serif; font-size:0.75rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#B43A2C; margin:0 0 0.4rem; }
+  .emergency-body { font-family:'Jost',sans-serif; font-size:0.92rem; color:var(--mauve); margin:0; line-height:1.65; font-weight:300; }
+  .emergency-numbers { display:grid; grid-template-columns:1fr; gap:0.6rem; }
+  @media (min-width: 520px) { .emergency-numbers { grid-template-columns:1fr 1fr; } }
+  .emergency-num { display:flex; flex-direction:column; padding:0.7rem 0.9rem; background:white; border:1px solid #F2D6CD; border-radius:10px; text-decoration:none; transition:all 0.18s; }
+  .emergency-num:hover { border-color:#B43A2C; transform:translateY(-1px); }
+  .emergency-num-label { font-family:'Jost',sans-serif; font-size:0.7rem; letter-spacing:0.06em; color:var(--taupe); margin-bottom:0.2rem; }
+  .emergency-num-value { font-family:'Jost',sans-serif; font-size:1.05rem; color:#B43A2C; font-weight:600; letter-spacing:0.04em; }
+
+  .quick-answer { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .quick-answer p { font-family:'Jost',sans-serif; font-size:0.95rem; line-height:1.7; color:var(--mauve-mid); margin:0; max-width:920px; font-weight:300; }
+  .quick-answer strong { color:var(--mauve); font-weight:500; }
+  .quick-answer a { color:var(--blush-dark); text-decoration:underline; text-decoration-color:rgba(196,122,138,0.4); text-underline-offset:3px; }
+
+  .checker-wrap { background:var(--ivory); }
+
+  .filter-bar { background:white; border:1px solid var(--ivory-dark); border-radius:16px; padding:1.4rem 1.4rem 1.1rem; display:grid; grid-template-columns:1fr; gap:1rem; }
+  @media (min-width: 900px) { .filter-bar { grid-template-columns:1.1fr 1fr 1fr; gap:1.4rem; } }
+  .filter-label { display:block; font-family:'Jost',sans-serif; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--taupe); margin-bottom:0.5rem; font-weight:500; padding:0; }
+  .filter-search { display:flex; flex-direction:column; }
+  .filter-input { font-family:'Jost',sans-serif; padding:0.6rem 0.95rem; border:1px solid var(--ivory-dark); border-radius:10px; background:var(--ivory); color:var(--mauve); font-size:0.95rem; width:100%; }
+  .filter-input:focus { outline:2px solid var(--blush); outline-offset:2px; }
+  .filter-group { border:none; padding:0; margin:0; min-width:0; }
+  .filter-chips { display:flex; flex-wrap:wrap; gap:0.4rem; }
+  .chip { padding:0.45rem 0.9rem; background:white; border:1px solid var(--ivory-dark); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); cursor:pointer; transition:all 0.18s; }
+  .chip:hover { color:var(--mauve); border-color:var(--blush); }
+  .chip[aria-pressed="true"] { background:var(--mauve); color:white; border-color:var(--mauve); font-weight:500; }
+  .chip-safe[aria-pressed="true"] { background:#1F8754; border-color:#1F8754; }
+  .chip-toxic[aria-pressed="true"] { background:#B43A2C; border-color:#B43A2C; }
+
+  .filter-help { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--taupe); margin:0.8rem 0 1.2rem; text-align:center; font-weight:300; }
+  .filter-help span { color:var(--mauve); font-weight:500; }
+
+  .severity-legend { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-bottom:1.4rem; }
+  .legend-pill { font-family:'Jost',sans-serif; font-size:0.78rem; padding:0.4rem 0.85rem; border-radius:999px; color:white; font-weight:500; letter-spacing:0.02em; }
+  .legend-pill.chip-safe { background:#1F8754; }
+  .legend-pill.chip-mild { background:#D4A12C; }
+  .legend-pill.chip-severe { background:#D9532C; }
+  .legend-pill.chip-lethal { background:#7A1F1F; }
+
+  .flower-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.2rem; }
+
+  .flower-card { background:white; border:1px solid var(--ivory-dark); border-radius:16px; padding:1.4rem 1.3rem; display:flex; flex-direction:column; gap:0.9rem; }
+  .flower-card[hidden] { display:none; }
+  .card-head { display:flex; align-items:center; gap:0.85rem; }
+  .card-emoji { font-size:1.95rem; line-height:1; }
+  .card-title-wrap { flex:1; min-width:0; }
+  .card-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.4rem; font-weight:400; color:var(--mauve); margin:0 0 0.1rem; line-height:1.1; }
+  .card-sci { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--taupe); font-style:italic; margin:0; font-weight:300; }
+
+  .pet-row { display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; padding:0.7rem; background:var(--ivory); border-radius:12px; }
+  .pet-cell { display:flex; flex-direction:column; align-items:center; padding:0.5rem 0.3rem; border-radius:8px; gap:0.25rem; background:white; border:1px solid var(--ivory-dark); }
+  .pet-cell-safe { background:#EBF7F1; border-color:#C7E5D5; }
+  .pet-cell-mild { background:#FBF3DC; border-color:#F0DFA9; }
+  .pet-cell-severe { background:#FDEBE3; border-color:#F5C9B6; }
+  .pet-cell-lethal { background:#F7DDDD; border-color:#E5A8A8; }
+  .pet-icon { font-size:1.2rem; }
+  .pet-status { display:flex; align-items:center; gap:0.3rem; }
+  .pet-status-icon { font-family:'Jost',sans-serif; font-size:0.95rem; font-weight:600; }
+  .pet-cell-safe .pet-status-icon { color:#1F8754; }
+  .pet-cell-mild .pet-status-icon { color:#A8801E; }
+  .pet-cell-severe .pet-status-icon { color:#B43A2C; }
+  .pet-cell-lethal .pet-status-icon { color:#7A1F1F; }
+  .pet-status-label { font-family:'Jost',sans-serif; font-size:0.74rem; color:var(--mauve); font-weight:500; }
+
+  .card-section { display:flex; flex-direction:column; gap:0.3rem; }
+  .card-sub { font-family:'Jost',sans-serif; font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--taupe); font-weight:500; margin:0; }
+  .card-body { font-family:'Jost',sans-serif; font-size:0.86rem; line-height:1.6; color:var(--mauve-mid); margin:0; font-weight:300; }
+  .card-list { font-family:'Jost',sans-serif; font-size:0.85rem; line-height:1.55; color:var(--mauve-mid); margin:0; padding-left:1.05rem; font-weight:300; }
+  .card-list li { margin-bottom:0.3rem; }
+  .card-list strong { color:var(--mauve); font-weight:500; }
+  .card-notes { background:#FDF6E9; border:1px solid #F2E2BD; border-radius:8px; padding:0.7rem 0.9rem; }
+  .card-notes .card-sub { color:#9B6F1A; }
+  .card-notes .card-body { color:#5C4319; }
+
+  .card-links { display:flex; gap:0.7rem; flex-wrap:wrap; margin-top:auto; padding-top:0.4rem; }
+  .card-link { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--blush-dark); text-decoration:none; font-weight:500; }
+  .card-link:hover { text-decoration:underline; }
+  .card-link-ext { color:var(--taupe); }
+
+  .empty-state { text-align:center; padding:2.5rem 1rem; font-family:'Jost',sans-serif; color:var(--taupe); font-size:0.92rem; font-weight:300; }
+
+  .faq-section { background:white; border-top:1px solid var(--ivory-dark); }
+  .faq-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.8rem,3.4vw,2.4rem); color:var(--mauve); font-weight:400; margin:0 0 1.4rem; text-align:center; }
+  .faq-list { max-width:780px; margin:0 auto; display:flex; flex-direction:column; gap:0.6rem; }
+  .faq-item { background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-q { width:100%; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:1rem 1.2rem; background:none; border:none; text-align:left; font-family:'Jost',sans-serif; font-size:0.95rem; color:var(--mauve); cursor:pointer; font-weight:400; }
+  .faq-q:hover { background:white; }
+  .faq-icon { font-size:1.3rem; color:var(--blush-dark); flex-shrink:0; }
+  .faq-a { padding:0 1.2rem 1.1rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.9rem; line-height:1.7; color:var(--mauve-mid); margin:0; font-weight:300; }
+
+  .tips-section { background:var(--ivory); }
+  .tips-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.6rem,3vw,2.2rem); color:var(--mauve); font-weight:400; margin:0 0 1.6rem; text-align:center; }
+  .tips-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.2rem; }
+  .tip-card { background:white; border:1px solid var(--ivory-dark); border-radius:14px; padding:1.4rem; }
+  .tip-icon { font-size:1.6rem; margin-bottom:0.6rem; }
+  .tip-head { font-family:'Jost',sans-serif; font-size:0.92rem; font-weight:500; color:var(--mauve); margin:0 0 0.45rem; }
+  .tip-body { font-family:'Jost',sans-serif; font-size:0.86rem; line-height:1.65; color:var(--mauve-mid); margin:0; font-weight:300; }
+
+  .disclaimer { background:white; border-top:1px solid var(--ivory-dark); }
+  .disclaimer p { font-family:'Jost',sans-serif; font-size:0.82rem; line-height:1.7; color:var(--taupe); margin:0; max-width:920px; font-weight:300; }
+  .disclaimer strong { color:var(--mauve); font-weight:500; }
+  .disclaimer a { color:var(--blush-dark); text-decoration:underline; }
+</style>

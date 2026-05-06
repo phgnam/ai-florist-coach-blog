@@ -1,0 +1,857 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../components/PagefindMeta.astro';
+
+export const prerender = true;
+
+const lang = 'en' as const;
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/pet-safe-checker/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/pet-safe-checker/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/pet-safe-checker/` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: `${siteUrl}/` },
+  { name: 'Tools', url: `${siteUrl}/tools/` },
+  { name: 'Pet-Safe Flower Checker', url: `${siteUrl}/tools/pet-safe-checker/` },
+];
+
+type Severity = 'safe' | 'mild' | 'severe' | 'lethal';
+
+interface PetStatus {
+  level: Severity;
+  symptoms?: string;
+  notes?: string;
+}
+
+interface FlowerEntry {
+  name: string;
+  scientific: string;
+  emoji: string;
+  glossarySlug: string | null;
+  cat: PetStatus;
+  dog: PetStatus;
+  horse: PetStatus;
+  toxicCompound: string | null;
+  aspcaUrl?: string;
+  aliases?: string[];
+}
+
+// Data sourced primarily from the ASPCA Toxic and Non-Toxic Plants database
+// (https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants)
+// and the Pet Poison Helpline. Severity buckets are simplified for at-a-glance use:
+//   safe   — non-toxic per ASPCA, no clinical signs expected from incidental contact
+//   mild   — GI upset, oral irritation, dermatitis; usually self-limiting
+//   severe — vet visit needed; significant systemic effects
+//   lethal — can be fatal, especially without rapid intervention
+const FLOWERS: FlowerEntry[] = [
+  // ---------- SAFE ----------
+  {
+    name: 'Rose', scientific: 'Rosa spp.', emoji: '🌹', glossarySlug: 'rose',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/rose',
+    aliases: ['garden rose', 'spray rose'],
+  },
+  {
+    name: 'Sunflower', scientific: 'Helianthus annuus', emoji: '🌻', glossarySlug: 'sunflower',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/sunflower',
+  },
+  {
+    name: 'Snapdragon', scientific: 'Antirrhinum majus', emoji: '🌷', glossarySlug: 'snapdragon',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+  },
+  {
+    name: 'Gerbera Daisy', scientific: 'Gerbera jamesonii', emoji: '🌼', glossarySlug: 'gerbera',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/gerbera-daisy',
+    aliases: ['barberton daisy', 'transvaal daisy'],
+  },
+  {
+    name: 'Orchid', scientific: 'Phalaenopsis spp., Cymbidium spp.', emoji: '🌸', glossarySlug: 'orchid',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/phalaenopsis-orchid',
+    aliases: ['moth orchid', 'phalaenopsis'],
+  },
+  {
+    name: 'Lisianthus', scientific: 'Eustoma grandiflorum', emoji: '💜', glossarySlug: 'lisianthus',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aliases: ['eustoma', 'prairie gentian'],
+  },
+  {
+    name: 'Stock', scientific: 'Matthiola incana', emoji: '🌸', glossarySlug: 'stock',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aliases: ['matthiola', 'gilly flower'],
+  },
+  {
+    name: 'Statice', scientific: 'Limonium sinuatum', emoji: '💜', glossarySlug: null,
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aliases: ['limonium', 'sea lavender'],
+  },
+  {
+    name: "Baby's Breath", scientific: 'Gypsophila paniculata', emoji: '🤍', glossarySlug: null,
+    cat: { level: 'mild', symptoms: 'Mild GI upset (vomiting, diarrhoea) if ingested.' },
+    dog: { level: 'mild', symptoms: 'Mild GI upset (vomiting, diarrhoea) if ingested.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Gyposenin (saponin)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/babys-breath',
+    aliases: ['gypsophila'],
+  },
+  {
+    name: 'Camellia', scientific: 'Camellia japonica', emoji: '🌸', glossarySlug: 'camellia',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/camellia',
+  },
+  {
+    name: 'Freesia', scientific: 'Freesia refracta', emoji: '🌼', glossarySlug: 'freesia',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    notes: 'Cut flowers are non-toxic. Bulbs may cause mild GI upset if a curious pet digs and chews.',
+  },
+  {
+    name: 'Marigold (Calendula)', scientific: 'Calendula officinalis', emoji: '🌼', glossarySlug: 'marigold',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+    notes: 'Pot marigold (Calendula) is non-toxic. Note: French/African marigolds (Tagetes spp.) are listed below as mild irritants.',
+  },
+  {
+    name: 'Magnolia', scientific: 'Magnolia spp.', emoji: '🌸', glossarySlug: 'magnolia',
+    cat: { level: 'safe' }, dog: { level: 'safe' }, horse: { level: 'safe' },
+    toxicCompound: null,
+  },
+
+  // ---------- MILD ----------
+  {
+    name: 'Carnation', scientific: 'Dianthus caryophyllus', emoji: '🌺', glossarySlug: 'carnation',
+    cat: { level: 'mild', symptoms: 'Mild GI upset, dermatitis on contact with sap.' },
+    dog: { level: 'mild', symptoms: 'Mild GI upset, dermatitis on contact with sap.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Triterpenoid saponins',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/carnation',
+  },
+  {
+    name: 'Chrysanthemum', scientific: 'Chrysanthemum spp.', emoji: '🌼', glossarySlug: 'chrysanthemum',
+    cat: { level: 'mild', symptoms: 'Vomiting, diarrhoea, hypersalivation, in-coordination, dermatitis.' },
+    dog: { level: 'mild', symptoms: 'Vomiting, diarrhoea, hypersalivation, in-coordination, dermatitis.' },
+    horse: { level: 'mild', symptoms: 'GI upset, ataxia.' },
+    toxicCompound: 'Sesquiterpene lactones, pyrethrins',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/chrysanthemum',
+    aliases: ['mum', 'pom', 'spider mum'],
+  },
+  {
+    name: 'Marigold (French / African)', scientific: 'Tagetes spp.', emoji: '🌼', glossarySlug: null,
+    cat: { level: 'mild', symptoms: 'Mild mouth/skin irritation, GI upset.' },
+    dog: { level: 'mild', symptoms: 'Mild mouth/skin irritation, GI upset.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Tagetes essential oils',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/marigold',
+  },
+  {
+    name: 'Iris', scientific: 'Iris spp.', emoji: '💜', glossarySlug: 'iris',
+    cat: { level: 'mild', symptoms: 'Salivation, vomiting, diarrhoea. Rhizome (the underground bulb-like part) is the most toxic.' },
+    dog: { level: 'mild', symptoms: 'Salivation, vomiting, diarrhoea. Rhizome is the most toxic part.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Pentacyclic terpenoids (irisin), iridin',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/iris',
+  },
+  {
+    name: 'Calla Lily', scientific: 'Zantedeschia aethiopica', emoji: '🤍', glossarySlug: 'calla-lily',
+    cat: { level: 'mild', symptoms: 'Intense oral pain, drooling, foaming, swelling of mouth/tongue, vomiting.' },
+    dog: { level: 'mild', symptoms: 'Intense oral pain, drooling, foaming, swelling of mouth/tongue, vomiting.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Insoluble calcium oxalate crystals',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/calla-lily',
+    notes: 'Despite the name, calla lilies are NOT true lilies and do not cause kidney failure in cats. Still painful — keep out of reach.',
+  },
+  {
+    name: 'Anthurium', scientific: 'Anthurium spp.', emoji: '❤️', glossarySlug: null,
+    cat: { level: 'mild', symptoms: 'Oral irritation, intense burning, drooling, difficulty swallowing, vomiting.' },
+    dog: { level: 'mild', symptoms: 'Oral irritation, intense burning, drooling, difficulty swallowing, vomiting.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Insoluble calcium oxalate crystals',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/flamingo-flower',
+    aliases: ['flamingo flower', 'tail flower', 'lace leaf'],
+  },
+  {
+    name: 'Ranunculus', scientific: 'Ranunculus spp.', emoji: '🌸', glossarySlug: 'ranunculus',
+    cat: { level: 'mild', symptoms: 'Mouth blisters, hypersalivation, ataxia.' },
+    dog: { level: 'mild', symptoms: 'Mouth blisters, hypersalivation, ataxia.' },
+    horse: { level: 'severe', symptoms: 'Severe oral and GI ulceration; livestock are most at risk in pasture.' },
+    toxicCompound: 'Protoanemonin (released from glycoside ranunculin when sap is crushed)',
+    aliases: ['buttercup', 'persian buttercup'],
+  },
+  {
+    name: 'Anemone', scientific: 'Anemone spp.', emoji: '🌸', glossarySlug: 'anemone',
+    cat: { level: 'mild', symptoms: 'Mouth blisters, drooling, vomiting.' },
+    dog: { level: 'mild', symptoms: 'Mouth blisters, drooling, vomiting.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Protoanemonin (same family as ranunculus)',
+  },
+  {
+    name: 'Sweet Pea', scientific: 'Lathyrus odoratus', emoji: '🌸', glossarySlug: 'sweet-pea',
+    cat: { level: 'mild', symptoms: 'Weakness, lethargy, tremors, seizures with large ingestions.' },
+    dog: { level: 'mild', symptoms: 'Weakness, lethargy, tremors, seizures with large ingestions.' },
+    horse: { level: 'severe', symptoms: 'Lathyrism — neurological damage, paralysis from chronic ingestion.' },
+    toxicCompound: 'Aminopropionitrile (especially in seeds)',
+    notes: 'Seeds and pods are the most toxic parts. Cut flowers in a vase are low-risk.',
+  },
+  {
+    name: 'Bird of Paradise', scientific: 'Strelitzia reginae', emoji: '🌺', glossarySlug: null,
+    cat: { level: 'mild', symptoms: 'Vomiting, diarrhoea, drowsiness; seed pod is the most toxic part.' },
+    dog: { level: 'mild', symptoms: 'Vomiting, diarrhoea, drowsiness; seed pod is the most toxic part.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Tannins, hydrocyanic acid (in seed pods)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/bird-paradise',
+  },
+  {
+    name: 'Plumeria', scientific: 'Plumeria spp.', emoji: '🌸', glossarySlug: 'plumeria',
+    cat: { level: 'mild', symptoms: 'Vomiting, diarrhoea; sap can cause skin irritation.' },
+    dog: { level: 'mild', symptoms: 'Vomiting, diarrhoea; sap can cause skin irritation.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Plumericin (irritant latex)',
+    aliases: ['frangipani'],
+  },
+  {
+    name: 'Peony', scientific: 'Paeonia officinalis', emoji: '🌸', glossarySlug: 'peony',
+    cat: { level: 'mild', symptoms: 'Vomiting, diarrhoea, depression. Bark and roots most toxic.' },
+    dog: { level: 'mild', symptoms: 'Vomiting, diarrhoea, depression. Bark and roots most toxic.' },
+    horse: { level: 'mild' },
+    toxicCompound: 'Paeonol',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/peony',
+  },
+  {
+    name: 'Alstroemeria', scientific: 'Alstroemeria spp.', emoji: '🌸', glossarySlug: 'alstroemeria',
+    cat: { level: 'mild', symptoms: 'Mild GI upset; sap can cause contact dermatitis (alstroemeria-itch in florists).' },
+    dog: { level: 'mild', symptoms: 'Mild GI upset; sap can cause contact dermatitis.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Tulipalin A (allergenic)',
+    aliases: ['peruvian lily', 'lily of the incas'],
+    notes: 'Despite the nickname "Peruvian lily," alstroemeria is NOT a true lily and does not cause kidney failure in cats.',
+  },
+
+  // ---------- SEVERE ----------
+  {
+    name: 'Tulip', scientific: 'Tulipa spp.', emoji: '🌷', glossarySlug: 'tulip',
+    cat: { level: 'severe', symptoms: 'Vomiting, diarrhoea, drooling, depression; cardiac arrhythmia and breathing difficulty with large ingestions.' },
+    dog: { level: 'severe', symptoms: 'Vomiting, diarrhoea, drooling, depression; cardiac signs with large bulb ingestion.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Tulipalin A & B (concentrated in bulbs)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/tulip',
+    notes: 'Bulbs are dramatically more toxic than cut flowers, but the cut stems and petals can still cause GI signs.',
+  },
+  {
+    name: 'Daffodil', scientific: 'Narcissus spp.', emoji: '🌼', glossarySlug: 'daffodil',
+    cat: { level: 'severe', symptoms: 'Severe vomiting, drooling, abdominal pain, cardiac arrhythmias, low blood pressure, tremors.' },
+    dog: { level: 'severe', symptoms: 'Severe vomiting, drooling, abdominal pain, cardiac arrhythmias, low blood pressure, tremors.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Lycorine alkaloids (highest concentration in bulb)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/daffodil',
+    aliases: ['narcissus', 'jonquil', 'paperwhite'],
+  },
+  {
+    name: 'Hyacinth', scientific: 'Hyacinthus orientalis', emoji: '💜', glossarySlug: 'hyacinth',
+    cat: { level: 'severe', symptoms: 'Intense vomiting, drooling, diarrhoea (sometimes bloody), depression, tremors.' },
+    dog: { level: 'severe', symptoms: 'Intense vomiting, drooling, diarrhoea (sometimes bloody), depression, tremors.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Narcissus-like alkaloids, oxalates',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hyacinth',
+  },
+  {
+    name: 'Hydrangea', scientific: 'Hydrangea spp.', emoji: '💙', glossarySlug: 'hydrangea',
+    cat: { level: 'severe', symptoms: 'Vomiting, diarrhoea, depression; cyanide release with large ingestions.' },
+    dog: { level: 'severe', symptoms: 'Vomiting, diarrhoea, depression; cyanide release with large ingestions.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Cyanogenic glycosides (release hydrogen cyanide when chewed)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/hydrangea',
+  },
+  {
+    name: 'Cherry Blossom', scientific: 'Prunus serrulata', emoji: '🌸', glossarySlug: 'cherry-blossom',
+    cat: { level: 'severe', symptoms: 'Brick-red mucous membranes, dilated pupils, panting, shock — cyanide poisoning with large ingestion of leaves/seeds.' },
+    dog: { level: 'severe', symptoms: 'Brick-red mucous membranes, dilated pupils, panting, shock — cyanide poisoning.' },
+    horse: { level: 'severe' },
+    toxicCompound: 'Cyanogenic glycosides (in leaves, twigs, seeds — not blossoms)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/cherry',
+    notes: 'Risk is mostly from leaves/stems and pits, not the showy pink blossoms themselves. Still, treat the whole branch as toxic.',
+    aliases: ['sakura', 'flowering cherry'],
+  },
+
+  // ---------- LETHAL ----------
+  {
+    name: 'Lily (true lily)', scientific: 'Lilium spp., Hemerocallis spp.', emoji: '🌺', glossarySlug: 'lily',
+    cat: { level: 'lethal', symptoms: 'Acute kidney failure within 24–72 hours from any part — petal, leaf, pollen, or vase water. Lethargy, vomiting, then anuria.' },
+    dog: { level: 'mild', symptoms: 'GI upset only; dogs are NOT susceptible to the kidney toxin that affects cats.' },
+    horse: { level: 'safe' },
+    toxicCompound: 'Unidentified water-soluble nephrotoxin (cats only)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lilies',
+    notes: 'THE most dangerous flower for cats in any florist shop. Includes Easter lily, Tiger lily, Asiatic lily, Stargazer, Oriental lily, and daylilies. Even licking pollen off fur or drinking vase water can be fatal. Never deliver lilies to a household with a cat.',
+    aliases: ['easter lily', 'asiatic lily', 'tiger lily', 'stargazer', 'oriental lily', 'daylily'],
+  },
+  {
+    name: 'Lily of the Valley', scientific: 'Convallaria majalis', emoji: '🤍', glossarySlug: 'lily-of-the-valley',
+    cat: { level: 'lethal', symptoms: 'Vomiting, slow heart rate, severe arrhythmias, seizures, death without aggressive cardiac care.' },
+    dog: { level: 'lethal', symptoms: 'Vomiting, slow heart rate, severe arrhythmias, seizures, death without aggressive cardiac care.' },
+    horse: { level: 'lethal' },
+    toxicCompound: 'Cardiac glycosides (convallatoxin, convallarin) — same class as digitalis',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/lily-valley',
+  },
+  {
+    name: 'Foxglove', scientific: 'Digitalis purpurea', emoji: '💜', glossarySlug: null,
+    cat: { level: 'lethal', symptoms: 'Cardiac arrhythmias, weakness, vomiting, collapse, death. Used historically as a heart drug; the therapeutic and lethal doses are close.' },
+    dog: { level: 'lethal', symptoms: 'Cardiac arrhythmias, weakness, vomiting, collapse, death.' },
+    horse: { level: 'lethal' },
+    toxicCompound: 'Cardiac glycosides (digitoxin, digoxin)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/foxglove',
+  },
+  {
+    name: 'Oleander', scientific: 'Nerium oleander', emoji: '🌸', glossarySlug: null,
+    cat: { level: 'lethal', symptoms: 'Severe GI signs, cardiac arrhythmias, hypothermia, death. One of the most toxic ornamental plants known.' },
+    dog: { level: 'lethal', symptoms: 'Severe GI signs, cardiac arrhythmias, hypothermia, death.' },
+    horse: { level: 'lethal' },
+    toxicCompound: 'Cardiac glycosides (oleandrin, neriin)',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/oleander',
+    notes: 'Every part is deeply toxic, including dried leaves, smoke, and water flowers have sat in. Many florists refuse to handle oleander at all.',
+  },
+  {
+    name: 'Azalea / Rhododendron', scientific: 'Rhododendron spp.', emoji: '🌸', glossarySlug: null,
+    cat: { level: 'lethal', symptoms: 'Vomiting, drooling, weakness, severe cardiac arrhythmia, coma, death.' },
+    dog: { level: 'lethal', symptoms: 'Vomiting, drooling, weakness, severe cardiac arrhythmia, coma, death.' },
+    horse: { level: 'lethal' },
+    toxicCompound: 'Grayanotoxins',
+    aspcaUrl: 'https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants/azalea',
+  },
+];
+
+// Group by severity for the legend / filtering
+const COUNTS = {
+  safe: FLOWERS.filter(f => f.cat.level === 'safe' && f.dog.level === 'safe').length,
+  mild: FLOWERS.filter(f => (f.cat.level === 'mild' || f.dog.level === 'mild') && f.cat.level !== 'severe' && f.dog.level !== 'severe' && f.cat.level !== 'lethal' && f.dog.level !== 'lethal').length,
+  severe: FLOWERS.filter(f => (f.cat.level === 'severe' || f.dog.level === 'severe') && f.cat.level !== 'lethal' && f.dog.level !== 'lethal').length,
+  lethal: FLOWERS.filter(f => f.cat.level === 'lethal' || f.dog.level === 'lethal').length,
+};
+
+const SEVERITY_LABEL: Record<Severity, string> = {
+  safe: 'Safe',
+  mild: 'Mild',
+  severe: 'Severe',
+  lethal: 'Lethal',
+};
+
+const SEVERITY_ICON: Record<Severity, string> = {
+  safe: '✓',
+  mild: '⚠',
+  severe: '⛔',
+  lethal: '☠',
+};
+
+// FAQ entries for AEO long-tail coverage
+const generalFAQs = [
+  {
+    q: 'Which flowers are most dangerous to cats?',
+    a: 'True lilies (Lilium and Hemerocallis genera — Easter, Tiger, Asiatic, Stargazer, Oriental, daylily) are the single most dangerous flowers for cats. Any part — petal, leaf, pollen on fur, even the vase water — can cause fatal kidney failure within 72 hours. Other lethal flowers for cats include lily of the valley, foxglove, oleander, and azalea/rhododendron.',
+  },
+  {
+    q: 'Are roses safe for dogs and cats?',
+    a: 'Yes — roses (Rosa spp.) are listed as non-toxic by the ASPCA. The flesh of the flower and stem will not poison dogs or cats. The thorns can still cause cuts, choking, or perforation, so stripped or thornless roses are safer in a pet household.',
+  },
+  {
+    q: 'My cat just chewed on a lily petal — what do I do?',
+    a: 'Treat it as an emergency. Call your vet or the ASPCA Animal Poison Control Center at (888) 426-4435 (US) or the Pet Poison Helpline at (855) 764-7661 immediately. Do not wait for symptoms — once kidney failure starts, the prognosis drops sharply. Bring the plant or a clear photo to the appointment.',
+  },
+  {
+    q: 'Are tulips toxic to dogs?',
+    a: 'Yes, tulips contain tulipalin A and B which cause vomiting, drooling, and depression in dogs. The bulb is significantly more toxic than the cut flower, so dogs that dig in the garden are most at risk. A cut tulip in a vase is lower-risk but still worth keeping out of reach.',
+  },
+  {
+    q: 'What is the safest bouquet to send a household with a cat?',
+    a: 'A bouquet built around roses, sunflowers, snapdragons, lisianthus, gerbera daisies, stock, statice, freesia, orchids, and plain greens like ruscus, leatherleaf, or eucalyptus (eucalyptus is a mild irritant — see notes). Always avoid ALL true lilies (Lilium / Hemerocallis), even one stem, in a cat household.',
+  },
+  {
+    q: 'Is lavender safe for dogs and cats?',
+    a: 'The lavender plant itself causes only mild GI upset if eaten, but concentrated lavender essential oil is significantly more toxic and is responsible for most lavender poisoning calls — never apply lavender essential oil to pets or use it in a closed-room diffuser around cats.',
+  },
+  {
+    q: 'Where does this data come from?',
+    a: 'Severity ratings on this tool are based on the ASPCA Toxic and Non-Toxic Plants database and the Pet Poison Helpline. It is a quick reference, not veterinary advice — always call a vet or pet poison control if your animal has actually ingested something. Linked ASPCA pages are referenced on each entry where available.',
+  },
+  {
+    q: 'Can I prevent pet poisoning by just placing flowers up high?',
+    a: 'Helpful but not foolproof, especially for cats — they jump and knock things over. Pollen drops onto surfaces and gets on fur, then is licked off; water tipped from a vase contains lily toxins; chewed leaves fall to the floor. The only fully safe option for a cat household is to never bring true lilies into the home at all, and to keep moderate-toxicity flowers in rooms the cat cannot access.',
+  },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Pet-Safe Flower Reference',
+  description: 'Reference list of common florist flowers with cat, dog, and horse toxicity ratings sourced from the ASPCA database.',
+  url: `${siteUrl}/tools/pet-safe-checker/`,
+  numberOfItems: FLOWERS.length,
+  itemListElement: FLOWERS.map((f, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: `${f.name} (${f.scientific})`,
+    item: {
+      '@type': 'Thing',
+      name: f.name,
+      alternateName: f.scientific,
+      description: `Cat: ${SEVERITY_LABEL[f.cat.level]}. Dog: ${SEVERITY_LABEL[f.dog.level]}. Horse: ${SEVERITY_LABEL[f.horse.level]}.`,
+      url: f.glossarySlug ? `${siteUrl}/learn/${f.glossarySlug}/` : (f.aspcaUrl ?? `${siteUrl}/tools/pet-safe-checker/`),
+    },
+  })),
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: generalFAQs.map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+---
+<BaseLayout
+  lang={lang}
+  title="Pet-Safe Flower Checker — Are These Flowers Toxic to Cats and Dogs?"
+  description="Look up whether a flower is safe for cats, dogs, or horses. Severity ratings, symptoms, and toxic compounds for 35+ popular florist flowers, sourced from the ASPCA. Free tool from Yor Flower."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/tools/">Tools</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">Pet-Safe Flower Checker</li>
+      </ol>
+    </div>
+  </nav>
+
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Pet-safe flower checker. Look up cat, dog, and horse toxicity for 35+ florist flowers, with symptoms and safer alternatives. Sourced from the ASPCA database." tags={["tool","pet-safe","toxicity","florist-safety"]} />
+
+  <div class="page-header">
+    <div class="max-w-6xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Free florist tool</p>
+      <h1 class="page-title">Pet-Safe Flower Checker</h1>
+      <p class="page-sub">Are these flowers toxic to cats, dogs, or horses? Search 35+ popular florist flowers, get a severity rating per pet, and find safer alternatives.</p>
+      <a href="/vi/tools/pet-safe-checker/" class="lang-switch-link">🇻🇳 Xem bằng tiếng Việt</a>
+    </div>
+  </div>
+
+  <aside class="emergency-banner" data-pagefind-ignore>
+    <div class="max-w-6xl mx-auto px-6 py-5">
+      <div class="emergency-grid">
+        <div class="emergency-text">
+          <p class="emergency-eyebrow">⚠ If your pet has already ingested something</p>
+          <p class="emergency-body">Call your vet, or one of the 24-hour poison-control lines below, <em>before</em> you wait for symptoms. Bring the plant — or a clear photo — to the appointment.</p>
+        </div>
+        <div class="emergency-numbers">
+          <a class="emergency-num" href="tel:+18884264435">
+            <span class="emergency-num-label">ASPCA Animal Poison Control (US)</span>
+            <span class="emergency-num-value">(888) 426-4435</span>
+          </a>
+          <a class="emergency-num" href="tel:+18557647661">
+            <span class="emergency-num-label">Pet Poison Helpline (US/Canada)</span>
+            <span class="emergency-num-value">(855) 764-7661</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <section class="quick-answer">
+    <div class="max-w-6xl mx-auto px-6 py-8">
+      <p><strong>Quick answer:</strong> The single most dangerous flower in any florist shop is the <strong>true lily</strong> (Lilium and Hemerocallis — Easter, Asiatic, Tiger, Stargazer, Oriental, daylily). Even pollen on fur or vase water can cause fatal kidney failure in cats within 72 hours. The safest "all-rounder" stems for cat- and dog-friendly arrangements are <a href="/learn/rose/">roses</a>, <a href="/learn/sunflower/">sunflowers</a>, <a href="/learn/snapdragon/">snapdragons</a>, <a href="/learn/gerbera/">gerbera daisies</a>, <a href="/learn/lisianthus/">lisianthus</a>, <a href="/learn/orchid/">orchids</a>, <a href="/learn/stock/">stock</a>, and statice.</p>
+    </div>
+  </section>
+
+  <div class="checker-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-10">
+
+      <div class="filter-bar">
+        <div class="filter-search">
+          <label for="flower-search" class="filter-label">Search a flower</label>
+          <input
+            type="search"
+            id="flower-search"
+            placeholder="e.g. lily, hydrangea, gerbera…"
+            class="filter-input"
+            aria-describedby="filter-help"
+          />
+        </div>
+
+        <fieldset class="filter-group">
+          <legend class="filter-label">Show only safe for</legend>
+          <div class="filter-chips" role="group">
+            <button type="button" class="chip" data-filter-pet="all" aria-pressed="true">All pets</button>
+            <button type="button" class="chip" data-filter-pet="cat" aria-pressed="false">🐱 Cats</button>
+            <button type="button" class="chip" data-filter-pet="dog" aria-pressed="false">🐶 Dogs</button>
+            <button type="button" class="chip" data-filter-pet="horse" aria-pressed="false">🐴 Horses</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="filter-group">
+          <legend class="filter-label">Severity</legend>
+          <div class="filter-chips" role="group">
+            <button type="button" class="chip" data-filter-sev="all" aria-pressed="true">Show all</button>
+            <button type="button" class="chip chip-safe" data-filter-sev="safe" aria-pressed="false">✓ Safe only</button>
+            <button type="button" class="chip chip-toxic" data-filter-sev="toxic" aria-pressed="false">⚠ Toxic only</button>
+          </div>
+        </fieldset>
+      </div>
+      <p id="filter-help" class="filter-help">Showing <span id="result-count">{FLOWERS.length}</span> of {FLOWERS.length} flowers. Severity is a quick reference, not vet advice.</p>
+
+      <div class="severity-legend" role="region" aria-label="Severity legend">
+        <span class="legend-pill chip-safe">{SEVERITY_ICON.safe} Safe — non-toxic per ASPCA</span>
+        <span class="legend-pill chip-mild">{SEVERITY_ICON.mild} Mild — GI upset / oral irritation</span>
+        <span class="legend-pill chip-severe">{SEVERITY_ICON.severe} Severe — vet visit needed</span>
+        <span class="legend-pill chip-lethal">{SEVERITY_ICON.lethal} Lethal — can be fatal</span>
+      </div>
+
+      <div class="flower-grid" id="flower-grid">
+        {FLOWERS.map((f) => (
+          <article
+            class="flower-card"
+            data-name={f.name.toLowerCase()}
+            data-aliases={(f.aliases ?? []).join(',').toLowerCase()}
+            data-cat={f.cat.level}
+            data-dog={f.dog.level}
+            data-horse={f.horse.level}
+          >
+            <header class="card-head">
+              <span class="card-emoji" aria-hidden="true">{f.emoji}</span>
+              <div class="card-title-wrap">
+                <h2 class="card-name">{f.name}</h2>
+                <p class="card-sci">{f.scientific}</p>
+              </div>
+            </header>
+
+            <div class="pet-row">
+              {(['cat', 'dog', 'horse'] as const).map((pet) => (
+                <div class={`pet-cell pet-cell-${f[pet].level}`}>
+                  <span class="pet-icon">{pet === 'cat' ? '🐱' : pet === 'dog' ? '🐶' : '🐴'}</span>
+                  <span class="pet-status">
+                    <span class="pet-status-icon">{SEVERITY_ICON[f[pet].level]}</span>
+                    <span class="pet-status-label">{SEVERITY_LABEL[f[pet].level]}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {(f.cat.symptoms || f.dog.symptoms || f.horse.symptoms) && (
+              <div class="card-section">
+                <h3 class="card-sub">Symptoms if ingested</h3>
+                <ul class="card-list">
+                  {f.cat.symptoms && <li><strong>Cats:</strong> {f.cat.symptoms}</li>}
+                  {f.dog.symptoms && f.dog.symptoms !== f.cat.symptoms && <li><strong>Dogs:</strong> {f.dog.symptoms}</li>}
+                  {f.dog.symptoms && f.dog.symptoms === f.cat.symptoms && <li><strong>Dogs:</strong> Same as cats above.</li>}
+                  {f.horse.symptoms && <li><strong>Horses:</strong> {f.horse.symptoms}</li>}
+                </ul>
+              </div>
+            )}
+
+            {f.toxicCompound && (
+              <div class="card-section">
+                <h3 class="card-sub">Toxic compound</h3>
+                <p class="card-body">{f.toxicCompound}</p>
+              </div>
+            )}
+
+            {f.notes && (
+              <div class="card-section card-notes">
+                <h3 class="card-sub">Florist note</h3>
+                <p class="card-body">{f.notes}</p>
+              </div>
+            )}
+
+            <div class="card-links">
+              {f.glossarySlug && (
+                <a class="card-link" href={`/learn/${f.glossarySlug}/`}>Full guide →</a>
+              )}
+              {f.aspcaUrl && (
+                <a class="card-link card-link-ext" href={f.aspcaUrl} target="_blank" rel="noopener noreferrer">ASPCA reference ↗</a>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <p class="empty-state" id="empty-state" hidden>No flowers match this filter. Try a different search term or clear filters.</p>
+    </div>
+  </div>
+
+  <section class="faq-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-16">
+      <h2 class="faq-title">Pet-Safe Flower FAQs — What Florists and Pet Owners Ask</h2>
+      <div class="faq-list">
+        {generalFAQs.map((item, i) => (
+          <div class="faq-item" data-index={i}>
+            <button class="faq-q" aria-expanded="false">
+              <span>{item.q}</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>{item.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="tips-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="tips-title">How Should You Build a Truly Pet-Safe Bouquet?</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">🐱</div>
+          <h3 class="tip-head">Never deliver lilies to cat households</h3>
+          <p class="tip-body">If you don't know whether the recipient has a cat, default to a no-lily arrangement. The kidney-failure toxin in true lilies has no equivalent "low dose" — even pollen on a paw is enough. Substitute lisianthus, alstroemeria (NOT a true lily), or oriental-style ranunculus for the same look.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🐶</div>
+          <h3 class="tip-head">Watch out for bulb-stem flowers</h3>
+          <p class="tip-body">Tulip, daffodil, and hyacinth are most dangerous to dogs that dig in the garden — the bulbs are far more toxic than the cut stems. Cut flowers in a vase are lower-risk, but still position them on shelves or hung where a dog cannot pull them down.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🌿</div>
+          <h3 class="tip-head">Don't forget the foliage</h3>
+          <p class="tip-body">Filler greens are often more accessible than the showy flowers. Eucalyptus, ivy, leatherleaf, and ruscus all have varying toxicity — eucalyptus is a mild GI/CNS irritant for cats and dogs. For pet households, prefer pet-safe foliage like leather leaf fern, parlor palm, or boston fern.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">📞</div>
+          <h3 class="tip-head">Save these numbers in your phone now</h3>
+          <p class="tip-body">ASPCA Animal Poison Control: (888) 426-4435 (consultation fee). Pet Poison Helpline: (855) 764-7661 (consultation fee). Both run 24/7 and have direct lines to vets. Faster than searching for symptoms when your pet is already showing them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="disclaimer">
+    <div class="max-w-6xl mx-auto px-6 py-10">
+      <p><strong>Sources & disclaimer:</strong> Severity ratings draw on the <a href="https://www.aspca.org/pet-care/animal-poison-control/toxic-and-non-toxic-plants" target="_blank" rel="noopener noreferrer">ASPCA Toxic and Non-Toxic Plants database</a> and the <a href="https://www.petpoisonhelpline.com/poisons/" target="_blank" rel="noopener noreferrer">Pet Poison Helpline</a>. This page is intended as a quick reference for florists and gift-givers, not as veterinary advice. If your pet has actually ingested a plant, call a vet or poison-control line immediately — do not rely on a web page to make the call for you.</p>
+    </div>
+  </section>
+
+  </article>
+</BaseLayout>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('#flower-grid');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.flower-card'));
+  const search = document.querySelector<HTMLInputElement>('#flower-search');
+  const counter = document.querySelector<HTMLElement>('#result-count');
+  const empty = document.querySelector<HTMLElement>('#empty-state');
+  const petChips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter-pet]'));
+  const sevChips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter-sev]'));
+
+  let activePet: 'all' | 'cat' | 'dog' | 'horse' = 'all';
+  let activeSev: 'all' | 'safe' | 'toxic' = 'all';
+  let activeQuery = '';
+
+  function applyFilters() {
+    let visible = 0;
+    const q = activeQuery.trim().toLowerCase();
+    cards.forEach(card => {
+      const name = card.dataset.name ?? '';
+      const aliases = card.dataset.aliases ?? '';
+      const matchesQuery = !q || name.includes(q) || aliases.includes(q);
+
+      const cat = card.dataset.cat ?? 'safe';
+      const dog = card.dataset.dog ?? 'safe';
+      const horse = card.dataset.horse ?? 'safe';
+
+      let matchesPet = true;
+      if (activePet === 'cat') matchesPet = cat === 'safe';
+      else if (activePet === 'dog') matchesPet = dog === 'safe';
+      else if (activePet === 'horse') matchesPet = horse === 'safe';
+
+      const allSafe = cat === 'safe' && dog === 'safe' && horse === 'safe';
+      const anyToxic = cat !== 'safe' || dog !== 'safe' || horse !== 'safe';
+      let matchesSev = true;
+      if (activeSev === 'safe') matchesSev = allSafe;
+      else if (activeSev === 'toxic') matchesSev = anyToxic;
+
+      const show = matchesQuery && matchesPet && matchesSev;
+      card.hidden = !show;
+      if (show) visible += 1;
+    });
+    if (counter) counter.textContent = String(visible);
+    if (empty) empty.hidden = visible !== 0;
+  }
+
+  search?.addEventListener('input', () => {
+    activeQuery = search.value;
+    applyFilters();
+  });
+
+  petChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      petChips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+      chip.setAttribute('aria-pressed', 'true');
+      activePet = (chip.dataset.filterPet ?? 'all') as typeof activePet;
+      applyFilters();
+    });
+  });
+
+  sevChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      sevChips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+      chip.setAttribute('aria-pressed', 'true');
+      activeSev = (chip.dataset.filterSev ?? 'all') as typeof activeSev;
+      applyFilters();
+    });
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      const answer = btn.nextElementSibling as HTMLElement | null;
+      if (answer) answer.hidden = expanded;
+      const icon = btn.querySelector('.faq-icon');
+      if (icon) icon.textContent = expanded ? '+' : '−';
+    });
+  });
+</script>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .breadcrumb-list a:hover { text-decoration:underline; }
+
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:620px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+
+  .emergency-banner { background:#FEF1EE; border-top:1px solid #F2D6CD; border-bottom:1px solid #F2D6CD; }
+  .emergency-grid { display:grid; grid-template-columns:1fr; gap:1rem; align-items:center; }
+  @media (min-width: 800px) { .emergency-grid { grid-template-columns:1.4fr 1fr; gap:2.4rem; } }
+  .emergency-eyebrow { font-family:'Jost',sans-serif; font-size:0.75rem; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:#B43A2C; margin:0 0 0.4rem; }
+  .emergency-body { font-family:'Jost',sans-serif; font-size:0.92rem; color:var(--mauve); margin:0; line-height:1.65; font-weight:300; }
+  .emergency-numbers { display:grid; grid-template-columns:1fr; gap:0.6rem; }
+  @media (min-width: 520px) { .emergency-numbers { grid-template-columns:1fr 1fr; } }
+  .emergency-num { display:flex; flex-direction:column; padding:0.7rem 0.9rem; background:white; border:1px solid #F2D6CD; border-radius:10px; text-decoration:none; transition:all 0.18s; }
+  .emergency-num:hover { border-color:#B43A2C; transform:translateY(-1px); }
+  .emergency-num-label { font-family:'Jost',sans-serif; font-size:0.7rem; letter-spacing:0.06em; color:var(--taupe); margin-bottom:0.2rem; }
+  .emergency-num-value { font-family:'Jost',sans-serif; font-size:1.05rem; color:#B43A2C; font-weight:600; letter-spacing:0.04em; }
+
+  .quick-answer { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .quick-answer p { font-family:'Jost',sans-serif; font-size:0.95rem; line-height:1.7; color:var(--mauve-mid); margin:0; max-width:920px; font-weight:300; }
+  .quick-answer strong { color:var(--mauve); font-weight:500; }
+  .quick-answer a { color:var(--blush-dark); text-decoration:underline; text-decoration-color:rgba(196,122,138,0.4); text-underline-offset:3px; }
+
+  .checker-wrap { background:var(--ivory); }
+
+  .filter-bar { background:white; border:1px solid var(--ivory-dark); border-radius:16px; padding:1.4rem 1.4rem 1.1rem; display:grid; grid-template-columns:1fr; gap:1rem; }
+  @media (min-width: 900px) { .filter-bar { grid-template-columns:1.1fr 1fr 1fr; gap:1.4rem; } }
+  .filter-label { display:block; font-family:'Jost',sans-serif; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--taupe); margin-bottom:0.5rem; font-weight:500; padding:0; }
+  .filter-search { display:flex; flex-direction:column; }
+  .filter-input { font-family:'Jost',sans-serif; padding:0.6rem 0.95rem; border:1px solid var(--ivory-dark); border-radius:10px; background:var(--ivory); color:var(--mauve); font-size:0.95rem; width:100%; }
+  .filter-input:focus { outline:2px solid var(--blush); outline-offset:2px; }
+  .filter-group { border:none; padding:0; margin:0; min-width:0; }
+  .filter-chips { display:flex; flex-wrap:wrap; gap:0.4rem; }
+  .chip { padding:0.45rem 0.9rem; background:white; border:1px solid var(--ivory-dark); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); cursor:pointer; transition:all 0.18s; }
+  .chip:hover { color:var(--mauve); border-color:var(--blush); }
+  .chip[aria-pressed="true"] { background:var(--mauve); color:white; border-color:var(--mauve); font-weight:500; }
+  .chip-safe[aria-pressed="true"] { background:#1F8754; border-color:#1F8754; }
+  .chip-toxic[aria-pressed="true"] { background:#B43A2C; border-color:#B43A2C; }
+
+  .filter-help { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--taupe); margin:0.8rem 0 1.2rem; text-align:center; font-weight:300; }
+  .filter-help span { color:var(--mauve); font-weight:500; }
+
+  .severity-legend { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-bottom:1.4rem; }
+  .legend-pill { font-family:'Jost',sans-serif; font-size:0.78rem; padding:0.4rem 0.85rem; border-radius:999px; color:white; font-weight:500; letter-spacing:0.02em; }
+  .legend-pill.chip-safe { background:#1F8754; }
+  .legend-pill.chip-mild { background:#D4A12C; }
+  .legend-pill.chip-severe { background:#D9532C; }
+  .legend-pill.chip-lethal { background:#7A1F1F; }
+
+  .flower-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.2rem; }
+
+  .flower-card { background:white; border:1px solid var(--ivory-dark); border-radius:16px; padding:1.4rem 1.3rem; display:flex; flex-direction:column; gap:0.9rem; }
+  .flower-card[hidden] { display:none; }
+  .card-head { display:flex; align-items:center; gap:0.85rem; }
+  .card-emoji { font-size:1.95rem; line-height:1; }
+  .card-title-wrap { flex:1; min-width:0; }
+  .card-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.4rem; font-weight:400; color:var(--mauve); margin:0 0 0.1rem; line-height:1.1; }
+  .card-sci { font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--taupe); font-style:italic; margin:0; font-weight:300; }
+
+  .pet-row { display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; padding:0.7rem; background:var(--ivory); border-radius:12px; }
+  .pet-cell { display:flex; flex-direction:column; align-items:center; padding:0.5rem 0.3rem; border-radius:8px; gap:0.25rem; background:white; border:1px solid var(--ivory-dark); }
+  .pet-cell-safe { background:#EBF7F1; border-color:#C7E5D5; }
+  .pet-cell-mild { background:#FBF3DC; border-color:#F0DFA9; }
+  .pet-cell-severe { background:#FDEBE3; border-color:#F5C9B6; }
+  .pet-cell-lethal { background:#F7DDDD; border-color:#E5A8A8; }
+  .pet-icon { font-size:1.2rem; }
+  .pet-status { display:flex; align-items:center; gap:0.3rem; }
+  .pet-status-icon { font-family:'Jost',sans-serif; font-size:0.95rem; font-weight:600; }
+  .pet-cell-safe .pet-status-icon { color:#1F8754; }
+  .pet-cell-mild .pet-status-icon { color:#A8801E; }
+  .pet-cell-severe .pet-status-icon { color:#B43A2C; }
+  .pet-cell-lethal .pet-status-icon { color:#7A1F1F; }
+  .pet-status-label { font-family:'Jost',sans-serif; font-size:0.74rem; color:var(--mauve); font-weight:500; }
+
+  .card-section { display:flex; flex-direction:column; gap:0.3rem; }
+  .card-sub { font-family:'Jost',sans-serif; font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--taupe); font-weight:500; margin:0; }
+  .card-body { font-family:'Jost',sans-serif; font-size:0.86rem; line-height:1.6; color:var(--mauve-mid); margin:0; font-weight:300; }
+  .card-list { font-family:'Jost',sans-serif; font-size:0.85rem; line-height:1.55; color:var(--mauve-mid); margin:0; padding-left:1.05rem; font-weight:300; }
+  .card-list li { margin-bottom:0.3rem; }
+  .card-list strong { color:var(--mauve); font-weight:500; }
+  .card-notes { background:#FDF6E9; border:1px solid #F2E2BD; border-radius:8px; padding:0.7rem 0.9rem; }
+  .card-notes .card-sub { color:#9B6F1A; }
+  .card-notes .card-body { color:#5C4319; }
+
+  .card-links { display:flex; gap:0.7rem; flex-wrap:wrap; margin-top:auto; padding-top:0.4rem; }
+  .card-link { font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--blush-dark); text-decoration:none; font-weight:500; }
+  .card-link:hover { text-decoration:underline; }
+  .card-link-ext { color:var(--taupe); }
+
+  .empty-state { text-align:center; padding:2.5rem 1rem; font-family:'Jost',sans-serif; color:var(--taupe); font-size:0.92rem; font-weight:300; }
+
+  .faq-section { background:white; border-top:1px solid var(--ivory-dark); }
+  .faq-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.8rem,3.4vw,2.4rem); color:var(--mauve); font-weight:400; margin:0 0 1.4rem; text-align:center; }
+  .faq-list { max-width:780px; margin:0 auto; display:flex; flex-direction:column; gap:0.6rem; }
+  .faq-item { background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-q { width:100%; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:1rem 1.2rem; background:none; border:none; text-align:left; font-family:'Jost',sans-serif; font-size:0.95rem; color:var(--mauve); cursor:pointer; font-weight:400; }
+  .faq-q:hover { background:white; }
+  .faq-icon { font-size:1.3rem; color:var(--blush-dark); flex-shrink:0; }
+  .faq-a { padding:0 1.2rem 1.1rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.9rem; line-height:1.7; color:var(--mauve-mid); margin:0; font-weight:300; }
+
+  .tips-section { background:var(--ivory); }
+  .tips-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.6rem,3vw,2.2rem); color:var(--mauve); font-weight:400; margin:0 0 1.6rem; text-align:center; }
+  .tips-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.2rem; }
+  .tip-card { background:white; border:1px solid var(--ivory-dark); border-radius:14px; padding:1.4rem; }
+  .tip-icon { font-size:1.6rem; margin-bottom:0.6rem; }
+  .tip-head { font-family:'Jost',sans-serif; font-size:0.92rem; font-weight:500; color:var(--mauve); margin:0 0 0.45rem; }
+  .tip-body { font-family:'Jost',sans-serif; font-size:0.86rem; line-height:1.65; color:var(--mauve-mid); margin:0; font-weight:300; }
+
+  .disclaimer { background:white; border-top:1px solid var(--ivory-dark); }
+  .disclaimer p { font-family:'Jost',sans-serif; font-size:0.82rem; line-height:1.7; color:var(--taupe); margin:0; max-width:920px; font-weight:300; }
+  .disclaimer strong { color:var(--mauve); font-weight:500; }
+  .disclaimer a { color:var(--blush-dark); text-decoration:underline; }
+</style>
