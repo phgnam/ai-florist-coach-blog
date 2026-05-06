@@ -9,7 +9,7 @@ interface Post {
     description: string;
     pubDate: Date;
     tags: string[];
-    heroImage?: { src: string; width: number; height: number; format: string };
+    heroImage?: { src: string; width: number; height: number; format: string } | string;
     heroAlt?: string;
     draft?: boolean;
     lang?: string;

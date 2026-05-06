@@ -39,7 +39,10 @@ const { Content } = await render(post);
 const { title, description, pubDate, updatedDate, heroImage, heroAlt, tags = [], author } = post.data;
 
 const mins = readingTime(post.body);
-const ogImage = heroImage?.src ?? firstBodyImage(post.body);
+const heroImageUrl = typeof heroImage === 'string' ? heroImage : heroImage?.src;
+const heroImageWidth = typeof heroImage === 'string' ? 1600 : heroImage?.width;
+const heroImageHeight = typeof heroImage === 'string' ? 900 : heroImage?.height;
+const ogImage = heroImageUrl ?? firstBodyImage(post.body);
 
 const hreflang = [
   { lang: 'vi', url: `${siteUrl}/vi/posts/${post.id}` },
@@ -106,8 +109,8 @@ const breadcrumbs = [
   <article data-pagefind-body>
   <PagefindMeta kind="article" description={description} image={ogImage} imageAlt={heroAlt} tags={tags} />
   <div class="post-hero">
-    {heroImage ? (
-      <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="post-hero-img" />
+    {heroImageUrl ? (
+      <img src={heroImageUrl} alt={heroAlt ?? title} width={heroImageWidth} height={heroImageHeight} class="post-hero-img" />
     ) : (
       <div class="post-hero-placeholder"></div>
     )}

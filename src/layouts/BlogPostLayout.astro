@@ -9,13 +9,16 @@ interface Props {
   description: string;
   pubDate: Date;
   updatedDate?: Date;
-  heroImage?: ImageMetadata;
+  heroImage?: ImageMetadata | string;
   heroAlt?: string;
   tags?: string[];
   author?: string;
 }
 
 const { title, description, pubDate, updatedDate, heroImage, heroAlt, tags = [], author } = Astro.props;
+const heroImageUrl = typeof heroImage === 'string' ? heroImage : heroImage?.src;
+const heroImageWidth = typeof heroImage === 'string' ? 1600 : heroImage?.width;
+const heroImageHeight = typeof heroImage === 'string' ? 900 : heroImage?.height;
 ---
 <BaseLayout title={title} description={description} type="article" padTop={false}>
   <!-- Reading progress bar -->
@@ -23,8 +26,8 @@ const { title, description, pubDate, updatedDate, heroImage, heroAlt, tags = [],
 
   <!-- Hero -->
   <div class="post-hero">
-    {heroImage ? (
-      <img src={heroImage.src} alt={heroAlt ?? title} width={heroImage.width} height={heroImage.height} class="post-hero-img" />
+    {heroImageUrl ? (
+      <img src={heroImageUrl} alt={heroAlt ?? title} width={heroImageWidth} height={heroImageHeight} class="post-hero-img" />
     ) : (
       <div class="post-hero-placeholder"></div>
     )}

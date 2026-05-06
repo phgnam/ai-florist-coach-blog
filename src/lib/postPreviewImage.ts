@@ -16,5 +16,5 @@ export function firstPreviewImage(
   post: CollectionEntry<'posts'>
 ): string | ImageMetadata | undefined {
   const figureImage = post.body?.match(/<figure>[\s\S]*?<img[^>]+src="([^"]+)"/)?.[1];
-  return figureImage ?? (post.data.heroImage as ImageMetadata | undefined);
+  return figureImage ?? (post.data.heroImage as ImageMetadata | string | undefined);
 }

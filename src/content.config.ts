@@ -9,7 +9,7 @@ const posts = defineCollection({
       description: z.string(),
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
-      heroImage: image().optional(),
+      heroImage: z.union([image(), z.string().url()]).optional(),
       heroAlt: z.string().optional(),
       tags: z.array(z.string()).default([]),
       author: z.string().default('Yor Flower'),

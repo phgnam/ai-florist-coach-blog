@@ -27,6 +27,7 @@ Every article MUST include:
 3. **FAQ schema** (JSON-LD) on every content page.
 4. **Entity anchor page** with `Organization` + `Person` schema.
 5. **`llms.txt`** file at site root describing what the site is for LLM crawlers.
+6. **Contextual internal links** whenever the article mentions a topic, flower, care problem, tool, guide, glossary/entity page, flower page, topic/tag page, or any other relevant page that already exists on the site.
 
 Targets: ChatGPT, Gemini, Perplexity, Claude, Doubao (ByteDance), Copilot.
 
@@ -57,13 +58,13 @@ AI engines read schema to decide who to cite. No schema = no citation.
 
 ### Visual requirements (MANDATORY for every article)
 
-- **Every article MUST contain at least one impressive, on-topic image *inside the article body*.** A body image is one of `<figure>`, `<img>`, `<Image>`, or markdown `![alt](url)` placed inside the MDX content (not in the frontmatter). Text-only articles are rejected.
+- **Every article MUST contain a random count of 1–3 impressive, on-topic images *inside the article body*.** Randomly choose the count for each new article so the site does not fall into a fixed visual pattern. A body image is one of `<figure>`, `<img>`, `<Image>`, or markdown `![alt](url)` placed inside the MDX content (not in the frontmatter). Text-only articles are rejected.
 - **`heroImage` in the frontmatter alone does NOT satisfy this rule.** The hero is rendered above the article body by the layout; the body-image requirement is *in addition to* `heroImage`, not instead of it. An article that ships with `heroImage` but zero body-image markers will fail the `npm run check:body-images` guard wired into `npm run build` and CI.
-- The body image must carry a descriptive `alt` attribute (not a filename), so it works for screen readers and counts toward `ImageObject` discovery.
-- `heroImage` itself is **recommended but optional**. Setting it powers the in-page hero, Open Graph (`og:image`) share card, Twitter card, and `BlogPosting.image` field, so prefer it whenever a strong cover image is available. When you do set `heroImage`, you must also set a descriptive `heroAlt`.
+- Each body image must carry a descriptive `alt` attribute (not a filename), so it works for screen readers and counts toward `ImageObject` discovery.
+- **Randomly decide whether each new article includes `heroImage` or not.** If the random choice is "no hero", omit both `heroImage` and `heroAlt` from frontmatter. If the random choice is "hero", add a strong, on-topic hero image and a descriptive `heroAlt`. Setting `heroImage` powers the in-page hero, Open Graph (`og:image`) share card, Twitter card, and `BlogPosting.image` field.
 - "Impressive" means: editorial-quality, well-lit, on-topic, free-to-use or properly licensed. Avoid stock-photo clichés and AI-slop close-ups.
 - **Unique Images Required**: The image URLs used in an article (both body images and `heroImage`) MUST NOT duplicate images already used in any other article. If an image URL is already in use, you must find another image.
-- Performance: any image you commit through Astro's `image()` schema must be ≤ 250 KB delivered (WebP/AVIF) and sized for a 1600px-wide render. Inline `<figure>` images sourced from a CDN (e.g. Unsplash with `?w=800&q=75&auto=format`) should hit the same effective ceiling at the rendered width.
+- Performance: any image you commit through Astro's `image()` schema must be ≤ 250 KB delivered (WebP/AVIF) and sized for a 1600px-wide render. Inline `<figure>` images sourced from a CDN (e.g. Unsplash with `?w=800&q=75&auto=format`) should hit the same effective ceiling at the rendered width. Avoid using more than three body images unless there is a clear editorial reason and the page still meets the performance budget.
 - **Enforcement.** `scripts/check-body-images.mjs` scans every published `src/content/posts/*.mdx` for body-image markers and enforces unique images. It exits non-zero if any post has none or has duplicates. It runs as `prebuild`, so `npm run build` (locally and in Vercel) will fail before deploy if this rule is violated. Run it directly with `npm run check:body-images`.
 
 ## 5. Weekly Growth Loop (Mandatory Cadence)
@@ -88,7 +89,9 @@ This loop is the highest-ROI activity. Other channels (Product Hunt, directories
 ---
 title: "<exact long-tail question>"
 description: "<150-160 chars, includes target query>"
-heroImage: "../../assets/<descriptive-name>.webp"   # OPTIONAL but recommended — powers OG / Twitter / BlogPosting.image
+# Randomly include or omit heroImage/heroAlt per article.
+# If included:
+heroImage: "../../assets/<descriptive-name>.webp"   # powers OG / Twitter / BlogPosting.image
 heroAlt: "<descriptive alt text, not a filename>"   # REQUIRED when heroImage is set
 schema: Article + FAQPage
 ---
@@ -99,11 +102,38 @@ schema: Article + FAQPage
 ## <Question phrased as H2>
 ...
 
+When mentioning a topic already covered anywhere on the site, link the first natural mention in context to the most useful internal resource:
+
+- Mentioning roses → link to an existing rose article such as `/posts/rose-care-en/`
+- Mentioning edible flowers → link to `/posts/edible-flowers-guide-en/`
+- Mentioning pollinator planting → link to `/posts/flowers-for-bees-en/` or `/posts/flowers-for-butterflies-en/`
+- Mentioning a flower with a glossary/entity page → link to its `/learn/<flower>/` page
+- Mentioning a calculator, checker, planner, or interactive workflow → link to the relevant `/tools/.../` page
+- Mentioning a broader category or topic already indexed by the site → link to the relevant guide, topic/tag, or landing page when it helps the reader
+
+Do not add unrelated links just to increase count. Link only when the target page helps the reader continue the same task or understand a mentioned topic.
+
+### Editorial enrichment (SOFT RULE)
+
+To make each article more vivid and useful, choose **1–3 supporting formats** that fit the specific topic and search intent. Do not force every article into the same structure.
+
+Examples of supporting formats:
+
+- Care articles: checklist, seasonal routine, common mistakes, troubleshooting table.
+- Problem/diagnosis articles: symptom table, cause-by-cause breakdown, quick fix sequence.
+- List articles: comparison table, best-for scenarios, buyer/grower selection criteria.
+- Meaning/symbolism articles: use cases, bouquet examples, cultural context.
+- DIY articles: materials list, step-by-step sequence, timing, mistake prevention.
+- Trend articles: visual examples, palette notes, real-world applications.
+- Seasonal articles: timeline, monthly guidance, climate-region notes.
+
+Use these only when they make the article easier to understand, scan, or act on.
+
 <figure>
   <img src="..." alt="<descriptive alt>" loading="lazy" />
   <figcaption>...</figcaption>
 </figure>
-<!-- MANDATORY: at least one body image (<figure>, <img>, <Image>, or ![]()) -->
+<!-- MANDATORY: randomly choose 1–3 relevant body images (<figure>, <img>, <Image>, or ![]()) -->
 <!-- per article. heroImage in frontmatter does NOT satisfy this rule. -->
 <!-- Enforced by scripts/check-body-images.mjs (runs as prebuild). -->
 
@@ -125,6 +155,7 @@ schema: Article + FAQPage
 - ❌ Publish an article with zero images in its body — even one that ships with `heroImage`. The body-image requirement is in addition to (not instead of) `heroImage` (see §4).
 - ❌ Try to satisfy the rule with the frontmatter `heroImage` alone; the hero is rendered above the body by the layout and does not count as a body image.
 - ❌ Bypass the `npm run check:body-images` guard. If the guard is wrong about a specific case, fix the guard, not the article.
+- ❌ Mention an existing covered topic, flower, care issue, guide, glossary/entity page, tool, topic/tag page, or other useful site resource without linking to the most relevant internal page when a helpful internal link exists.
 
 ## 8. Success Metrics
 
