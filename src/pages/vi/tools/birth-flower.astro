@@ -1,0 +1,663 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../../components/PagefindMeta.astro';
+
+export const prerender = true;
+
+const lang = 'vi' as const;
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/birth-flower/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/birth-flower/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/birth-flower/` },
+];
+
+const breadcrumbs = [
+  { name: 'Trang chủ', url: `${siteUrl}/vi/` },
+  { name: 'Công cụ', url: `${siteUrl}/vi/tools/` },
+  { name: 'Hoa Sinh Nhật Theo Tháng', url: `${siteUrl}/vi/tools/birth-flower/` },
+];
+
+interface BirthFlower {
+  name: string;
+  emoji: string;
+  glossarySlug: string | null;
+  color: string;
+  meaning: string;
+  personality: string;
+  gifts: string[];
+}
+
+interface MonthEntry {
+  num: number;
+  name: string;
+  short: string;
+  primary: BirthFlower;
+  secondary: BirthFlower;
+  zodiac: { sign: string; range: string }[];
+}
+
+const MONTHS: MonthEntry[] = [
+  {
+    num: 1, name: 'Tháng 1', short: 'T1',
+    primary: {
+      name: 'Cẩm chướng', emoji: '🌺', glossarySlug: 'carnation', color: '#E58CA1',
+      meaning: 'Cẩm chướng tượng trưng cho tình yêu, sự say mê và lòng trung thành. Cẩm chướng hồng là biểu tượng cho tình mẹ bất diệt — món quà ý nghĩa giữa các thế hệ.',
+      personality: 'Người sinh tháng 1 thường trung thành, đáng tin cậy và lặng lẽ tận tụy — giống như chính bông cẩm chướng, một trong những loài hoa cắt cành lâu tàn nhất.',
+      gifts: ['Bó cẩm chướng hồng đơn loại (15–20 cành)', 'Bình nhỏ cẩm chướng + bạch đàn', 'Khung tranh ép hoa cẩm chướng "hoa tháng sinh"'],
+    },
+    secondary: {
+      name: 'Hoa giọt tuyết (Snowdrop)', emoji: '🤍', glossarySlug: null, color: '#E8EEF6',
+      meaning: 'Hoa giọt tuyết tượng trưng cho hy vọng và sự khởi đầu mới — là một trong những loài hoa đầu tiên đâm chồi qua tuyết mùa đông.',
+      personality: 'Người sinh tháng 1 mang tinh thần hoa giọt tuyết thường tìm thấy hy vọng ở nơi người khác chỉ thấy giá lạnh — nguồn lạc quan thầm lặng.',
+      gifts: ['Bình mini cắm hoa giọt tuyết + dây thường xuân', 'Chậu nhỏ trồng củ hoa kiểu vườn', 'Tranh minh họa thực vật chủ đề snowdrop'],
+    },
+    zodiac: [{ sign: 'Ma Kết', range: 'đến 19/1' }, { sign: 'Bảo Bình', range: 'từ 20/1' }],
+  },
+  {
+    num: 2, name: 'Tháng 2', short: 'T2',
+    primary: {
+      name: 'Hoa violet', emoji: '💜', glossarySlug: null, color: '#7C5BAE',
+      meaning: 'Hoa violet tượng trưng cho lòng chung thủy, sự khiêm nhường và trí tuệ thầm lặng. Trong ngôn ngữ hoa thời Victoria, tặng hoa violet nghĩa là "Tôi sẽ luôn chân thành."',
+      personality: 'Người sinh tháng 2 thường có nét trầm tĩnh kiểu violet — vẻ ngoài khiêm tốn nhưng trung thành tuyệt đối.',
+      gifts: ['Bó violet + freesia trong tách trà', 'Một chậu hoa violet châu Phi', 'Bookmark hoặc thiệp ép cánh violet'],
+    },
+    secondary: {
+      name: 'Anh thảo (Primrose)', emoji: '🌼', glossarySlug: null, color: '#F2C84B',
+      meaning: 'Anh thảo tượng trưng cho tình yêu thuở mới chớm và "Anh không thể thiếu em" — đối điểm lãng mạn, nhẹ nhàng so với violet.',
+      personality: 'Người tháng 2 nghiêng về primrose dẫn dắt bằng sự ấm áp và mang theo cảm giác đầu xuân nhẹ nhàng.',
+      gifts: ['Chậu primrose hỗn hợp đặt cửa sổ bếp', 'Bó nhỏ primrose + ranunculus', 'Thiệp thực vật chủ đề primula mùa xuân'],
+    },
+    zodiac: [{ sign: 'Bảo Bình', range: 'đến 18/2' }, { sign: 'Song Ngư', range: 'từ 19/2' }],
+  },
+  {
+    num: 3, name: 'Tháng 3', short: 'T3',
+    primary: {
+      name: 'Thủy tiên (Daffodil)', emoji: '🌼', glossarySlug: 'daffodil', color: '#F4C432',
+      meaning: 'Thủy tiên tượng trưng cho sự đổi mới, tái sinh và tình yêu chưa được đáp lại. Tặng nguyên một bó (không bao giờ tặng một cành) là biểu tượng của niềm vui và may mắn.',
+      personality: 'Người tháng 3 mang đặc trưng của thủy tiên: xuất hiện đúng lúc mọi người cần — ấm áp, lạc quan, thường là người đầu tiên phá tan không khí lạnh nhạt.',
+      gifts: ['Bó 12+ cành thủy tiên buộc nơ', 'Chậu củ thủy tiên để người nhận tự trồng năm sau', 'Bó hoa xuân trắng vàng kết hợp tulip + thủy tiên'],
+    },
+    secondary: {
+      name: 'Jonquil', emoji: '🌼', glossarySlug: 'daffodil', color: '#F7D86A',
+      meaning: 'Jonquil — họ hàng thơm ngát của thủy tiên — tượng trưng cho khao khát, đồng cảm và sự đáp lại tình cảm.',
+      personality: 'Người tháng 3 mang chất jonquil là phiên bản lãng mạn, hương thơm đậm hơn của thủy tiên — tinh tế và thi vị hơn một chút.',
+      gifts: ['Bó hand-tie jonquil thơm', 'Chậu trồng jonquil + paperwhite', 'Nến hương xuân kèm một cành hoa'],
+    },
+    zodiac: [{ sign: 'Song Ngư', range: 'đến 20/3' }, { sign: 'Bạch Dương', range: 'từ 21/3' }],
+  },
+  {
+    num: 4, name: 'Tháng 4', short: 'T4',
+    primary: {
+      name: 'Hoa cúc daisy', emoji: '🌼', glossarySlug: 'marguerite-daisy', color: '#FFFFFF',
+      meaning: 'Hoa daisy tượng trưng cho sự ngây thơ, thuần khiết và tình yêu chân thật — và trong vài truyền thống, là sự giữ kín bí mật. Hoa "yêu tôi, không yêu tôi" kinh điển.',
+      personality: 'Người tháng 4 thường mang sự tươi sáng, mộc mạc kiểu daisy — cởi mở, nhanh cười, đáng tin trong những điều nhỏ bé.',
+      gifts: ['Bó daisy hỗn hợp kiểu vườn', 'Vương miện daisy cho sinh nhật trẻ em', 'Pin cài hoặc trang sức gắn daisy ép khô'],
+    },
+    secondary: {
+      name: 'Đậu thơm (Sweet Pea)', emoji: '🌸', glossarySlug: 'sweet-pea', color: '#F4B6C2',
+      meaning: 'Sweet pea tượng trưng cho niềm vui và lời tạm biệt thân ái — hay được dùng trong các bó hoa "cảm ơn" và tiễn biệt cổ điển.',
+      personality: 'Người tháng 4 mang chất sweet pea là sự dịu dàng, thơm và đáng nhớ — sang trọng kín đáo thay vì phô trương.',
+      gifts: ['Bó garden sweet pea + ranunculus', 'Gói hạt sweet pea + bình bud nhỏ', 'Hand-tie sweet pea phong cách vintage gói giấy nâu'],
+    },
+    zodiac: [{ sign: 'Bạch Dương', range: 'đến 19/4' }, { sign: 'Kim Ngưu', range: 'từ 20/4' }],
+  },
+  {
+    num: 5, name: 'Tháng 5', short: 'T5',
+    primary: {
+      name: 'Linh lan (Lily of the Valley)', emoji: '🤍', glossarySlug: 'lily-of-the-valley', color: '#E9EFD7',
+      meaning: 'Linh lan tượng trưng cho hạnh phúc trở lại, sự khiêm nhường và ngọt ngào — từng được các cô dâu hoàng gia (Kate Middleton, Grace Kelly) cầm tay vì ý nghĩa may mắn và thuần khiết.',
+      personality: 'Người tháng 5 thường kín đáo nhưng sang trọng — không ồn ào, nhưng là kiểu hiện diện ai cũng nhận ra khi đã ở trong phòng.',
+      gifts: ['Bó posy phong cách cô dâu với linh lan', 'Đĩa cắm hoa linh lan + mẫu đơn kem', 'Set nước hoa lấy cảm hứng từ linh lan'],
+    },
+    secondary: {
+      name: 'Sơn trà (Hawthorn)', emoji: '🌸', glossarySlug: null, color: '#FBE3E5',
+      meaning: 'Sơn trà — "hoa tháng 5" — tượng trưng cho hy vọng và hạnh phúc tột đỉnh trong ngôn ngữ hoa Victoria.',
+      personality: 'Người tháng 5 nghiêng hawthorn vững chãi và bình tâm, mang năng lượng bảo vệ và hy vọng đến những người xung quanh.',
+      gifts: ['Bó cành hoa nở cho lò sưởi', 'Centerpiece sơn trà + mẫu đơn cho mùa xuân', 'Cây con hawthorn để làm quà lâu bền'],
+    },
+    zodiac: [{ sign: 'Kim Ngưu', range: 'đến 20/5' }, { sign: 'Song Tử', range: 'từ 21/5' }],
+  },
+  {
+    num: 6, name: 'Tháng 6', short: 'T6',
+    primary: {
+      name: 'Hoa hồng', emoji: '🌹', glossarySlug: 'rose', color: '#D94661',
+      meaning: 'Hoa hồng tượng trưng cho tình yêu ở hầu hết mọi sắc thái — nhưng màu sắc rất quan trọng. Đỏ là tình yêu lãng mạn, hồng là lòng biết ơn, trắng là sự tôn kính, vàng là tình bạn, cam đào là sự trân trọng chân thành.',
+      personality: 'Người tháng 6 mang sự đa năng của hoa hồng — phù hợp với mọi dịp, nhưng càng nhìn kỹ càng thấy nhiều tầng nghĩa.',
+      gifts: ['Hand-tie hoa hồng vườn (giống David Austin)', 'Centerpiece hỗn hợp hoa hồng cam đào + hồng pastel', 'Một bông hồng hoàn hảo trong chuông thủy tinh'],
+    },
+    secondary: {
+      name: 'Kim ngân hoa (Honeysuckle)', emoji: '🌼', glossarySlug: null, color: '#F7D9A0',
+      meaning: 'Kim ngân hoa tượng trưng cho mối ràng buộc trong tình yêu và sự gắn bó tận tụy — thân leo quấn vào nhau là biểu tượng kinh điển của một mối quan hệ chặt chẽ.',
+      personality: 'Người tháng 6 thiên honeysuckle ngọt ngào, kiên trì và biết kết nối — một người gắn kết tự nhiên.',
+      gifts: ['Hand-tie mùa hè kim ngân + hồng', 'Cây leo kim ngân có hương cho ban công', 'Nước hoa cảm hứng kim ngân kèm một cành hoa'],
+    },
+    zodiac: [{ sign: 'Song Tử', range: 'đến 20/6' }, { sign: 'Cự Giải', range: 'từ 21/6' }],
+  },
+  {
+    num: 7, name: 'Tháng 7', short: 'T7',
+    primary: {
+      name: 'Larkspur (phi yến)', emoji: '💙', glossarySlug: 'delphinium', color: '#5D7BB6',
+      meaning: 'Larkspur (họ hàng gần với delphinium) tượng trưng cho năng lượng tích cực, phẩm giá và mối ràng buộc tình yêu mạnh mẽ. Mỗi màu một ý nghĩa: hồng là bay bổng, trắng là tinh thần vui tươi, xanh là sự ân cần.',
+      personality: 'Người tháng 7 mang dáng dấp đứng thẳng, thanh thoát của larkspur — duyên dáng ở tầm cao nhưng bám rễ rất chắc bên dưới.',
+      gifts: ['Centerpiece mùa hè larkspur + delphinium cao', 'Bình trung tâm xanh-trắng larkspur + lisianthus', 'Tranh ép larkspur khung gỗ'],
+    },
+    secondary: {
+      name: 'Hoa súng (Water Lily)', emoji: '🪷', glossarySlug: 'water-lily', color: '#F4B6E2',
+      meaning: 'Hoa súng tượng trưng cho trái tim trong sáng, sự giác ngộ và tái sinh — là loài hoa thiêng trong nhiều nền văn hóa Á Đông.',
+      personality: 'Người tháng 7 thiên water lily thường lặng lẽ trên bề mặt nhưng chiều sâu bên dưới — điềm tĩnh, suy tư, hướng nội.',
+      gifts: ['Centerpiece bông súng nổi trên đĩa rộng', 'Tranh hoặc cuộn tranh hoa súng', 'Set nến chủ đề sen / súng làm quà'],
+    },
+    zodiac: [{ sign: 'Cự Giải', range: 'đến 22/7' }, { sign: 'Sư Tử', range: 'từ 23/7' }],
+  },
+  {
+    num: 8, name: 'Tháng 8', short: 'T8',
+    primary: {
+      name: 'Lay-ơn (Gladiolus)', emoji: '🌺', glossarySlug: null, color: '#E14F65',
+      meaning: 'Lay-ơn — tiếng Latin nghĩa là "thanh kiếm nhỏ" — tượng trưng cho phẩm chất mạnh mẽ, chính trực và tưởng nhớ. Thời La Mã các đấu sĩ đeo lay-ơn như biểu tượng chiến thắng.',
+      personality: 'Người tháng 8 mang dáng đứng cao, tự tin của lay-ơn — quan điểm rõ ràng, cam kết bền vững, dáng vóc nổi bật.',
+      gifts: ['Bình lay-ơn đơn loại cao (5–7 cành)', 'Bó cuối hè hỗn hợp lay-ơn + hướng dương', 'Thiệp sinh nhật chủ đề lay-ơn kèm một cành tươi'],
+    },
+    secondary: {
+      name: 'Hoa anh túc (Poppy)', emoji: '🌺', glossarySlug: 'poppy', color: '#E63A3A',
+      meaning: 'Anh túc tượng trưng cho trí tưởng tượng, giấc ngủ vĩnh hằng và tưởng nhớ. Anh túc đỏ trên đồng là biểu tượng quốc tế cho việc tưởng niệm.',
+      personality: 'Người tháng 8 thiên poppy mạnh mẽ, mơ mộng và khó quên — kiểu người để lại ấn tượng sống động và một câu chuyện đằng sau.',
+      gifts: ['Bó vườn hỗn hợp anh túc Iceland', 'Một nắm đầu hạt anh túc khô trong bình nâu', 'Khăn lụa hoặc tác phẩm nghệ thuật in anh túc'],
+    },
+    zodiac: [{ sign: 'Sư Tử', range: 'đến 22/8' }, { sign: 'Xử Nữ', range: 'từ 23/8' }],
+  },
+  {
+    num: 9, name: 'Tháng 9', short: 'T9',
+    primary: {
+      name: 'Hoa cúc sao (Aster)', emoji: '💜', glossarySlug: null, color: '#A879D8',
+      meaning: 'Aster — "hoa hình ngôi sao" — tượng trưng cho trí tuệ, niềm tin và lòng dũng cảm. Hoa sinh tháng 9 là một bức thư tình bằng hình ngôi sao.',
+      personality: 'Người tháng 9 mang sự khôn ngoan của loài hoa nở muộn — họ nở rộ theo nhịp riêng, không bị lịch thúc giục.',
+      gifts: ['Hand-tie thu hỗn hợp aster + thược dược', 'Trang sức mặt dây hình sao tháng 9', 'Posy aster trong bình bud màu đồng'],
+    },
+    secondary: {
+      name: 'Bìm bìm (Morning Glory)', emoji: '💙', glossarySlug: null, color: '#5C8DD3',
+      meaning: 'Hoa bìm bìm tượng trưng cho tình cảm, sự hữu hạn và vẻ đẹp ngắn ngủi — chỉ nở duy nhất một buổi sáng.',
+      personality: 'Người tháng 9 thiên morning glory thi vị và sống ở hiện tại — biết trân trọng khoảnh khắc ngắn ngủi nhưng hoàn hảo.',
+      gifts: ['Bộ hạt giống bìm bìm leo + bình bud', 'Tranh minh họa morning glory', 'Bó hoa dây leo + cosmos + aster'],
+    },
+    zodiac: [{ sign: 'Xử Nữ', range: 'đến 22/9' }, { sign: 'Thiên Bình', range: 'từ 23/9' }],
+  },
+  {
+    num: 10, name: 'Tháng 10', short: 'T10',
+    primary: {
+      name: 'Cúc vạn thọ (Marigold)', emoji: '🌼', glossarySlug: 'marigold', color: '#F08A26',
+      meaning: 'Cúc vạn thọ tượng trưng cho sự ấm áp, sáng tạo và sức bền nở rộ vào tận cuối thu. Trong truyền thống Mexico (Día de Muertos) là loài hoa dẫn linh hồn về nhà.',
+      personality: 'Người tháng 10 mang ánh ấm rực rỡ của vạn thọ — tự tin trong màu sắc, hào phóng trong mùa của mình.',
+      gifts: ['Centerpiece thu vạn thọ + thược dược', 'Quả bí ngô cắm đầy vạn thọ hỗn hợp', 'Set quà trà hoặc mỹ phẩm hương cánh vạn thọ'],
+    },
+    secondary: {
+      name: 'Cosmos (sao nháy)', emoji: '🌸', glossarySlug: 'cosmos', color: '#F4A8C2',
+      meaning: 'Cosmos tượng trưng cho trật tự, hài hòa và sự thanh bình — chính cái tên xuất phát từ tiếng Hy Lạp nghĩa là "vũ trụ có trật tự".',
+      personality: 'Người tháng 10 thiên cosmos thường điềm đạm, cân bằng và mang lại trật tự cho không gian hỗn loạn gần như tự nhiên.',
+      gifts: ['Bó cosmos kiểu vườn gói vải mộc', 'Gói hạt cosmos + bình bud', 'Đăng ký hộp hoa cottage-garden có cosmos'],
+    },
+    zodiac: [{ sign: 'Thiên Bình', range: 'đến 22/10' }, { sign: 'Bọ Cạp', range: 'từ 23/10' }],
+  },
+  {
+    num: 11, name: 'Tháng 11', short: 'T11',
+    primary: {
+      name: 'Hoa cúc (Chrysanthemum)', emoji: '🌼', glossarySlug: 'chrysanthemum', color: '#E5A53C',
+      meaning: 'Hoa cúc tượng trưng cho lòng trung thành, trường thọ và tình bạn chân thành. Ở Đông Á, cúc là loài hoa của khí phách quý phái và sống lâu — ở phần lớn châu Âu, cúc trắng được dành riêng cho viếng và tưởng niệm.',
+      personality: 'Người tháng 11 mang nét bền bỉ của hoa cúc — tuổi thọ bình dài, ký ức dài lâu, sự trung thành đường dài.',
+      gifts: ['Bình cúc spider mum đơn loại nghệ thuật', 'Hand-tie thu hỗn hợp các loại cúc', 'Một chậu cúc giống lâu đời để tặng món quà bền lâu'],
+    },
+    secondary: {
+      name: 'Mẫu đơn (Peony)', emoji: '🌸', glossarySlug: 'peony', color: '#F4B6C2',
+      meaning: 'Mẫu đơn tượng trưng cho sự thịnh vượng, lãng mạn và một cuộc hôn nhân hạnh phúc. Một số truyền thống ghi nhận mẫu đơn là hoa phụ tháng 11 cho những ngày sinh cuối thu.',
+      personality: 'Người tháng 11 thiên mẫu đơn dẫn dắt bằng sự sung túc và duyên dáng — bên dưới phong thái mùa thu là dòng chảy hào phóng, lãng mạn.',
+      gifts: ['Bó cô dâu mẫu đơn đơn loại', 'Hand-tie mẫu đơn + ranunculus tone phớt hồng', 'Tranh mẫu đơn hoặc tranh nước cho phòng ngủ'],
+    },
+    zodiac: [{ sign: 'Bọ Cạp', range: 'đến 21/11' }, { sign: 'Nhân Mã', range: 'từ 22/11' }],
+  },
+  {
+    num: 12, name: 'Tháng 12', short: 'T12',
+    primary: {
+      name: 'Thủy tiên trắng (Paperwhite)', emoji: '🤍', glossarySlug: 'daffodil', color: '#F5EFE0',
+      meaning: 'Thủy tiên trắng paperwhite tượng trưng cho lời chúc tốt lành, lòng trung thành và sự đổi mới — mang nốt hương hy vọng vào giữa lòng mùa đông.',
+      personality: 'Người tháng 12 mang khả năng nở của paperwhite — người bạn làm sáng phòng khi tất cả những người khác đang co cụm.',
+      gifts: ['Chậu củ paperwhite để ép nở trên cửa sổ', 'Centerpiece mùa đông paperwhite + amaryllis', 'Posy mùa đông có hương kết hợp paperwhite + thông'],
+    },
+    secondary: {
+      name: 'Ô rô (Holly)', emoji: '🌿', glossarySlug: null, color: '#2E7D4E',
+      meaning: 'Holly tượng trưng cho hạnh phúc gia đình, sự bảo vệ và lời chúc tốt — biểu tượng thường xanh mùa đông từ rất lâu trước khi gắn với Giáng sinh.',
+      personality: 'Người tháng 12 thiên holly biết bảo vệ, hân hoan và vững chãi — người chủ nhà thầm lặng giữ cho cả mùa được trọn vẹn.',
+      gifts: ['Vòng cửa Giáng sinh holly + paperwhite', 'Runner bàn ăn ngày lễ holly + tuyết tùng', 'Centerpiece mùa đông phong cách "hái rừng" với holly có quả'],
+    },
+    zodiac: [{ sign: 'Nhân Mã', range: 'đến 21/12' }, { sign: 'Ma Kết', range: 'từ 22/12' }],
+  },
+];
+
+const firstSentence = (text: string) => text.split('.')[0].trim() + '.';
+const monthFAQs = MONTHS.map(m => ({
+  q: `Hoa sinh nhật của ${m.name} là gì?`,
+  a: `Hoa chính của ${m.name} là ${m.primary.name}. ${firstSentence(m.primary.meaning)} Hoa phụ là ${m.secondary.name}. ${firstSentence(m.secondary.meaning)} ${firstSentence(m.primary.personality)}`,
+}));
+
+const generalFAQs = [
+  {
+    q: 'Hoa sinh nhật theo tháng là gì?',
+    a: 'Hoa sinh nhật là một loài hoa được gán cho mỗi tháng trong năm, tương tự như đá sinh nhật. Truyền thống này kết hợp biểu tượng của La Mã, Anglo-Saxon cùng mùa nở tự nhiên của mỗi loài hoa. Phần lớn các tháng có cả hoa chính và hoa phụ vì phong tục mỗi vùng mỗi khác.',
+  },
+  {
+    q: 'Vì sao tháng của tôi có hai loài hoa?',
+    a: 'Phần lớn các tháng có cả hoa chính và hoa phụ vì không có truyền thống nào là duy nhất. Hoa chính thường là loài được các florist, niên giám và thợ kim hoàn dùng nhiều nhất (ví dụ cẩm chướng cho tháng 1, hoa hồng cho tháng 6). Hoa phụ thường là một thay thế theo vùng hoặc theo mùa — hữu ích khi hoa chính không có sẵn ở địa phương.',
+  },
+  {
+    q: 'Hoa sinh nhật khác hoa cung hoàng đạo thế nào?',
+    a: 'Hoa sinh nhật được gán theo tháng dương lịch (ví dụ tháng 1 = cẩm chướng). Hoa cung hoàng đạo được gán cho 12 cung (ví dụ Bảo Bình = lan), và mỗi cung trải qua một phần của hai tháng. Nếu sinh nhật rơi vào cuối hoặc đầu tháng, bạn có cả hoa sinh nhật và hoa cung hoàng đạo — cả hai đều dùng được cho quà tặng cá nhân hóa hoặc hình xăm.',
+  },
+  {
+    q: 'Có thể dùng hoa sinh nhật trong bó hoa cưới không?',
+    a: 'Hoàn toàn được — bó "hoa sinh nhật" là cách cá nhân hóa rất phổ biến. Lấy hoa sinh nhật của cô dâu làm hoa chủ, hoa của chú rể làm hoa phụ, và hoa sinh nhật theo tháng cưới làm hoa độn. Lưu ý kiểm tra mùa: không phải hoa sinh nhật nào cũng có ở Việt Nam tại mọi thời điểm. Hãy dùng Lịch Hoa Theo Mùa của Yor Flower để xác nhận.',
+  },
+  {
+    q: 'Loài hoa sinh nhật nào hiếm nhất?',
+    a: 'Linh lan (tháng 5) thường được xem là hoa sinh nhật hiếm nhất trong chuỗi cung ứng florist. Mùa tự nhiên rất ngắn (3–6 tuần đầu xuân), chủ yếu được trồng trong nhà kính cho thị trường cao cấp châu Âu, và là một trong những loài hoa cắt cành đắt đỏ nhất. Hawthorn (hoa phụ tháng 5) gần như không bán dưới dạng hoa cắt mà chủ yếu là hàng rào hoặc cành.',
+  },
+  {
+    q: 'Hoa sinh nhật có giống nhau ở mọi văn hóa không?',
+    a: 'Không. Danh sách 12 tháng trên trang này theo truyền thống Anh-Mỹ phổ biến hóa bởi The Old Farmer\'s Almanac và các thợ kim hoàn hiện đại. Các nền văn hóa khác có hệ thống riêng. Floriography của Hàn Quốc và Nhật Bản gán một loài hoa cho mỗi ngày trong năm. Truyền thống Việt Nam và Trung Quốc gắn hoa với các tháng âm lịch và 24 tiết khí thay vì lịch dương phương Tây.',
+  },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Hoa Sinh Nhật Theo Tháng',
+  description: 'Danh sách 12 loài hoa sinh nhật theo truyền thống Anh-Mỹ với hoa chính, hoa phụ, ý nghĩa và gợi ý quà tặng.',
+  url: `${siteUrl}/vi/tools/birth-flower/`,
+  numberOfItems: MONTHS.length,
+  itemListElement: MONTHS.map(m => ({
+    '@type': 'ListItem',
+    position: m.num,
+    name: `${m.name} — ${m.primary.name}`,
+    item: {
+      '@type': 'Thing',
+      name: m.primary.name,
+      description: m.primary.meaning,
+      url: m.primary.glossarySlug ? `${siteUrl}/vi/learn/${m.primary.glossarySlug}/` : `${siteUrl}/vi/tools/birth-flower/`,
+    },
+  })),
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [...monthFAQs, ...generalFAQs].map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+// BreadcrumbList JSON-LD is emitted automatically by SEO.astro when `breadcrumbs` is passed.
+---
+<BaseLayout
+  lang={lang}
+  title="Hoa Sinh Nhật Theo Tháng — Tra Cứu Hoa Theo Tháng Sinh"
+  description="Tra cứu hoa sinh nhật theo tháng. Hoa chính, hoa phụ, ý nghĩa, gợi ý quà tặng và liên kết cung hoàng đạo cho cả 12 tháng. Công cụ miễn phí từ Yor Flower."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/vi/">Trang chủ</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/vi/tools/">Công cụ</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">Hoa Sinh Nhật Theo Tháng</li>
+      </ol>
+    </div>
+  </nav>
+
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Tra cứu hoa sinh nhật theo tháng. Hoa chính và hoa phụ, ý nghĩa, gợi ý quà tặng và cung hoàng đạo cho cả 12 tháng." tags={["tool","birth-flower","gift-guide"]} />
+
+  <div class="page-header">
+    <div class="max-w-6xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Công cụ florist miễn phí</p>
+      <h1 class="page-title">Hoa Sinh Nhật Theo Tháng</h1>
+      <p class="page-sub">Hoa sinh nhật của bạn là gì? Chọn một tháng để khám phá hoa chính, hoa phụ, ý nghĩa, gợi ý quà tặng và cung hoàng đạo tương ứng.</p>
+      <a href="/tools/birth-flower/" class="lang-switch-link">🇬🇧 View in English</a>
+    </div>
+  </div>
+
+  <div class="planner-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-12">
+
+      <div class="picker-controls">
+        <label for="bday-input" class="picker-label">Nhập ngày sinh <span aria-hidden="true">·</span> hoặc chọn tháng bên dưới</label>
+        <div class="picker-row">
+          <input type="date" id="bday-input" class="bday-input" aria-describedby="picker-help" />
+          <button type="button" id="bday-clear" class="bday-clear" aria-label="Xóa ngày sinh">Xóa</button>
+        </div>
+        <p id="picker-help" class="picker-help">Chúng tôi chỉ dùng tháng/ngày từ thông tin bạn nhập — không lưu trữ ngày sinh.</p>
+      </div>
+
+      <div class="month-tabs" role="tablist" aria-label="Chọn tháng sinh">
+        {MONTHS.map((m) => (
+          <button
+            class:list={['month-tab', { 'active': m.num - 1 === new Date().getMonth() }]}
+            role="tab"
+            aria-selected={m.num - 1 === new Date().getMonth() ? 'true' : 'false'}
+            data-month={m.num - 1}
+            id={`tab-${m.num - 1}`}
+            aria-controls={`panel-${m.num - 1}`}
+          >{m.short}</button>
+        ))}
+      </div>
+
+      {MONTHS.map((m) => (
+        <div
+          class="month-panel"
+          id={`panel-${m.num - 1}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${m.num - 1}`}
+          data-month={m.num - 1}
+          hidden={m.num - 1 !== new Date().getMonth()}
+        >
+          <div class="month-panel-header">
+            <h2 class="month-panel-title">Hoa sinh nhật cho <em>{m.name}</em></h2>
+            <p class="month-panel-zodiac">
+              {m.zodiac.map((z, zi) => (
+                <span>
+                  <strong>{z.sign}</strong> <span class="zodiac-range">({z.range})</span>{zi < m.zodiac.length - 1 ? ' · ' : ''}
+                </span>
+              ))}
+            </p>
+          </div>
+
+          <div class="flower-grid">
+            {[
+              { ...m.primary, slot: 'Hoa chính' as const },
+              { ...m.secondary, slot: 'Hoa phụ' as const },
+            ].map((f) => (
+              <article class="flower-card" style={`--accent:${f.color}`}>
+                <header class="flower-card-head">
+                  <span class="flower-card-emoji" aria-hidden="true">{f.emoji}</span>
+                  <div>
+                    <p class="flower-card-slot">{f.slot}</p>
+                    <h3 class="flower-card-name">{f.name}</h3>
+                  </div>
+                  <span class="flower-card-swatch" aria-hidden="true"></span>
+                </header>
+
+                <h4 class="flower-card-subhead">Ý nghĩa của {f.name.toLowerCase()}</h4>
+                <p class="flower-card-text">{f.meaning}</p>
+
+                <h4 class="flower-card-subhead">Người sinh {m.name}</h4>
+                <p class="flower-card-text">{f.personality}</p>
+
+                <h4 class="flower-card-subhead">Gợi ý quà tặng</h4>
+                <ul class="flower-card-list">
+                  {f.gifts.map(g => <li>{g}</li>)}
+                </ul>
+
+                {f.glossarySlug && (
+                  <a class="flower-card-link" href={`/vi/learn/${f.glossarySlug}/`}>
+                    Xem hướng dẫn đầy đủ về {f.name.toLowerCase()} →
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+
+          <aside class="cross-tool">
+            <p>
+              Đang lên ý tưởng quà sinh nhật {m.name}?
+              {' '}<a href="/vi/tools/combination-builder/">Xem các loài hoa kết hợp với {m.primary.name.toLowerCase()}</a>,
+              {' '}<a href="/vi/tools/budget-planner/">tính giá bó hoa</a>,
+              hoặc <a href="/vi/tools/season-planner/">kiểm tra hoa nào đang vào mùa</a>.
+            </p>
+          </aside>
+        </div>
+      ))}
+
+    </div>
+  </div>
+
+  <section class="table-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="table-title">Hoa Sinh Nhật Theo Tháng — Bảng Tra Nhanh</h2>
+      <p class="table-sub">Tham chiếu nhanh 12 loài hoa sinh nhật theo truyền thống Anh-Mỹ. Bấm vào hoa có hướng dẫn để đọc thêm.</p>
+      <div class="table-wrap">
+        <table class="bf-table">
+          <thead>
+            <tr>
+              <th scope="col">Tháng</th>
+              <th scope="col">Hoa chính</th>
+              <th scope="col">Hoa phụ</th>
+              <th scope="col">Ý nghĩa cốt lõi</th>
+              <th scope="col">Cung hoàng đạo</th>
+            </tr>
+          </thead>
+          <tbody>
+            {MONTHS.map(m => (
+              <tr>
+                <th scope="row">{m.name}</th>
+                <td>
+                  {m.primary.glossarySlug
+                    ? <a href={`/vi/learn/${m.primary.glossarySlug}/`}>{m.primary.emoji} {m.primary.name}</a>
+                    : <span>{m.primary.emoji} {m.primary.name}</span>}
+                </td>
+                <td>
+                  {m.secondary.glossarySlug
+                    ? <a href={`/vi/learn/${m.secondary.glossarySlug}/`}>{m.secondary.emoji} {m.secondary.name}</a>
+                    : <span>{m.secondary.emoji} {m.secondary.name}</span>}
+                </td>
+                <td>{m.primary.meaning.split('.')[0]}.</td>
+                <td>{m.zodiac.map(z => z.sign).join(' · ')}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-16">
+      <h2 class="faq-title">Câu Hỏi Thường Gặp Về Hoa Sinh Nhật</h2>
+      <div class="faq-list">
+        {[...monthFAQs, ...generalFAQs].map((item, i) => (
+          <div class="faq-item" data-index={i}>
+            <button class="faq-q" aria-expanded="false">
+              <span>{item.q}</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>{item.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="tips-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="tips-title">Cách Dùng Hoa Sinh Nhật — Quà Tặng, Hình Xăm và Cá Nhân Hóa Đám Cưới</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">🎁</div>
+          <h3 class="tip-head">Làm quà tặng cá nhân hóa</h3>
+          <p class="tip-body">Xây bó hoa quanh hoa sinh nhật của người nhận làm hoa chủ, sau đó thêm hoa độn và lá. Với người yêu hoặc bố mẹ, hãy thêm hoa sinh nhật của bạn để bó hoa mang cả hai câu chuyện.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">💍</div>
+          <h3 class="tip-head">Trong bó hoa cưới</h3>
+          <p class="tip-body">Một "bó hoa sinh nhật" gồm hoa của cô dâu, chú rể và hoa của tháng cưới. Kiểm tra Lịch Hoa Theo Mùa trước — không phải hoa sinh nhật nào cũng có vào mọi thời điểm; có thể phải dùng hoa phụ hoặc giống cùng họ thay thế.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🖋️</div>
+          <h3 class="tip-head">Cho hình xăm hoặc trang sức</h3>
+          <p class="tip-body">Hoa sinh nhật ngày càng phổ biến cho hình xăm fine-line và mặt dây khắc tên. Lợi thế so với đá sinh nhật: hoa sinh nhật có thể mang màu sắc, biến tấu nét vẽ, và kết hợp hoa của người yêu/con nhỏ vào một thiết kế chung.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🌸</div>
+          <h3 class="tip-head">Để tưởng nhớ</h3>
+          <p class="tip-body">Một bó posy hoa sinh nhật trong lễ tưởng niệm (hoặc ép khung sau đó) là cách thầm lặng để vinh danh ai đó — đặc biệt khi loài hoa của họ có ý nghĩa tưởng nhớ riêng (lay-ơn, anh túc, cúc trắng).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </article>
+</BaseLayout>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.month-tab');
+  const panels = document.querySelectorAll<HTMLElement>('.month-panel');
+
+  function activateMonth(monthIdx: number) {
+    tabs.forEach(tab => {
+      const isActive = Number(tab.dataset.month) === monthIdx;
+      tab.classList.toggle('active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    panels.forEach(panel => {
+      const isActive = Number(panel.dataset.month) === monthIdx;
+      panel.hidden = !isActive;
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const idx = Number(tab.dataset.month);
+      if (!Number.isNaN(idx)) activateMonth(idx);
+    });
+  });
+
+  const bdayInput = document.querySelector<HTMLInputElement>('#bday-input');
+  const bdayClear = document.querySelector<HTMLButtonElement>('#bday-clear');
+
+  bdayInput?.addEventListener('change', () => {
+    if (!bdayInput.value) return;
+    const parts = bdayInput.value.split('-');
+    if (parts.length !== 3) return;
+    const monthIdx = Number(parts[1]) - 1;
+    if (monthIdx >= 0 && monthIdx < 12) {
+      activateMonth(monthIdx);
+      const target = document.getElementById(`panel-${monthIdx}`);
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  bdayClear?.addEventListener('click', () => {
+    if (bdayInput) bdayInput.value = '';
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      const answer = btn.nextElementSibling as HTMLElement | null;
+      if (answer) answer.hidden = expanded;
+      const icon = btn.querySelector('.faq-icon');
+      if (icon) icon.textContent = expanded ? '+' : '−';
+    });
+  });
+</script>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .breadcrumb-list a:hover { text-decoration:underline; }
+
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:580px; margin:0 auto 1.25rem; line-height:1.75; }
+  .lang-switch-link { display:inline-block; font-family:'Jost',sans-serif; font-size:0.78rem; color:var(--mauve-mid); text-decoration:none; border:1px solid rgba(74,45,53,0.2); padding:0.3rem 1rem; border-radius:999px; transition:all 0.2s; }
+  .lang-switch-link:hover { color:var(--mauve); border-color:var(--mauve); }
+
+  .planner-wrap { background:var(--ivory); }
+
+  .picker-controls { background:white; border:1px solid var(--ivory-dark); border-radius:16px; padding:1.4rem 1.6rem; margin-bottom:1.5rem; }
+  .picker-label { display:block; font-family:'Jost',sans-serif; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--taupe); margin-bottom:0.7rem; font-weight:500; }
+  .picker-row { display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; }
+  .bday-input { font-family:'Jost',sans-serif; padding:0.55rem 0.9rem; border:1px solid var(--ivory-dark); border-radius:10px; background:var(--ivory); color:var(--mauve); font-size:0.92rem; min-width:200px; }
+  .bday-input:focus { outline:2px solid var(--blush); outline-offset:2px; }
+  .bday-clear { background:none; border:1px solid var(--ivory-dark); border-radius:10px; padding:0.55rem 1rem; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); cursor:pointer; }
+  .bday-clear:hover { color:var(--mauve); border-color:var(--blush); }
+  .picker-help { font-family:'Jost',sans-serif; font-size:0.74rem; color:var(--taupe); margin-top:0.7rem; font-weight:300; }
+
+  .month-tabs { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1.5rem; }
+  .month-tab { padding:0.5rem 1rem; background:white; border:1px solid var(--ivory-dark); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); cursor:pointer; transition:all 0.18s; }
+  .month-tab:hover { color:var(--mauve); border-color:var(--blush); }
+  .month-tab.active { background:var(--blush-dark); color:white; border-color:var(--blush-dark); font-weight:500; }
+
+  .month-panel { background:white; border:1px solid var(--ivory-dark); border-radius:18px; padding:2rem 1.8rem; }
+  .month-panel-header { margin-bottom:1.6rem; }
+  .month-panel-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.8rem,3.6vw,2.4rem); font-weight:400; color:var(--mauve); margin:0 0 0.4rem; }
+  .month-panel-title em { font-style:italic; color:var(--blush-dark); }
+  .month-panel-zodiac { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); font-weight:300; }
+  .month-panel-zodiac strong { color:var(--mauve); font-weight:500; }
+  .zodiac-range { font-style:italic; color:var(--taupe); }
+
+  .flower-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.4rem; }
+
+  .flower-card { background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:16px; padding:1.6rem 1.4rem; position:relative; }
+  .flower-card-head { display:flex; align-items:center; gap:0.9rem; margin-bottom:1rem; }
+  .flower-card-emoji { font-size:2.1rem; line-height:1; }
+  .flower-card-slot { font-family:'Jost',sans-serif; font-size:0.66rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin:0 0 0.15rem; font-weight:500; }
+  .flower-card-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.5rem; font-weight:400; color:var(--mauve); margin:0; line-height:1.1; }
+  .flower-card-swatch { width:18px; height:18px; border-radius:50%; background:var(--accent,#E8A4B0); margin-left:auto; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06); }
+  .flower-card-subhead { font-family:'Jost',sans-serif; font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--taupe); font-weight:500; margin:1.05rem 0 0.4rem; }
+  .flower-card-text { font-family:'Jost',sans-serif; font-size:0.92rem; line-height:1.7; color:var(--mauve-mid); margin:0; font-weight:300; }
+  .flower-card-list { font-family:'Jost',sans-serif; font-size:0.9rem; line-height:1.65; color:var(--mauve-mid); margin:0; padding-left:1.1rem; font-weight:300; }
+  .flower-card-list li { margin-bottom:0.25rem; }
+  .flower-card-link { display:inline-block; margin-top:1rem; font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--blush-dark); text-decoration:none; font-weight:500; }
+  .flower-card-link:hover { text-decoration:underline; }
+
+  .cross-tool { margin-top:1.5rem; background:linear-gradient(135deg,#FDF0F2 0%,#F5E6EA 100%); border:1px solid var(--ivory-dark); border-radius:14px; padding:1.1rem 1.3rem; font-family:'Jost',sans-serif; font-size:0.92rem; color:var(--mauve-mid); line-height:1.6; font-weight:300; }
+  .cross-tool a { color:var(--blush-dark); text-decoration:underline; text-decoration-color:rgba(196,122,138,0.35); text-underline-offset:3px; }
+  .cross-tool a:hover { text-decoration-color:var(--blush-dark); }
+
+  .table-section { background:white; border-top:1px solid var(--ivory-dark); border-bottom:1px solid var(--ivory-dark); }
+  .table-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.6rem,3vw,2.2rem); color:var(--mauve); font-weight:400; margin:0 0 0.5rem; text-align:center; }
+  .table-sub { font-family:'Jost',sans-serif; color:var(--taupe); font-size:0.92rem; max-width:620px; margin:0 auto 1.6rem; text-align:center; font-weight:300; line-height:1.6; }
+  .table-wrap { overflow-x:auto; }
+  .bf-table { width:100%; border-collapse:collapse; font-family:'Jost',sans-serif; font-size:0.88rem; }
+  .bf-table th, .bf-table td { padding:0.75rem 0.85rem; text-align:left; border-bottom:1px solid var(--ivory-dark); vertical-align:top; }
+  .bf-table thead th { font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--taupe); font-weight:500; background:var(--ivory); }
+  .bf-table tbody th { font-weight:500; color:var(--mauve); white-space:nowrap; }
+  .bf-table td { color:var(--mauve-mid); font-weight:300; }
+  .bf-table a { color:var(--blush-dark); text-decoration:none; }
+  .bf-table a:hover { text-decoration:underline; }
+
+  .faq-section { background:var(--ivory); }
+  .faq-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.8rem,3.4vw,2.4rem); color:var(--mauve); font-weight:400; margin:0 0 1.4rem; text-align:center; }
+  .faq-list { max-width:780px; margin:0 auto; display:flex; flex-direction:column; gap:0.6rem; }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-q { width:100%; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:1rem 1.2rem; background:none; border:none; text-align:left; font-family:'Jost',sans-serif; font-size:0.95rem; color:var(--mauve); cursor:pointer; font-weight:400; }
+  .faq-q:hover { background:var(--ivory); }
+  .faq-icon { font-size:1.3rem; color:var(--blush-dark); flex-shrink:0; }
+  .faq-a { padding:0 1.2rem 1.1rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.9rem; line-height:1.7; color:var(--mauve-mid); margin:0; font-weight:300; }
+
+  .tips-section { background:white; }
+  .tips-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.6rem,3vw,2.2rem); color:var(--mauve); font-weight:400; margin:0 0 1.6rem; text-align:center; }
+  .tips-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.2rem; }
+  .tip-card { background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:14px; padding:1.4rem; }
+  .tip-icon { font-size:1.6rem; margin-bottom:0.6rem; }
+  .tip-head { font-family:'Jost',sans-serif; font-size:0.92rem; font-weight:500; color:var(--mauve); margin:0 0 0.45rem; }
+  .tip-body { font-family:'Jost',sans-serif; font-size:0.88rem; line-height:1.65; color:var(--mauve-mid); margin:0; font-weight:300; }
+
+  @media (max-width: 640px) {
+    .month-panel { padding:1.4rem 1.1rem; }
+    .flower-card { padding:1.3rem 1.1rem; }
+  }
+</style>
