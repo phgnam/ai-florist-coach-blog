@@ -1,0 +1,689 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PagefindMeta from '../../components/PagefindMeta.astro';
+
+export const prerender = true;
+
+const lang = 'en' as const;
+const siteUrl = (Astro.site?.toString() ?? import.meta.env.SITE_URL ?? 'https://ai-florist-coach-blog.vercel.app').replace(/\/$/, '');
+
+const hreflang = [
+  { lang: 'en', url: `${siteUrl}/tools/birth-flower/` },
+  { lang: 'vi', url: `${siteUrl}/vi/tools/birth-flower/` },
+  { lang: 'x-default', url: `${siteUrl}/tools/birth-flower/` },
+];
+
+const breadcrumbs = [
+  { name: 'Home', url: `${siteUrl}/` },
+  { name: 'Tools', url: `${siteUrl}/tools/` },
+  { name: 'Birth Flower Finder', url: `${siteUrl}/tools/birth-flower/` },
+];
+
+interface BirthFlower {
+  name: string;
+  emoji: string;
+  /** Glossary slug if a deep-link is available (otherwise null) */
+  glossarySlug: string | null;
+  /** Hex accent color used on the card */
+  color: string;
+  /** Plain-language meaning paragraph */
+  meaning: string;
+  /** What this birth flower says about people born this month */
+  personality: string;
+  /** 3 gift suggestions */
+  gifts: string[];
+}
+
+interface MonthEntry {
+  num: number;            // 1–12
+  name: string;
+  short: string;
+  /** Western-tradition primary + secondary birth flowers */
+  primary: BirthFlower;
+  secondary: BirthFlower;
+  /** Quick zodiac coverage for that month */
+  zodiac: { sign: string; range: string }[];
+}
+
+const MONTHS: MonthEntry[] = [
+  {
+    num: 1, name: 'January', short: 'Jan',
+    primary: {
+      name: 'Carnation', emoji: '🌺', glossarySlug: 'carnation', color: '#E58CA1',
+      meaning: 'Carnations symbolise love, fascination, and devotion. A pink carnation in particular represents a mother\'s undying love — making them a thoughtful pick for a January birthday gift between generations.',
+      personality: 'People born in January are often loyal, dependable, and quietly devoted — much like the carnation itself, which is one of the longest-lasting cut flowers a florist can offer.',
+      gifts: ['Single-variety pink-carnation hand-tie (15–20 stems)', 'Carnation + eucalyptus posy in a small vase', 'A "month flower" pressed-carnation framed print'],
+    },
+    secondary: {
+      name: 'Snowdrop', emoji: '🤍', glossarySlug: null, color: '#E8EEF6',
+      meaning: 'Snowdrops symbolise hope and new beginnings — they are one of the very first flowers to push through winter snow.',
+      personality: 'A January-born person with a snowdrop temperament tends to find quiet hope where others see only cold — an underestimated source of optimism.',
+      gifts: ['Tiny bud-vase posy of snowdrops + ivy', 'Garden-style mini-bulb pot', 'Snowdrop-themed botanical illustration'],
+    },
+    zodiac: [{ sign: 'Capricorn', range: 'until Jan 19' }, { sign: 'Aquarius', range: 'from Jan 20' }],
+  },
+  {
+    num: 2, name: 'February', short: 'Feb',
+    primary: {
+      name: 'Violet', emoji: '💜', glossarySlug: null, color: '#7C5BAE',
+      meaning: 'Violets symbolise faithfulness, modesty, and quiet wisdom. In Victorian floriography, sending a violet meant "I\'ll always be true."',
+      personality: 'February-born people often share the violet\'s quiet steadiness — modest in presentation but unwavering in loyalty.',
+      gifts: ['Posy of violets + freesia in a tea cup', 'A single African violet houseplant', 'Pressed-violet bookmark or card'],
+    },
+    secondary: {
+      name: 'Primrose', emoji: '🌼', glossarySlug: null, color: '#F2C84B',
+      meaning: 'Primroses symbolise young love and "I can\'t live without you" — a softer, romantic counterpoint to the violet.',
+      personality: 'A primrose-leaning February soul leads with warmth and brings a sense of early-spring lightness wherever they go.',
+      gifts: ['Mixed primrose pot for the kitchen window', 'Primrose + ranunculus mini bouquet', 'A botanical card featuring spring primulas'],
+    },
+    zodiac: [{ sign: 'Aquarius', range: 'until Feb 18' }, { sign: 'Pisces', range: 'from Feb 19' }],
+  },
+  {
+    num: 3, name: 'March', short: 'Mar',
+    primary: {
+      name: 'Daffodil', emoji: '🌼', glossarySlug: 'daffodil', color: '#F4C432',
+      meaning: 'Daffodils symbolise renewal, rebirth, and unrequited love. A bunch of daffodils — never a single stem — represents joy and good fortune.',
+      personality: 'March-born people share the daffodil\'s habit of arriving when everyone needs them most: warm, optimistic, often the first to break a cold mood.',
+      gifts: ['Bunch of 12+ daffodils tied with a ribbon', 'Daffodil bulb pot for the recipient to grow next year', 'Yellow + white spring posy with tulips and daffodils'],
+    },
+    secondary: {
+      name: 'Jonquil', emoji: '🌼', glossarySlug: 'daffodil', color: '#F7D86A',
+      meaning: 'Jonquils — a fragrant cousin of the daffodil — symbolise desire, sympathy, and the return of affection.',
+      personality: 'A jonquil-style March personality is the more romantic, perfume-forward sibling of the daffodil — a little more delicate, a little more poetic.',
+      gifts: ['Scented jonquil hand-tie', 'Jonquil + paperwhite mixed pot', 'Spring fragrance candle paired with a single stem'],
+    },
+    zodiac: [{ sign: 'Pisces', range: 'until Mar 20' }, { sign: 'Aries', range: 'from Mar 21' }],
+  },
+  {
+    num: 4, name: 'April', short: 'Apr',
+    primary: {
+      name: 'Daisy', emoji: '🌼', glossarySlug: 'marguerite-daisy', color: '#FFFFFF',
+      meaning: 'Daisies symbolise innocence, purity, and true love — and in some traditions, keeping a secret. The classic "loves me, loves me not" flower.',
+      personality: 'April-born people often share the daisy\'s sunny, no-pretence presence — open-hearted, quick to smile, dependable in small kindnesses.',
+      gifts: ['Field-style mixed daisy bouquet', 'Daisy chain crown for a child\'s birthday', 'Pressed-daisy enamel pin or jewelry'],
+    },
+    secondary: {
+      name: 'Sweet Pea', emoji: '🌸', glossarySlug: 'sweet-pea', color: '#F4B6C2',
+      meaning: 'Sweet peas symbolise blissful pleasure and a fond goodbye — popular in vintage send-off and "thank you" arrangements.',
+      personality: 'A sweet-pea April personality is gentle, fragrant, and memorable — a quiet luxury rather than a loud presence.',
+      gifts: ['Sweet pea + ranunculus garden bouquet', 'Sweet pea seed packet + bud vase', 'Vintage-style sweet pea hand-tie wrapped in brown paper'],
+    },
+    zodiac: [{ sign: 'Aries', range: 'until Apr 19' }, { sign: 'Taurus', range: 'from Apr 20' }],
+  },
+  {
+    num: 5, name: 'May', short: 'May',
+    primary: {
+      name: 'Lily of the Valley', emoji: '🤍', glossarySlug: 'lily-of-the-valley', color: '#E9EFD7',
+      meaning: 'Lily of the Valley symbolises returning happiness, humility, and sweetness — historically carried by royal brides (Kate Middleton, Grace Kelly) for its luck and purity meaning.',
+      personality: 'May-born people are often understated yet luxurious — not loud, but the kind of presence everyone notices once they\'re in the room.',
+      gifts: ['Lily-of-the-valley bridal-style posy', 'Mini compote with lily of the valley + cream peonies', 'A perfumed gift set inspired by the flower'],
+    },
+    secondary: {
+      name: 'Hawthorn', emoji: '🌸', glossarySlug: null, color: '#FBE3E5',
+      meaning: 'Hawthorn — the "May flower" — symbolises hope and supreme happiness in Victorian floriography.',
+      personality: 'A hawthorn-leaning May soul is grounded and steady, bringing protective, hopeful energy to the people around them.',
+      gifts: ['Branch-and-blossom arrangement for a mantel', 'Hawthorn + peony spring centerpiece', 'A bare-root hawthorn sapling for a lasting gift'],
+    },
+    zodiac: [{ sign: 'Taurus', range: 'until May 20' }, { sign: 'Gemini', range: 'from May 21' }],
+  },
+  {
+    num: 6, name: 'June', short: 'Jun',
+    primary: {
+      name: 'Rose', emoji: '🌹', glossarySlug: 'rose', color: '#D94661',
+      meaning: 'Roses symbolise love in nearly every form — but the colour matters. Red is romantic love, pink is gratitude, white is reverence, yellow is friendship, and peach is sincere appreciation.',
+      personality: 'June-born people share the rose\'s versatility — they fit every occasion, but the closer you look, the more nuance you find.',
+      gifts: ['Garden-rose hand-tie (David Austin varieties)', 'Mixed pink + peach rose centerpiece', 'A single perfect rose in a glass dome'],
+    },
+    secondary: {
+      name: 'Honeysuckle', emoji: '🌼', glossarySlug: null, color: '#F7D9A0',
+      meaning: 'Honeysuckle symbolises the bonds of love and devoted affection — its twining habit makes it a classic symbol of a tight relationship.',
+      personality: 'A honeysuckle-leaning June personality is sweet, persistent, and binds people together — a connector by nature.',
+      gifts: ['Honeysuckle + rose summer hand-tie', 'A scented honeysuckle vine for a balcony', 'Honeysuckle-inspired fragrance plus a single stem'],
+    },
+    zodiac: [{ sign: 'Gemini', range: 'until Jun 20' }, { sign: 'Cancer', range: 'from Jun 21' }],
+  },
+  {
+    num: 7, name: 'July', short: 'Jul',
+    primary: {
+      name: 'Larkspur', emoji: '💙', glossarySlug: 'delphinium', color: '#5D7BB6',
+      meaning: 'Larkspur (closely related to delphinium) symbolises positivity, dignity, and a strong bond of love. Different colours carry different meanings: pink for fickleness, white for joyful spirit, blue for grace.',
+      personality: 'July-born people share the larkspur\'s elegant, upright presence — graceful at full height but rooted firmly underneath.',
+      gifts: ['Tall larkspur + delphinium summer arrangement', 'Larkspur + lisianthus blue-and-white centrepiece', 'Pressed-larkspur framed botanical print'],
+    },
+    secondary: {
+      name: 'Water Lily', emoji: '🪷', glossarySlug: 'water-lily', color: '#F4B6E2',
+      meaning: 'Water lilies symbolise purity of heart, enlightenment, and rebirth — a sacred bloom in many Asian cultures.',
+      personality: 'A water-lily July personality is calm on the surface with depth underneath — composed, reflective, spiritually-minded.',
+      gifts: ['Floating-bloom centrepiece in a wide bowl', 'Water-lily print or scroll', 'Lotus / water-lily-themed candle gift box'],
+    },
+    zodiac: [{ sign: 'Cancer', range: 'until Jul 22' }, { sign: 'Leo', range: 'from Jul 23' }],
+  },
+  {
+    num: 8, name: 'August', short: 'Aug',
+    primary: {
+      name: 'Gladiolus', emoji: '🌺', glossarySlug: null, color: '#E14F65',
+      meaning: 'The gladiolus — Latin for "little sword" — symbolises strength of character, integrity, and remembrance. In Roman times, gladiators wore them as victory symbols.',
+      personality: 'August-born people share the gladiolus\'s tall, confident presence — strong opinions, strong commitments, strong silhouette.',
+      gifts: ['Tall single-variety gladiolus arrangement (5–7 stems)', 'Mixed gladiolus + sunflower late-summer bouquet', 'Gladiolus-themed birthday card with one fresh stem'],
+    },
+    secondary: {
+      name: 'Poppy', emoji: '🌺', glossarySlug: 'poppy', color: '#E63A3A',
+      meaning: 'Poppies symbolise imagination, eternal sleep, and remembrance. The red field poppy is the most internationally recognised symbol of remembrance.',
+      personality: 'A poppy-leaning August personality is bold, dreamy, and unforgettable — the person who leaves a vivid impression and a story behind.',
+      gifts: ['Iceland-poppy mixed garden bouquet', 'A handful of dried poppy seed-heads in a brown vase', 'A poppy-print silk scarf or art piece'],
+    },
+    zodiac: [{ sign: 'Leo', range: 'until Aug 22' }, { sign: 'Virgo', range: 'from Aug 23' }],
+  },
+  {
+    num: 9, name: 'September', short: 'Sep',
+    primary: {
+      name: 'Aster', emoji: '💜', glossarySlug: null, color: '#A879D8',
+      meaning: 'Asters — "star flowers" — symbolise wisdom, faith, and valour. The September birth flower is a love letter in star-shape form.',
+      personality: 'September-born people share the aster\'s late-season wisdom — they bloom on their own timing, not rushed by the calendar.',
+      gifts: ['Mixed aster + dahlia autumn hand-tie', 'September birth-flower star-pendant jewellery', 'Aster posy in a copper bud vase'],
+    },
+    secondary: {
+      name: 'Morning Glory', emoji: '💙', glossarySlug: null, color: '#5C8DD3',
+      meaning: 'Morning glories symbolise affection, mortality, and the brevity of beauty — they bloom for a single morning at a time.',
+      personality: 'A morning-glory-leaning September personality is poetic and present — someone who values the brief, perfect moment.',
+      gifts: ['Climbing morning-glory seed kit + bud vase', 'A morning-glory illustrated print', 'A bouquet of trailing vines with cosmos and asters'],
+    },
+    zodiac: [{ sign: 'Virgo', range: 'until Sep 22' }, { sign: 'Libra', range: 'from Sep 23' }],
+  },
+  {
+    num: 10, name: 'October', short: 'Oct',
+    primary: {
+      name: 'Marigold', emoji: '🌼', glossarySlug: 'marigold', color: '#F08A26',
+      meaning: 'Marigolds symbolise warmth, creativity, and the resilience to bloom into late autumn. In Mexican tradition (Día de Muertos) they are the flower that guides souls home.',
+      personality: 'October-born people share the marigold\'s warm, grounded glow — confident in their colour, generous in their season.',
+      gifts: ['Marigold + dahlia autumn centrepiece', 'A pumpkin filled with mixed marigolds', 'Marigold-petal-infused tea or skincare gift set'],
+    },
+    secondary: {
+      name: 'Cosmos', emoji: '🌸', glossarySlug: 'cosmos', color: '#F4A8C2',
+      meaning: 'Cosmos symbolise order, harmony, and tranquillity — the name itself comes from the Greek for "harmony" or "ordered universe."',
+      personality: 'A cosmos-leaning October personality is calm, balanced, and tends to bring order to chaotic spaces almost by accident.',
+      gifts: ['Garden-style cosmos bouquet wrapped in muslin', 'Cosmos seed packet + bud vase pairing', 'A cottage-garden subscription centred on cosmos'],
+    },
+    zodiac: [{ sign: 'Libra', range: 'until Oct 22' }, { sign: 'Scorpio', range: 'from Oct 23' }],
+  },
+  {
+    num: 11, name: 'November', short: 'Nov',
+    primary: {
+      name: 'Chrysanthemum', emoji: '🌼', glossarySlug: 'chrysanthemum', color: '#E5A53C',
+      meaning: 'Chrysanthemums symbolise loyalty, longevity, and honest friendship. In East Asia they are a flower of nobility and long life — in much of Europe, white chrysanthemums are reserved for sympathy and remembrance.',
+      personality: 'November-born people share the chrysanthemum\'s reputation for going the distance — long vase life, long memory, long-haul loyalty.',
+      gifts: ['Single-variety spider-mum sculptural vase', 'Mixed chrysanthemum autumn hand-tie', 'A heritage chrysanthemum plant for a long-living gift'],
+    },
+    secondary: {
+      name: 'Peony', emoji: '🌸', glossarySlug: 'peony', color: '#F4B6C2',
+      meaning: 'Peonies symbolise prosperity, romance, and a happy marriage. Some traditions list the peony as a secondary November birth flower for late autumn births.',
+      personality: 'A peony-leaning November personality leads with abundance and grace — a generous, romantic streak underneath the autumnal poise.',
+      gifts: ['Single-variety peony bridal bouquet', 'Peony + ranunculus blush hand-tie', 'A peony print or watercolour for the bedroom'],
+    },
+    zodiac: [{ sign: 'Scorpio', range: 'until Nov 21' }, { sign: 'Sagittarius', range: 'from Nov 22' }],
+  },
+  {
+    num: 12, name: 'December', short: 'Dec',
+    primary: {
+      name: 'Narcissus (Paperwhite)', emoji: '🤍', glossarySlug: 'daffodil', color: '#F5EFE0',
+      meaning: 'The paperwhite narcissus symbolises good wishes, faithfulness, and renewal — bringing a hopeful, fragrant note into the depths of winter.',
+      personality: 'December-born people share the paperwhite\'s ability to bloom in dark months — the friend who lights up the room when everyone else is hibernating.',
+      gifts: ['Paperwhite bulb pot for forcing on a windowsill', 'Paperwhite + amaryllis winter centrepiece', 'A scented winter posy with paperwhites and pine'],
+    },
+    secondary: {
+      name: 'Holly', emoji: '🌿', glossarySlug: null, color: '#2E7D4E',
+      meaning: 'Holly symbolises domestic happiness, defence, and good wishes — a winter-evergreen icon long before it became a Christmas symbol.',
+      personality: 'A holly-leaning December personality is protective, festive, and grounded — the hosting type who quietly holds the season together.',
+      gifts: ['Holly + paperwhite Christmas door wreath', 'Holly + cedar table runner for the holidays', 'A foraged-style winter centrepiece with berried holly'],
+    },
+    zodiac: [{ sign: 'Sagittarius', range: 'until Dec 21' }, { sign: 'Capricorn', range: 'from Dec 22' }],
+  },
+];
+
+// Build per-month FAQ entries for AEO long-tail coverage
+const firstSentence = (text: string) => text.split('.')[0].trim() + '.';
+const monthFAQs = MONTHS.map(m => ({
+  q: `What is the birth flower for ${m.name}?`,
+  a: `The primary ${m.name} birth flower is the ${m.primary.name}. ${firstSentence(m.primary.meaning)} The secondary ${m.name} birth flower is the ${m.secondary.name}. ${firstSentence(m.secondary.meaning)} ${firstSentence(m.primary.personality)}`,
+}));
+
+const generalFAQs = [
+  {
+    q: 'What is a birth flower?',
+    a: 'A birth flower is a flower assigned to each calendar month, much like a birthstone. The tradition combines Roman and Anglo-Saxon symbolism with each flower\'s natural blooming season. Most months have both a primary and a secondary birth flower because traditions vary by country and climate.',
+  },
+  {
+    q: 'Why does my month have two birth flowers?',
+    a: 'Most months have a primary and a secondary birth flower because no single tradition is universal. The primary tends to be the one most florists, almanacs, and jewellery makers reference (e.g. carnation for January, rose for June). The secondary is usually a regional or seasonal alternative — useful when the primary isn\'t in season locally.',
+  },
+  {
+    q: 'How is a birth flower different from a zodiac flower?',
+    a: 'Birth flowers are assigned by calendar month (e.g. January = carnation). Zodiac flowers are assigned to the 12 astrological signs (e.g. Aquarius = orchid), and each sign covers parts of two calendar months. If your birthday falls near the end or start of a month, you have a birth flower for that month and a zodiac flower for your sign — both are valid options for personalised gifts and tattoos.',
+  },
+  {
+    q: 'Can I use my birth flower in my wedding bouquet?',
+    a: 'Yes — a birth-flower bouquet is a popular personalisation. Pick the bride\'s birth flower as the focal, mix in the partner\'s as a secondary, and add the wedding-month birth flower as filler. Just check seasonality first: not every birth flower is available in every month locally. Use the Yor Flower season planner to confirm which versions of your birth flower are in season for your wedding date.',
+  },
+  {
+    q: 'What is the rarest birth flower?',
+    a: 'Lily of the valley (May) is widely considered the rarest birth flower in florist supply chains. It has a very short natural season (3–6 weeks in spring), is mostly grown in greenhouses for European luxury markets, and is one of the most expensive cut flowers per stem. Hawthorn (May\'s secondary) is rarely sold as a cut flower at all and is mostly grown as a hedge or branch source.',
+  },
+  {
+    q: 'Are birth flowers the same in every culture?',
+    a: 'No. The 12-month list on this page follows the Anglo-American tradition popularised by The Old Farmer\'s Almanac and modern jewellery makers. Other cultures have their own systems. Korean and Japanese floriography assign a flower to every day of the year, not just every month. Vietnamese and Chinese traditions tie flowers to lunar months and to the 24 solar terms rather than to Western calendar months.',
+  },
+];
+
+// Schema
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Birth Flowers by Month',
+  description: 'The 12 traditional birth-month flowers (Anglo-American tradition) with primary and secondary flowers, meanings, and gift suggestions.',
+  url: `${siteUrl}/tools/birth-flower/`,
+  numberOfItems: MONTHS.length,
+  itemListElement: MONTHS.map(m => ({
+    '@type': 'ListItem',
+    position: m.num,
+    name: `${m.name} — ${m.primary.name}`,
+    item: {
+      '@type': 'Thing',
+      name: m.primary.name,
+      description: m.primary.meaning,
+      url: m.primary.glossarySlug ? `${siteUrl}/learn/${m.primary.glossarySlug}/` : `${siteUrl}/tools/birth-flower/`,
+    },
+  })),
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [...monthFAQs, ...generalFAQs].map(item => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
+// BreadcrumbList JSON-LD is emitted automatically by SEO.astro when `breadcrumbs` is passed.
+---
+<BaseLayout
+  lang={lang}
+  title="Birth Flower Finder — What Is My Birth Month Flower?"
+  description="Find your birth flower by month. Get the primary and secondary birth flowers for every month, their meanings, gift ideas, and zodiac connections. Free tool from Yor Flower."
+  hreflang={hreflang}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(itemListSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+
+  <!-- Breadcrumb nav -->
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb" data-pagefind-ignore>
+    <div class="max-w-6xl mx-auto px-6 py-4">
+      <ol class="breadcrumb-list">
+        <li><a href="/">Home</a></li>
+        <li aria-hidden="true">›</li>
+        <li><a href="/tools/">Tools</a></li>
+        <li aria-hidden="true">›</li>
+        <li aria-current="page">Birth Flower Finder</li>
+      </ol>
+    </div>
+  </nav>
+
+  <article data-pagefind-body>
+  <PagefindMeta kind="tool" description="Look up your birth flower by month. Primary and secondary flowers, meanings, gift ideas and zodiac links for all 12 months." tags={["tool","birth-flower","gift-guide"]} />
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div class="max-w-6xl mx-auto px-6 py-20 text-center" style="position:relative;z-index:2">
+      <p class="page-eyebrow">Free Florist Tool</p>
+      <h1 class="page-title">Birth Flower Finder</h1>
+      <p class="page-sub">What is your birth-month flower? Pick a month to discover its primary and secondary flowers, their meanings, gift ideas, and the zodiac signs each one covers.</p>
+    </div>
+  </div>
+
+  <!-- Tool body -->
+  <div class="planner-wrap">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-12">
+
+      <!-- Picker controls -->
+      <div class="picker-controls">
+        <label for="bday-input" class="picker-label">Enter your birthday <span aria-hidden="true">·</span> or pick a month below</label>
+        <div class="picker-row">
+          <input type="date" id="bday-input" class="bday-input" aria-describedby="picker-help" />
+          <button type="button" id="bday-clear" class="bday-clear" aria-label="Clear birthday">Clear</button>
+        </div>
+        <p id="picker-help" class="picker-help">We only use the month/day from your input — no birthday data is stored.</p>
+      </div>
+
+      <!-- Month tabs -->
+      <div class="month-tabs" role="tablist" aria-label="Select a birth month">
+        {MONTHS.map((m) => (
+          <button
+            class:list={['month-tab', { 'active': m.num - 1 === new Date().getMonth() }]}
+            role="tab"
+            aria-selected={m.num - 1 === new Date().getMonth() ? 'true' : 'false'}
+            data-month={m.num - 1}
+            id={`tab-${m.num - 1}`}
+            aria-controls={`panel-${m.num - 1}`}
+          >{m.short}</button>
+        ))}
+      </div>
+
+      <!-- Month panels (all rendered for SEO) -->
+      {MONTHS.map((m) => (
+        <div
+          class="month-panel"
+          id={`panel-${m.num - 1}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${m.num - 1}`}
+          data-month={m.num - 1}
+          hidden={m.num - 1 !== new Date().getMonth()}
+        >
+          <div class="month-panel-header">
+            <h2 class="month-panel-title">Birth Flowers for <em>{m.name}</em></h2>
+            <p class="month-panel-zodiac">
+              {m.zodiac.map((z, zi) => (
+                <span>
+                  <strong>{z.sign}</strong> <span class="zodiac-range">({z.range})</span>{zi < m.zodiac.length - 1 ? ' · ' : ''}
+                </span>
+              ))}
+            </p>
+          </div>
+
+          <div class="flower-grid">
+            {[
+              { ...m.primary, slot: 'Primary' as const },
+              { ...m.secondary, slot: 'Secondary' as const },
+            ].map((f) => (
+              <article class="flower-card" style={`--accent:${f.color}`}>
+                <header class="flower-card-head">
+                  <span class="flower-card-emoji" aria-hidden="true">{f.emoji}</span>
+                  <div>
+                    <p class="flower-card-slot">{f.slot}</p>
+                    <h3 class="flower-card-name">{f.name}</h3>
+                  </div>
+                  <span class="flower-card-swatch" aria-hidden="true"></span>
+                </header>
+
+                <h4 class="flower-card-subhead">What does the {f.name.toLowerCase()} mean?</h4>
+                <p class="flower-card-text">{f.meaning}</p>
+
+                <h4 class="flower-card-subhead">What it says about {m.name}-born people</h4>
+                <p class="flower-card-text">{f.personality}</p>
+
+                <h4 class="flower-card-subhead">Gift ideas</h4>
+                <ul class="flower-card-list">
+                  {f.gifts.map(g => <li>{g}</li>)}
+                </ul>
+
+                {f.glossarySlug && (
+                  <a class="flower-card-link" href={`/learn/${f.glossarySlug}/`}>
+                    Read the full {f.name.toLowerCase()} guide →
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+
+          <!-- Cross-tool callout -->
+          <aside class="cross-tool">
+            <p>
+              Putting together a {m.name} birthday gift?
+              {' '}<a href="/tools/combination-builder/">See what pairs with the {m.primary.name.toLowerCase()}</a>,
+              {' '}<a href="/tools/budget-planner/">price up the bouquet</a>,
+              or <a href="/tools/season-planner/">check what else is in season this month</a>.
+            </p>
+          </aside>
+        </div>
+      ))}
+
+    </div>
+  </div>
+
+  <!-- Summary table — always visible, helps Pagefind + AEO -->
+  <section class="table-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="table-title">Birth Flowers by Month — At-a-Glance Table</h2>
+      <p class="table-sub">A quick reference for the 12 birth-month flowers in the Anglo-American tradition. Click any flower with a guide to read more.</p>
+      <div class="table-wrap">
+        <table class="bf-table">
+          <thead>
+            <tr>
+              <th scope="col">Month</th>
+              <th scope="col">Primary</th>
+              <th scope="col">Secondary</th>
+              <th scope="col">Core meaning</th>
+              <th scope="col">Zodiac signs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {MONTHS.map(m => (
+              <tr>
+                <th scope="row">{m.name}</th>
+                <td>
+                  {m.primary.glossarySlug
+                    ? <a href={`/learn/${m.primary.glossarySlug}/`}>{m.primary.emoji} {m.primary.name}</a>
+                    : <span>{m.primary.emoji} {m.primary.name}</span>}
+                </td>
+                <td>
+                  {m.secondary.glossarySlug
+                    ? <a href={`/learn/${m.secondary.glossarySlug}/`}>{m.secondary.emoji} {m.secondary.name}</a>
+                    : <span>{m.secondary.emoji} {m.secondary.name}</span>}
+                </td>
+                <td>{m.primary.meaning.split('.')[0]}.</td>
+                <td>{m.zodiac.map(z => z.sign).join(' · ')}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ section -->
+  <section class="faq-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-16">
+      <h2 class="faq-title">Birth Flower FAQs — Every Month and Every Tradition</h2>
+      <div class="faq-list">
+        {[...monthFAQs, ...generalFAQs].map((item, i) => (
+          <div class="faq-item" data-index={i}>
+            <button class="faq-q" aria-expanded="false">
+              <span>{item.q}</span>
+              <span class="faq-icon">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>{item.a}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Tips section -->
+  <section class="tips-section">
+    <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14">
+      <h2 class="tips-title">How to Use Birth Flowers — Gifts, Tattoos, and Wedding Personalisation</h2>
+      <div class="tips-grid">
+        <div class="tip-card">
+          <div class="tip-icon">🎁</div>
+          <h3 class="tip-head">As a personalised gift</h3>
+          <p class="tip-body">Build a bouquet around the recipient\'s birth flower as the focal, then layer in fillers and foliage that pair well with it. For a partner or parent, mix in your own birth flower so the arrangement carries both stories.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">💍</div>
+          <h3 class="tip-head">In a wedding bouquet</h3>
+          <p class="tip-body">A "birth-flower bouquet" includes the bride\'s, the partner\'s, and the wedding-month birth flowers. Check the season planner first — not every birth flower is in season every month, so you may need to substitute the secondary or use a sister variety.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🖋️</div>
+          <h3 class="tip-head">As a tattoo or jewellery design</h3>
+          <p class="tip-body">Birth flowers are increasingly popular as fine-line tattoos and engraved-charm motifs. The advantage over birthstones: a birth flower can carry colour, line variation, and combine with a partner\'s or child\'s flower into a single composition.</p>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">🌸</div>
+          <h3 class="tip-head">For a memorial or remembrance</h3>
+          <p class="tip-body">A birth-flower posy at a service (or pressed in a frame afterward) is a quietly powerful way to honour someone — especially when their birth flower carries remembrance meanings of its own (gladiolus, poppy, white chrysanthemum).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </article>
+</BaseLayout>
+
+<script>
+  // Month tabs
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.month-tab');
+  const panels = document.querySelectorAll<HTMLElement>('.month-panel');
+
+  function activateMonth(monthIdx: number) {
+    tabs.forEach(tab => {
+      const isActive = Number(tab.dataset.month) === monthIdx;
+      tab.classList.toggle('active', isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    panels.forEach(panel => {
+      const isActive = Number(panel.dataset.month) === monthIdx;
+      panel.hidden = !isActive;
+    });
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const idx = Number(tab.dataset.month);
+      if (!Number.isNaN(idx)) activateMonth(idx);
+    });
+  });
+
+  // Birthday picker
+  const bdayInput = document.querySelector<HTMLInputElement>('#bday-input');
+  const bdayClear = document.querySelector<HTMLButtonElement>('#bday-clear');
+
+  bdayInput?.addEventListener('change', () => {
+    if (!bdayInput.value) return;
+    // value is YYYY-MM-DD; parse without timezone surprises
+    const parts = bdayInput.value.split('-');
+    if (parts.length !== 3) return;
+    const monthIdx = Number(parts[1]) - 1;
+    if (monthIdx >= 0 && monthIdx < 12) {
+      activateMonth(monthIdx);
+      const target = document.getElementById(`panel-${monthIdx}`);
+      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  bdayClear?.addEventListener('click', () => {
+    if (bdayInput) bdayInput.value = '';
+  });
+
+  // FAQ accordion
+  document.querySelectorAll<HTMLButtonElement>('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+      const answer = btn.nextElementSibling as HTMLElement | null;
+      if (answer) answer.hidden = expanded;
+      const icon = btn.querySelector('.faq-icon');
+      if (icon) icon.textContent = expanded ? '+' : '−';
+    });
+  });
+</script>
+
+<style>
+  .breadcrumb-nav { background:var(--ivory); border-bottom:1px solid var(--ivory-dark); }
+  .breadcrumb-list { display:flex; align-items:center; gap:0.5rem; list-style:none; padding:0; margin:0; font-family:'Jost',sans-serif; font-size:0.8rem; color:var(--taupe); flex-wrap:wrap; }
+  .breadcrumb-list a { color:var(--blush-dark); text-decoration:none; }
+  .breadcrumb-list a:hover { text-decoration:underline; }
+
+  .page-header { background:linear-gradient(160deg,#FDF0F2 0%,#F5E6EA 50%,#EDA8B8 100%); position:relative; overflow:hidden; }
+  .page-header::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:80px; background:linear-gradient(to top,var(--ivory),transparent); }
+  .page-eyebrow { font-family:'Jost',sans-serif; font-size:0.68rem; font-weight:500; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+  .page-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.2rem,5.5vw,4rem); font-weight:300; color:var(--mauve); line-height:1.1; margin:0 0 1.2rem; }
+  .page-sub { font-family:'Jost',sans-serif; color:var(--mauve-mid); font-size:1rem; font-weight:300; max-width:580px; margin:0 auto; line-height:1.75; }
+
+  .planner-wrap { background:var(--ivory); }
+
+  /* ── PICKER ── */
+  .picker-controls { background:white; border:1px solid var(--ivory-dark); border-radius:16px; padding:1.4rem 1.6rem; margin-bottom:1.5rem; }
+  .picker-label { display:block; font-family:'Jost',sans-serif; font-size:0.78rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--taupe); margin-bottom:0.7rem; font-weight:500; }
+  .picker-row { display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; }
+  .bday-input { font-family:'Jost',sans-serif; padding:0.55rem 0.9rem; border:1px solid var(--ivory-dark); border-radius:10px; background:var(--ivory); color:var(--mauve); font-size:0.92rem; min-width:200px; }
+  .bday-input:focus { outline:2px solid var(--blush); outline-offset:2px; }
+  .bday-clear { background:none; border:1px solid var(--ivory-dark); border-radius:10px; padding:0.55rem 1rem; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); cursor:pointer; }
+  .bday-clear:hover { color:var(--mauve); border-color:var(--blush); }
+  .picker-help { font-family:'Jost',sans-serif; font-size:0.74rem; color:var(--taupe); margin-top:0.7rem; font-weight:300; }
+
+  /* ── MONTH TABS ── */
+  .month-tabs { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:1.5rem; }
+  .month-tab { padding:0.5rem 1rem; background:white; border:1px solid var(--ivory-dark); border-radius:999px; font-family:'Jost',sans-serif; font-size:0.82rem; color:var(--taupe); cursor:pointer; transition:all 0.18s; }
+  .month-tab:hover { color:var(--mauve); border-color:var(--blush); }
+  .month-tab.active { background:var(--blush-dark); color:white; border-color:var(--blush-dark); font-weight:500; }
+
+  /* ── MONTH PANEL ── */
+  .month-panel { background:white; border:1px solid var(--ivory-dark); border-radius:18px; padding:2rem 1.8rem; }
+  .month-panel-header { margin-bottom:1.6rem; }
+  .month-panel-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.8rem,3.6vw,2.4rem); font-weight:400; color:var(--mauve); margin:0 0 0.4rem; }
+  .month-panel-title em { font-style:italic; color:var(--blush-dark); }
+  .month-panel-zodiac { font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--taupe); font-weight:300; }
+  .month-panel-zodiac strong { color:var(--mauve); font-weight:500; }
+  .zodiac-range { font-style:italic; color:var(--taupe); }
+
+  .flower-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.4rem; }
+
+  .flower-card { background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:16px; padding:1.6rem 1.4rem; position:relative; }
+  .flower-card-head { display:flex; align-items:center; gap:0.9rem; margin-bottom:1rem; }
+  .flower-card-emoji { font-size:2.1rem; line-height:1; }
+  .flower-card-slot { font-family:'Jost',sans-serif; font-size:0.66rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); margin:0 0 0.15rem; font-weight:500; }
+  .flower-card-name { font-family:'Cormorant Garamond',Georgia,serif; font-size:1.5rem; font-weight:400; color:var(--mauve); margin:0; line-height:1.1; }
+  .flower-card-swatch { width:18px; height:18px; border-radius:50%; background:var(--accent,#E8A4B0); margin-left:auto; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06); }
+  .flower-card-subhead { font-family:'Jost',sans-serif; font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--taupe); font-weight:500; margin:1.05rem 0 0.4rem; }
+  .flower-card-text { font-family:'Jost',sans-serif; font-size:0.92rem; line-height:1.7; color:var(--mauve-mid); margin:0; font-weight:300; }
+  .flower-card-list { font-family:'Jost',sans-serif; font-size:0.9rem; line-height:1.65; color:var(--mauve-mid); margin:0; padding-left:1.1rem; font-weight:300; }
+  .flower-card-list li { margin-bottom:0.25rem; }
+  .flower-card-link { display:inline-block; margin-top:1rem; font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--blush-dark); text-decoration:none; font-weight:500; }
+  .flower-card-link:hover { text-decoration:underline; }
+
+  .cross-tool { margin-top:1.5rem; background:linear-gradient(135deg,#FDF0F2 0%,#F5E6EA 100%); border:1px solid var(--ivory-dark); border-radius:14px; padding:1.1rem 1.3rem; font-family:'Jost',sans-serif; font-size:0.92rem; color:var(--mauve-mid); line-height:1.6; font-weight:300; }
+  .cross-tool a { color:var(--blush-dark); text-decoration:underline; text-decoration-color:rgba(196,122,138,0.35); text-underline-offset:3px; }
+  .cross-tool a:hover { text-decoration-color:var(--blush-dark); }
+
+  /* ── TABLE ── */
+  .table-section { background:white; border-top:1px solid var(--ivory-dark); border-bottom:1px solid var(--ivory-dark); }
+  .table-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.6rem,3vw,2.2rem); color:var(--mauve); font-weight:400; margin:0 0 0.5rem; text-align:center; }
+  .table-sub { font-family:'Jost',sans-serif; color:var(--taupe); font-size:0.92rem; max-width:620px; margin:0 auto 1.6rem; text-align:center; font-weight:300; line-height:1.6; }
+  .table-wrap { overflow-x:auto; }
+  .bf-table { width:100%; border-collapse:collapse; font-family:'Jost',sans-serif; font-size:0.88rem; }
+  .bf-table th, .bf-table td { padding:0.75rem 0.85rem; text-align:left; border-bottom:1px solid var(--ivory-dark); vertical-align:top; }
+  .bf-table thead th { font-size:0.72rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--taupe); font-weight:500; background:var(--ivory); }
+  .bf-table tbody th { font-weight:500; color:var(--mauve); white-space:nowrap; }
+  .bf-table td { color:var(--mauve-mid); font-weight:300; }
+  .bf-table a { color:var(--blush-dark); text-decoration:none; }
+  .bf-table a:hover { text-decoration:underline; }
+
+  /* ── FAQ ── */
+  .faq-section { background:var(--ivory); }
+  .faq-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.8rem,3.4vw,2.4rem); color:var(--mauve); font-weight:400; margin:0 0 1.4rem; text-align:center; }
+  .faq-list { max-width:780px; margin:0 auto; display:flex; flex-direction:column; gap:0.6rem; }
+  .faq-item { background:white; border:1px solid var(--ivory-dark); border-radius:12px; overflow:hidden; }
+  .faq-q { width:100%; display:flex; justify-content:space-between; align-items:center; gap:1rem; padding:1rem 1.2rem; background:none; border:none; text-align:left; font-family:'Jost',sans-serif; font-size:0.95rem; color:var(--mauve); cursor:pointer; font-weight:400; }
+  .faq-q:hover { background:var(--ivory); }
+  .faq-icon { font-size:1.3rem; color:var(--blush-dark); flex-shrink:0; }
+  .faq-a { padding:0 1.2rem 1.1rem; }
+  .faq-a p { font-family:'Jost',sans-serif; font-size:0.9rem; line-height:1.7; color:var(--mauve-mid); margin:0; font-weight:300; }
+
+  /* ── TIPS ── */
+  .tips-section { background:white; }
+  .tips-title { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.6rem,3vw,2.2rem); color:var(--mauve); font-weight:400; margin:0 0 1.6rem; text-align:center; }
+  .tips-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.2rem; }
+  .tip-card { background:var(--ivory); border:1px solid var(--ivory-dark); border-radius:14px; padding:1.4rem; }
+  .tip-icon { font-size:1.6rem; margin-bottom:0.6rem; }
+  .tip-head { font-family:'Jost',sans-serif; font-size:0.92rem; font-weight:500; color:var(--mauve); margin:0 0 0.45rem; }
+  .tip-body { font-family:'Jost',sans-serif; font-size:0.88rem; line-height:1.65; color:var(--mauve-mid); margin:0; font-weight:300; }
+
+  @media (max-width: 640px) {
+    .month-panel { padding:1.4rem 1.1rem; }
+    .flower-card { padding:1.3rem 1.1rem; }
+  }
+</style>
