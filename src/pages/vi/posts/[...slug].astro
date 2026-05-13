@@ -110,7 +110,7 @@ const breadcrumbs = [
   <PagefindMeta kind="article" description={description} image={ogImage} imageAlt={heroAlt} tags={tags} />
   <div class="post-hero">
     {heroImageUrl ? (
-      <img src={heroImageUrl} alt={heroAlt ?? title} width={heroImageWidth} height={heroImageHeight} class="post-hero-img" />
+      <img src={heroImageUrl} alt={heroAlt ?? title} width={heroImageWidth} height={heroImageHeight} class="post-hero-img" fetchpriority="high" loading="eager" />
     ) : (
       <div class="post-hero-placeholder"></div>
     )}
