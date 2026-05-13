@@ -5,7 +5,7 @@ import vercel from '@astrojs/vercel';
 
 export default defineConfig({
   site: process.env.SITE_URL || 'https://ai-florist-coach-blog.vercel.app',
-  output: 'server',
+  output: 'static',
   adapter: vercel(),
   integrations: [
     mdx(),
